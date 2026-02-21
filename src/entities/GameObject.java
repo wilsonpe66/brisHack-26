@@ -4,6 +4,7 @@ public abstract class GameObject implements Updatable {
     protected double rotationAngle;
     protected double positionX;
     protected double positionY;
+    protected double radius;
 
     protected int health;
     protected boolean isAlive;
@@ -28,6 +29,8 @@ public abstract class GameObject implements Updatable {
     public double getPositionY() {
         return this.positionY;
     }
+
+    public double getRadius() { return this.radius; }
 
     public int getHealth() {
         return this.health;
@@ -57,6 +60,8 @@ public abstract class GameObject implements Updatable {
     public void setPositionY(double positionY) {
         this.positionY = positionY;
     }
+
+    public void setRadius(double radius) { this.radius = radius; } // TODO: fix arbitrary magic numbers for radius in all gameobjects
 
     public void setHealth(int health) {
         this.health = health;

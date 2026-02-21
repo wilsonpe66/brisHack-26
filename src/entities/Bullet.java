@@ -4,6 +4,7 @@ public class Bullet extends GameObject {
     public Bullet(double x, double y) {
         setPosition(x, y);
         setVelocity(10, 10);
+        setRadius(5);
         setHealth(1);
         setAlive(true);
     }
@@ -23,6 +24,7 @@ public class Bullet extends GameObject {
             setAlive(false);
         }
     }
+
 
     @Override
     public void collide(GameObject other) {

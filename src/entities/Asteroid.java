@@ -4,6 +4,7 @@ public class Asteroid extends GameObject{
     public Asteroid(double x, double y, double velocityX, double velocityY) {
         setPosition(x, y);
         setVelocity(velocityX, velocityY);
+        setRadius(30);
         setHealth(1);
         setAlive(true);
     }
@@ -30,6 +31,7 @@ public class Asteroid extends GameObject{
             setAlive(false);
         }
     }
+
 
     @Override
     public void collide(GameObject other) {

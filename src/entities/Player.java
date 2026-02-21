@@ -4,10 +4,10 @@ public class Player extends GameObject{
     public Player(double x, double y) {
         setPosition(x, y);
         setVelocity(0, 0);
+        setRadius(20);
         setHealth(100);
         setAlive(true);
     }
-
 
     @Override
     public void update() {
