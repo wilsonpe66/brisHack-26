@@ -51,10 +51,6 @@ public abstract class GameObject implements Updatable {
         return scale;
     }
 
-    public double getScale() {
-        return scale;
-    }
-
     // SETTERS:
     public void setVelocityX(double velocityX) {
         this.velocityX = velocityX;

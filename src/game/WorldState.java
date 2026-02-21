@@ -10,8 +10,6 @@ public class WorldState {
     private int shootCooldown;
     private long lastSpawnTime = 0;
 
-    private int framesUntilNextSpawn = Constants.SPAWN_DELAY;
-
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
         player = new Player((double) Constants.MIDDLEX, (double) Constants.MIDDLEY, inputHandler);
@@ -61,23 +59,17 @@ public class WorldState {
             for (int j = i+1; j < objects.size(); j++) {
                 GameObject a = objects.get(i);
                 GameObject b = objects.get(j);
-
-                if (!a.getIsAlive() || !b.getIsAlive()) continue;
-
                 if (checkCollision(a, b)) {
                     a.collide(b);
+                    b.collide(a);
                 }
             }
         }
     }
 
-    private static boolean isAlive(Updatable u) {
-        return !(u instanceof GameObject) || ((GameObject) u).getIsAlive();
-    }
-
     private void removeDeadObjects() {
         objects.removeIf(obj -> !obj.getIsAlive());
-        updatables.removeIf(u -> !isAlive(u));
+        updatables.removeIf(u -> u instanceof GameObject && !((GameObject) u).getIsAlive());
     }
 
     public void updateState() {
