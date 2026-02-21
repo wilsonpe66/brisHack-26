@@ -56,7 +56,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
             AffineTransform transform = new AffineTransform();
             transform.translate(cx, cy);                 // move origin to object center
-            transform.rotate(object.getRotationAngle()); // rotate around center
+            transform.rotate(object.getRotationAngle() + Math.toRadians(270)); // rotate around center
             transform.translate(-w / 2.0, -h / 2.0);    // offset so sprite draws centered
 
             g2d.drawImage(sprite, transform, null);
