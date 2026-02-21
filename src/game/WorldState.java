@@ -5,13 +5,13 @@ public class WorldState {
     public List<Updatable> updatables;
     public List<GameObject> objects;
     private Player player;
-    private AsteroidGenerator generator;
+    private final AsteroidGenerator generator;
 
     public WorldState() {
         player = new Player((double) Constants.WIDTH/2, (double) Constants.HEIGHT/2);
-        objects = new ArrayList<GameObject>();
+        objects = new ArrayList<>();
         objects.add(player);
-        updatables = new ArrayList<Updatable>();
+        updatables = new ArrayList<>();
         updatables.add(player);
         generator = new AsteroidGenerator(this);
     }
