@@ -30,6 +30,15 @@ public class Player extends GameObject{
                 vy *= scale;
             }
             setVelocity(vx, vy);
+        } else {
+            // decay velocity when thrust is not pressed
+            double vx = getVelocityX() * Constants.PLAYER_VELOCITY_DECAY;
+            double vy = getVelocityY() * Constants.PLAYER_VELOCITY_DECAY;
+            if (Math.abs(vx) < 0.01 && Math.abs(vy) < 0.01) {
+                vx = 0;
+                vy = 0;
+            }
+            setVelocity(vx, vy);
         }
         if (inputHandler.isLeftPressed()) {
             setRotationAngle(getRotationAngle() - Constants.ROTATION_SPEED);
