@@ -1,7 +1,7 @@
 import java.awt.*;
 
 public class Bullet extends GameObject {
-    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/missile.png");
+    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/missile.png");
 
     // CONSTRUCTOR:
     public Bullet(double x, double y) {

@@ -1,7 +1,7 @@
 import java.awt.*;
 
 public class Asteroid extends GameObject{
-    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/asteroid1.png");
+    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/asteroid1.png");
 
     // CONSTRUCTOR:
     public Asteroid(double x, double y, double velocityX, double velocityY) {

@@ -1,7 +1,7 @@
 import java.awt.*;
 
 public class Player extends GameObject{
-    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/spaceship.png");
+    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/spaceship.png");
 
     // CONSTRUCTOR:
     public Player(double x, double y) {
