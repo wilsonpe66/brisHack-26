@@ -18,6 +18,11 @@ public class Bullet extends GameObject {
     }
 
     @Override
+    public Image getSprite() {
+        return sprite;
+    }
+
+    @Override
     public void update() {
         // update position according to velocity:
         setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());

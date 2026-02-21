@@ -47,10 +47,12 @@ public class GamePanel extends JPanel implements ActionListener {
         // iterate over worldState
         for (GameObject object : worldState.objects) {
             Image sprite = object.getSprite();
-            int x = (int) Math.round(object.getPositionX());
-            int y = (int) Math.round(object.getPositionY());
+            if (sprite == null) continue;
             int w = sprite.getWidth(null);
             int h = sprite.getHeight(null);
+            if (w <= 0 || h <= 0) continue; // image not yet loaded
+            int x = (int) Math.round(object.getPositionX());
+            int y = (int) Math.round(object.getPositionY());
 
             AffineTransform transform = new AffineTransform();
             transform.translate(x + w / 2.0, y + h / 2.0); // move origin to image center

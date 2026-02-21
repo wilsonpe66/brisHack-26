@@ -78,6 +78,11 @@ public class Player extends GameObject{
         return new Bullet(spawnX, spawnY, bulletVelocityX, bulletVelocityY, angle);
     }
 
+    @Override
+    public Image getSprite() {
+        return sprite;
+    }
+
     public void rotateBy(double deltaAngle) {
         setRotationAngle(getRotationAngle() + deltaAngle);
     }
