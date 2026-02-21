@@ -40,7 +40,8 @@ public class GamePanel extends JPanel implements ActionListener {
     // called every frame
     @Override
     public void actionPerformed(ActionEvent e) {
-        // update world state
+        WorldState.update();
+        repaint();
     }
 
     @Override
@@ -48,7 +49,12 @@ public class GamePanel extends JPanel implements ActionListener {
         super.paintComponent(g);
 
         // iterate using world state
+        for (GameObject object : WorldState.Objects) {
+            g.drawImage(object.sprite, object.getPositionX(), object.getPositionY(), null);
+        }
 
         // draw hud
     }
+
+    private void draw()
 }
