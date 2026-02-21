@@ -81,6 +81,7 @@ public abstract class GameObject implements Updatable {
 
     // entry point - first dispatch
     public abstract void collide(GameObject other);
+
     // overloading (default responses) - not abstract as some combinations don't need to exist
     public void collideWith(Player player) {}
     public void collideWith(Asteroid asteroid) {}

@@ -21,16 +21,17 @@ public class Asteroid extends GameObject{
 
     @Override
     public void collideWith(Player player) {
-        // collision endpoint
+        player.collideWith(this);
     }
 
     @Override
     public void collideWith(Asteroid asteroid) {
-        // collision endpoint
+        this.setHealth(0);
+        asteroid.setHealth(0);
     }
 
     @Override
     public void collideWith(Bullet bullet) {
-        // collision endpoint
+        bullet.collideWith(this);
     }
 }

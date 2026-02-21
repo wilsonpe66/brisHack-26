@@ -4,7 +4,7 @@ public class Player extends GameObject{
     public Player(double x, double y) {
         setPosition(x, y);
         setVelocity(0, 0);
-        setHealth(health);
+        setHealth(100);
         setAlive(true);
     }
 
@@ -22,17 +22,17 @@ public class Player extends GameObject{
 
     @Override
     public void collideWith(Player player) {
-        // collision endpoint
+        throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
     }
 
     @Override
     public void collideWith(Asteroid asteroid) {
-        // collision endpoint
+        this.setHealth(0);
     }
 
     @Override
     public void collideWith(Bullet bullet) {
-        // collision endpoint
+        throw new RuntimeException("PLAYER HIT BULLET?!?!?");
     }
 
 }

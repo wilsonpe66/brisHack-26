@@ -21,16 +21,16 @@ public class Bullet extends GameObject {
 
     @Override
     public void collideWith(Player player) {
-        // collision endpoint
+        throw new RuntimeException("BULLET HIT PLAYER?!?!?");
     }
 
     @Override
     public void collideWith(Asteroid asteroid) {
-        // collision endpoint
+        asteroid.setHealth(0); // make asteroids survive multiple bullets?
     }
 
     @Override
     public void collideWith(Bullet bullet) {
-        // collision endpoint
+        throw new RuntimeException("BULLET HIT BULLET?!?!?");
     }
 }
