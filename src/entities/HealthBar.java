@@ -9,7 +9,7 @@ public class HealthBar implements Updatable{
     }
 
     @Override
-    public void update(double timeUnit) {
+    public void update() {
         displayedHealth = player.getHealth(); // add smooth health change transition?
     }
 }

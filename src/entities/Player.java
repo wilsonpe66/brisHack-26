@@ -10,7 +10,30 @@ public class Player extends GameObject{
 
 
     @Override
-    public void update(double timeUnit) {
+    public void update() {
+        // update position according to velocity:
+        setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
+
+        // check if off the screen - put to other side:
+        if (getPositionX() < 0) {
+            setPositionX(Constants.WIDTH);
+        } else if (getPositionX() > Constants.WIDTH) {
+            setPositionX(0);
+        }
+
+        if (getPositionY() < 0) {
+            setPositionY(Constants.HEIGHT);
+        } else if (getPositionY() > Constants.HEIGHT) {
+            setPositionY(0);
+        }
+
+        if (getHealth() <= 0) {
+            setAlive(false);
+        }
+    }
+
+    public void shoot() {
+        Bullet bullet = new Bullet(this.getPositionX(),this.getPositionY()); // spawn a bullet on the player
 
     }
 

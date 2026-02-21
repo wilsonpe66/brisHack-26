@@ -3,15 +3,25 @@ public class Bullet extends GameObject {
     // CONSTRUCTOR:
     public Bullet(double x, double y) {
         setPosition(x, y);
-        setVelocity(0, 0);
-        setHealth(health);
+        setVelocity(10, 10);
+        setHealth(1);
         setAlive(true);
     }
 
 
     @Override
-    public void update(double timeUnit) {
-        // NEED TO IMPLEMENT
+    public void update() {
+        // update position according to velocity:
+        setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
+
+        boolean outOfBounds = getPositionX() < 0
+                || getPositionX() > Constants.WIDTH
+                || getPositionY() < 0
+                || getPositionY() > Constants.HEIGHT;
+
+        if (outOfBounds || getHealth() <= 0) {
+            setAlive(false);
+        }
     }
 
     @Override
