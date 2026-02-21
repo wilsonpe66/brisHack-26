@@ -7,6 +7,7 @@ public class Player extends GameObject{
     public Player(double x, double y) {
         setPosition(x, y);
         setVelocity(0, 0);
+        setRotationAngle(-Math.PI / 2); // straight up in radians
         setRadius(20);
         setHealth(100);
         setAlive(true);
@@ -33,11 +34,29 @@ public class Player extends GameObject{
         if (getHealth() <= 0) {
             setAlive(false);
         }
+
+        // keep angle in [0, 2π) to avoid unbounded growth
+        double normalized = getRotationAngle() % (Math.PI * 2);
+        if (normalized < 0) {
+            normalized += Math.PI * 2;
+        }
+        setRotationAngle(normalized);
     }
 
-    public void shoot() {
-        Bullet bullet = new Bullet(this.getPositionX(),this.getPositionY()); // spawn a bullet on the player
+    public Bullet shoot() {
+        double angle = getRotationAngle(); // radians
+        double bulletVelocityX = Math.cos(angle) * 16;
+        double bulletVelocityY = Math.sin(angle) * 16;
 
+        // spawn at the ship nose, along the current facing angle
+        double spawnX = getPositionX() + Math.cos(angle) * getRadius();
+        double spawnY = getPositionY() + Math.sin(angle) * getRadius();
+
+        return new Bullet(spawnX, spawnY, bulletVelocityX, bulletVelocityY, angle);
+    }
+
+    public void rotateBy(double deltaAngle) {
+        setRotationAngle(getRotationAngle() + deltaAngle);
     }
 
     @Override

@@ -5,8 +5,13 @@ public class Bullet extends GameObject {
 
     // CONSTRUCTOR:
     public Bullet(double x, double y) {
+        this(x, y, 10, 10, Math.PI / 4);
+    }
+
+    public Bullet(double x, double y, double velocityX, double velocityY, double rotationAngle) {
         setPosition(x, y);
-        setVelocity(10, 10);
+        setVelocity(velocityX, velocityY);
+        setRotationAngle(rotationAngle);
         setRadius(5);
         setHealth(1);
         setAlive(true);

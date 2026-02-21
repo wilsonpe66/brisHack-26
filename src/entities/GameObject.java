@@ -3,7 +3,7 @@ import java.awt.*;
 public abstract class GameObject implements Updatable {
     private double velocityX;
     private double velocityY;
-    private double rotationAngle;
+    private double rotationAngle; // radians
     private double positionX;
     private double positionY;
     private double radius;
