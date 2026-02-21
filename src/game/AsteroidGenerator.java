@@ -23,7 +23,7 @@ public class AsteroidGenerator {
 
     private static Asteroid fromPosition(double x, double y, double playerX, double playerY) {
         double angle = Math.atan2(playerY - y, playerX - x);
-        return new Asteroid(x, y, Math.cos(angle) * 10, Math.sin(angle) * 10);
+        return new Asteroid(x, y, Math.cos(angle) * Constants.ASTEROID_SPEED, Math.sin(angle) * Constants.ASTEROID_SPEED);
     }
 
     public void generate() {

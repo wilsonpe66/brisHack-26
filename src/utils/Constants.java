@@ -9,4 +9,5 @@ public final class Constants {
     public static final double MIDDLEX = (double) WIDTH / 2;
     public static final double MIDDLEY = (double) HEIGHT / 2;
     public static final int SPAWN_DELAY = 60;
+    public static final double ASTEROID_SPEED = 10;
 }
