@@ -4,9 +4,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class GamePanel extends JPanel implements KeyListener, ActionListener {
+    Map<Integer, Consumer<Boolean>> keyMap = new HashMap<>() {{
+        put(KeyEvent.VK_W,     v -> upPressed = v);
+        put(KeyEvent.VK_UP,    v -> upPressed = v);
+        put(KeyEvent.VK_S,     v -> downPressed = v);
+        put(KeyEvent.VK_DOWN,  v -> downPressed = v);
+        put(KeyEvent.VK_A,     v -> leftPressed = v);
+        put(KeyEvent.VK_LEFT,  v -> leftPressed = v);
+        put(KeyEvent.VK_D,     v -> rightPressed = v);
+        put(KeyEvent.VK_RIGHT, v -> rightPressed = v);
+        put(KeyEvent.VK_SPACE, v -> shootPressed = v);
+    }};
+
     private static final int WIDTH = 800;
     private static final int HEIGHT = 800;
 
@@ -33,7 +49,7 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     }
 
     private void initGame() {
-        player = new Player();
+        player = new Player((double) WIDTH / 2, (double) HEIGHT / 2);
         asteroids = new ArrayList<>();
         bullets = new ArrayList<>();
     }
@@ -51,55 +67,15 @@ public class GamePanel extends JPanel implements KeyListener, ActionListener {
     @Override
     public void keyTyped(KeyEvent e) {}
 
-    // refactor
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-            case KeyEvent.VK_UP:
-                upPressed = true;
-                break;
-            case KeyEvent.VK_A:
-            case KeyEvent.VK_LEFT:
-                leftPressed = true;
-                break;
-            case KeyEvent.VK_S:
-            case KeyEvent.VK_DOWN:
-                downPressed = true;
-                break;
-            case KeyEvent.VK_D:
-            case KeyEvent.VK_RIGHT:
-                rightPressed = true;
-                break;
-            case KeyEvent.VK_SPACE:
-                shootPressed = true;
-                break;
-        }
+        Consumer<Boolean> action = keyMap.get(e.getKeyCode());
+        if (action != null) action.accept(true);
     }
 
-    // refactor
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_W:
-            case KeyEvent.VK_UP:
-                upPressed = false;
-                break;
-            case KeyEvent.VK_A:
-            case KeyEvent.VK_LEFT:
-                leftPressed = false;
-                break;
-            case KeyEvent.VK_S:
-            case KeyEvent.VK_DOWN:
-                downPressed = false;
-                break;
-            case KeyEvent.VK_D:
-            case KeyEvent.VK_RIGHT:
-                rightPressed = false;
-                break;
-            case KeyEvent.VK_SPACE:
-                shootPressed = false;
-                break;
-        }
+        Consumer<Boolean> action = keyMap.get(e.getKeyCode());
+        if (action != null) action.accept(false);
     }
 }
