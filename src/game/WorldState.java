@@ -1,15 +1,30 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorldState {
-    private List<Updatable> updatables;
-    private List<GameObject> objects;
+    public List<Updatable> updatables;
+    public List<GameObject> objects;
     private Player player;
     private AsteroidGenerator generator;
-    private void handleSpawning() {}
 
-    private void updateAll(double timeUnit) {
+    public WorldState() {
+        player = new Player((double) Constants.WIDTH/2, (double) Constants.HEIGHT/2);
+        objects = new ArrayList<GameObject>();
+        objects.add(player);
+        updatables = new ArrayList<Updatable>();
+        updatables.add(player);
+        generator = new AsteroidGenerator();
+    }
+
+    private void handleSpawning(double time) {
+        if (time % Constants.FPS == 0) {
+            generator.generate(this);
+        }
+    }
+
+    private void updateAll() {
         for (Updatable obj : updatables) {
-            obj.update(timeUnit);
+            obj.update();
         }
     }
 
@@ -37,9 +52,9 @@ public class WorldState {
         objects.removeIf(obj -> !obj.isAlive);
     }
 
-    public void updateState(double timeUnit) {
-        handleSpawning();
-        updateAll(timeUnit);
+    public void updateState(double time) {
+        handleSpawning(time);
+        updateAll();
         handleCollisions();
         removeDeadObjects();
     }
