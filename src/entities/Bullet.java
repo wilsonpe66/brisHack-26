@@ -49,11 +49,16 @@ public class Bullet extends GameObject {
 
     @Override
     public void collideWith(Asteroid asteroid) {
-        asteroid.setHealth(0); // make asteroids survive multiple bullets?
+        setHealth(0);
     }
 
     @Override
     public void collideWith(Bullet bullet) {
         throw new RuntimeException("BULLET HIT BULLET?!?!?");
+    }
+
+    @Override
+    public Image getSprite() {
+        return sprite;
     }
 }

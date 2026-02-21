@@ -116,4 +116,9 @@ public class Player extends GameObject{
     public void collideWith(Bullet bullet) {
         throw new RuntimeException("PLAYER HIT BULLET?!?!?");
     }
+
+    @Override
+    public Image getSprite() {
+        return sprite;
+    }
 }

@@ -23,15 +23,15 @@ public class Asteroid extends GameObject{
         setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
 
         if (getPositionX() < 0) {
-            this.setHealth(0);
+            setHealth(0);
         } else if (getPositionX() > Constants.WIDTH) {
-            this.setHealth(0);
+            setHealth(0);
         }
 
         if (getPositionY() < 0) {
-            setPositionY(Constants.HEIGHT);
+            setHealth(0);
         } else if (getPositionY() > Constants.HEIGHT) {
-            this.setHealth(0);
+            setHealth(0);
         }
 
         if (getHealth() <= 0) {
@@ -46,17 +46,22 @@ public class Asteroid extends GameObject{
 
     @Override
     public void collideWith(Player player) {
-        player.collideWith(this);
+        setHealth(0);
     }
 
     @Override
     public void collideWith(Asteroid asteroid) {
-        this.setHealth(0);
+        setHealth(0);
         asteroid.setHealth(0);
     }
 
     @Override
     public void collideWith(Bullet bullet) {
-        bullet.collideWith(this);
+        setHealth(getHealth() - 1 );
+    }
+
+    @Override
+    public Image getSprite() {
+        return sprite;
     }
 }
