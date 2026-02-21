@@ -10,3 +10,6 @@ Thumbs.db
 
 # Java Build Files
 *.class
+
+# VS Code
+.vscode
