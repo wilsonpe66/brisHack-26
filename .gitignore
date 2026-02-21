@@ -7,3 +7,6 @@ out/
 *:Zone.Identifier
 *.DS_Store
 Thumbs.db
+
+# Java Build Files
+*.class
