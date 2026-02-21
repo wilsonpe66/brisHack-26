@@ -12,6 +12,8 @@ public abstract class GameObject implements Updatable {
     private boolean isAlive;
     private double scale = 1.0;
 
+    private static Image sprite;
+
     // GETTERS:
     public double getVelocityX() {
         return velocityX;
@@ -44,6 +46,10 @@ public abstract class GameObject implements Updatable {
     }
 
     public abstract Image getSprite();
+
+    public double getScale() {
+        return scale;
+    }
 
     public double getScale() {
         return scale;

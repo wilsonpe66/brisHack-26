@@ -14,7 +14,7 @@ public final class Constants {
     // how far outside the screen asteroids spawn
     public static final double MIDDLEX = (double) WIDTH / 2;
     public static final double MIDDLEY = (double) HEIGHT / 2;
-    public static final int SPAWN_DELAY = 60;
+    public static final int SPAWN_DELAY = 1000;
     public static final double ASTEROID_SPEED = 3;
     public static final double MAX_PLAYER_SPEED = 5;
     public static final double PLAYER_ACCELERATION = 0.2;

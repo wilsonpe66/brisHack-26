@@ -7,9 +7,11 @@ public class Asteroid extends GameObject{
     public Asteroid(double x, double y, double velocityX, double velocityY) {
         setPosition(x, y);
         setVelocity(velocityX, velocityY);
+        setRotationAngle(Math.random() * Math.PI * 2);
         setRadius(30);
         setHealth(1);
         setAlive(true);
+        setScale(0.3);
     }
 
     @Override
@@ -22,16 +24,14 @@ public class Asteroid extends GameObject{
         // update position according to velocity:
         setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
 
-        if (getPositionX() < 0) {
-            setHealth(0);
-        } else if (getPositionX() > Constants.WIDTH) {
-            setHealth(0);
+        // kill asteroid if it goes too far off screen (with buffer for spawning)
+        double buffer = 100;
+        if (getPositionX() < -buffer || getPositionX() > Constants.WIDTH + buffer) {
+            this.setHealth(0);
         }
 
-        if (getPositionY() < 0) {
-            setHealth(0);
-        } else if (getPositionY() > Constants.HEIGHT) {
-            setHealth(0);
+        if (getPositionY() < -buffer || getPositionY() > Constants.HEIGHT + buffer) {
+            this.setHealth(0);
         }
 
         if (getHealth() <= 0) {

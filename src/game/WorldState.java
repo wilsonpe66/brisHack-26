@@ -8,6 +8,7 @@ public class WorldState {
     private final AsteroidGenerator generator;
     private final InputHandler inputHandler;
     private int shootCooldown;
+    private long lastSpawnTime = 0;
 
     private int framesUntilNextSpawn = Constants.SPAWN_DELAY;
 
@@ -35,14 +36,10 @@ public class WorldState {
     }
 
     private void handleSpawning() {
-        framesUntilNextSpawn--;
-        if (framesUntilNextSpawn <= 0) {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastSpawnTime >= Constants.SPAWN_DELAY) {
             generator.generate();
-
-            // Example: randomize next spawn delay around SPAWN_DELAY
-            int min = Math.max(1, Constants.SPAWN_DELAY / 2);
-            int max = Constants.SPAWN_DELAY + (Constants.SPAWN_DELAY / 2);
-            framesUntilNextSpawn = min + (int) (Math.random() * (max - min + 1));
+            lastSpawnTime = currentTime;
         }
     }
 
