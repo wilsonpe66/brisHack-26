@@ -4,7 +4,7 @@ import java.util.List;
 public class WorldState {
     public List<Updatable> updatables;
     public List<GameObject> objects;
-    private Player player;
+    private final Player player;
     private final AsteroidGenerator generator;
 
     public WorldState() {
@@ -59,4 +59,7 @@ public class WorldState {
         removeDeadObjects();
     }
 
+    public Player getPlayer() {
+        return player;
+    }
 }

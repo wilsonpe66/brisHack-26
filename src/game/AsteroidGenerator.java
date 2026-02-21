@@ -1,4 +1,3 @@
-import java.util.List;
 import java.util.Random;
 
 public class AsteroidGenerator {
@@ -6,24 +5,29 @@ public class AsteroidGenerator {
 
     @FunctionalInterface
     interface SideSpawner {
-        Asteroid spawn(double width, double height, double offset);
+        Asteroid spawn(double width, double height, double offset, double playerX, double playerY);
     }
 
     private static final SideSpawner[] SIDES = {
-            (w, h, o) -> new Asteroid(random.nextDouble() * w, -o), // top
-            (w, h, o) -> new Asteroid(random.nextDouble() * w, h + o), // bottom
-            (w, h, o) -> new Asteroid(-o, random.nextDouble() * h), // left
-            (w, h, o) -> new Asteroid(w + o, random.nextDouble() * h)  // right
+            (width, height, offset, px, py) -> fromPosition(random.nextDouble() * width, -offset, px, py), // top
+            (width, height, offset, px, py) -> fromPosition(random.nextDouble() * width,   height + offset,         px, py), // bottom
+            (width, height, offset, px, py) -> fromPosition(-offset, random.nextDouble() * height, px, py), // left
+            (width, height, offset, px, py) -> fromPosition(width + offset, random.nextDouble() * height, px, py)  // right
     };
 
-    private WorldState worldState;
+    private final WorldState worldState;
 
     public AsteroidGenerator(WorldState worldState) {
         this.worldState = worldState;
     }
 
-    public void generate(List<GameObject> objects) {
-        Asteroid asteroid = SIDES[random.nextInt(SIDES.length)].spawn(Constants.WIDTH, Constants.HEIGHT, Constants.ASTEROID_OFFSET);
+    private static Asteroid fromPosition(double x, double y, double playerX, double playerY) {
+        double angle = Math.atan2(playerY - y, playerX - x);
+        return new Asteroid(x, y, Math.cos(angle) * 10, Math.sin(angle) * 10);
+    }
+
+    public void generate() {
+        Asteroid asteroid = SIDES[random.nextInt(SIDES.length)].spawn(Constants.WIDTH, Constants.HEIGHT, Constants.ASTEROID_OFFSET, worldState.getPlayer().getPositionX(), worldState.getPlayer().getPositionY());
         worldState.objects.add(asteroid);
         worldState.updatables.add(asteroid);
     }
