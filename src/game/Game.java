@@ -13,7 +13,5 @@ public class Game extends JFrame {
         this.pack(); // Sizes the window to fit the preferred size of its components
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-
-        panel.startGame();
     }
 }
