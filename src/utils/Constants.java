@@ -17,4 +17,6 @@ public final class Constants {
     public static final int SPAWN_DELAY = 60;
     public static final double ASTEROID_SPEED = 3;
     public static final double MAX_PLAYER_SPEED = 5;
+    public static final double PLAYER_ACCELERATION = 0.2;
+    public static final double ROTATION_SPEED = 0.06;
 }

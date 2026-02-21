@@ -33,4 +33,10 @@ public class InputHandler implements KeyListener {
         Consumer<Boolean> action = keyMap.get(e.getKeyCode());
         if (action != null) action.accept(false);
     }
+
+    public boolean isUpPressed() { return upPressed; }
+    public boolean isDownPressed() { return downPressed; }
+    public boolean isLeftPressed() { return leftPressed; }
+    public boolean isRightPressed() { return rightPressed; }
+    public boolean isShootPressed() { return shootPressed; }
 }

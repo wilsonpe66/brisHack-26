@@ -7,8 +7,8 @@ public class WorldState {
     private final Player player;
     private final AsteroidGenerator generator;
 
-    public WorldState() {
-        player = new Player((double) Constants.MIDDLEX, (double) Constants.MIDDLEY);
+    public WorldState(InputHandler inputHandler) {
+        player = new Player((double) Constants.MIDDLEX, (double) Constants.MIDDLEY, inputHandler);
         objects = new ArrayList<>();
         objects.add(player);
         updatables = new ArrayList<>();

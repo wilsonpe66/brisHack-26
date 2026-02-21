@@ -2,9 +2,11 @@ import java.awt.*;
 
 public class Player extends GameObject{
     private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/spaceship.png");
+    private final InputHandler inputHandler;
 
     // CONSTRUCTOR:
-    public Player(double x, double y) {
+    public Player(double x, double y, InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
         setPosition(x, y);
         setVelocity(0, 0);
         setRotationAngle(-Math.PI / 2); // straight up in radians
@@ -15,6 +17,27 @@ public class Player extends GameObject{
 
     @Override
     public void update() {
+        // respond to input: thrust (W/Up) and rotation (A/D)
+        if (inputHandler.isUpPressed()) {
+            double ax = Math.cos(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
+            double ay = Math.sin(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
+            double vx = getVelocityX() + ax;
+            double vy = getVelocityY() + ay;
+            double speed = Math.sqrt(vx * vx + vy * vy);
+            if (speed > Constants.MAX_PLAYER_SPEED) {
+                double scale = Constants.MAX_PLAYER_SPEED / speed;
+                vx *= scale;
+                vy *= scale;
+            }
+            setVelocity(vx, vy);
+        }
+        if (inputHandler.isLeftPressed()) {
+            setRotationAngle(getRotationAngle() - Constants.ROTATION_SPEED);
+        }
+        if (inputHandler.isRightPressed()) {
+            setRotationAngle(getRotationAngle() + Constants.ROTATION_SPEED);
+        }
+
         // update position according to velocity:
         setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
 

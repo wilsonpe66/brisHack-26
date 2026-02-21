@@ -19,7 +19,7 @@ public class GamePanel extends JPanel implements ActionListener {
         setFocusable(true);
         addKeyListener(inputHandler);
 
-        worldState = new WorldState();
+        worldState = new WorldState(inputHandler);
 
         gameTimer = new Timer(Constants.FRAME_DELAY, this);
         gameTimer.start();
