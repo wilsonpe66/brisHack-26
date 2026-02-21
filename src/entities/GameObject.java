@@ -1,11 +1,12 @@
 public abstract class GameObject {
-    double velocityX;
-    double velocityY;
-    double rotationAngle;
-    double positionX;
-    double positionY;
+    protected double velocityX;
+    protected double velocityY;
+    protected double rotationAngle;
+    protected double positionX;
+    protected double positionY;
 
-    boolean isAlive;
+    protected int health;
+    protected boolean isAlive;
 
     // GETTERS:
     public double getVelocityX() {
@@ -26,6 +27,10 @@ public abstract class GameObject {
 
     public double getPositionY() {
         return this.positionY;
+    }
+
+    public int getHealth() {
+        return this.health;
     }
 
     public boolean getIsAlive() {
@@ -51,6 +56,10 @@ public abstract class GameObject {
 
     public void setPositionY(double positionY) {
         this.positionY = positionY;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
     }
 
     public void setAlive(boolean alive) {
