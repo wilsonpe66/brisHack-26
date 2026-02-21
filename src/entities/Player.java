@@ -13,6 +13,7 @@ public class Player extends GameObject{
         setRadius(20);
         setHealth(100);
         setAlive(true);
+        setScale(0.5); // make player sprite smaller
     }
 
     @Override

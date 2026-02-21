@@ -10,6 +10,7 @@ public abstract class GameObject implements Updatable {
 
     private int health;
     private boolean isAlive;
+    private double scale = 1.0;
 
     private static Image sprite;
 
@@ -48,6 +49,10 @@ public abstract class GameObject implements Updatable {
         return sprite;
     }
 
+    public double getScale() {
+        return scale;
+    }
+
     // SETTERS:
     public void setVelocityX(double velocityX) {
         this.velocityX = velocityX;
@@ -77,6 +82,10 @@ public abstract class GameObject implements Updatable {
 
     public void setAlive(boolean alive) {
         this.isAlive = alive;
+    }
+
+    public void setScale(double scale) {
+        this.scale = scale;
     }
 
     // SET X and Y TOGETHER:
