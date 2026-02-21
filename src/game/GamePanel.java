@@ -2,19 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.ArrayList;
-
 
 public class GamePanel extends JPanel implements ActionListener {
     private final Timer gameTimer;
 
     private final InputHandler inputHandler;
 
-    // deal with in world state
-    private Player player;
-    private List<Asteroid> asteroids;
-    private List<Bullet> bullets;
+    WorldState worldState;
 
     public GamePanel() {
         inputHandler = new InputHandler();
@@ -24,23 +18,16 @@ public class GamePanel extends JPanel implements ActionListener {
         setFocusable(true);
         addKeyListener(inputHandler);
 
-        // create world state
-        initGame();
+        worldState = new WorldState();
 
         gameTimer = new Timer(Constants.FRAME_DELAY, this);
         gameTimer.start();
     }
 
-    private void initGame() {
-        player = new Player((double) WIDTH / 2, (double) HEIGHT / 2);
-        asteroids = new ArrayList<>();
-        bullets = new ArrayList<>();
-    }
-
     // called every frame
     @Override
     public void actionPerformed(ActionEvent e) {
-        WorldState.update();
+        worldState.updateState();
         repaint();
     }
 
@@ -49,7 +36,7 @@ public class GamePanel extends JPanel implements ActionListener {
         super.paintComponent(g);
 
         // iterate using world state
-        for (GameObject object : WorldState.Objects) {
+        for (GameObject object : worldState.objects) {
             g.drawImage(object.sprite, object.getPositionX(), object.getPositionY(), null);
         }
 
