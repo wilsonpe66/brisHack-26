@@ -1,4 +1,4 @@
-public abstract class GameObject {
+public abstract class GameObject implements Updatable {
     protected double velocityX;
     protected double velocityY;
     protected double rotationAngle;
@@ -77,6 +77,5 @@ public abstract class GameObject {
         this.velocityY = vy;
     }
 
-    // NEEDS TO BE IMPLEMENTED BY EACH SUBCLASS:
-    public abstract void update();
+
 }

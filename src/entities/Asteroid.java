@@ -10,7 +10,7 @@ public class Asteroid extends GameObject{
 
 
     @Override
-    public void update() {
+    public void update(double timeUnit) {
         // NEED TO IMPLEMENT
     }
 }

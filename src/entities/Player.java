@@ -8,9 +8,9 @@ public class Player extends GameObject{
         setAlive(true);
     }
 
-    
+
     @Override
-    public void update() {
-        // NEED TO IMPLEMENT
+    public void update(double timeUnit) {
+
     }
 }
