@@ -37,11 +37,11 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // iterate using world state
         for (GameObject object : worldState.objects) {
-            g.drawImage(object.sprite, object.getPositionX(), object.getPositionY(), null);
+            g.drawImage(object.getSprite(), (int)Math.round(object.getPositionX()),  (int)Math.round(object.getPositionY()), null);
         }
 
         // draw hud
     }
 
-    private void draw()
+    private void draw() {}
 }
