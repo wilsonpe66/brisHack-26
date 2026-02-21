@@ -77,5 +77,12 @@ public abstract class GameObject implements Updatable {
         this.velocityY = vy;
     }
 
+    // COLLISIONS - double dispatch:
 
+    // entry point - first dispatch
+    public abstract void collide(GameObject other);
+    // overloading (default responses) - not abstract as some combinations don't need to exist
+    public void collideWith(Player player) {}
+    public void collideWith(Asteroid asteroid) {}
+    public void collideWith(Bullet bullet) {}
 }
