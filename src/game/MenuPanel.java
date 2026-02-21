@@ -11,9 +11,14 @@ public class MenuPanel extends JPanel {
         JButton playButton = new JButton("PLAY GAME");
         playButton.setPreferredSize(new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT));
 
+        JButton quitButton = new JButton("QUIT");
+        quitButton.setPreferredSize(new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT));
         // When clicked, tell the Game class to swap screens
         playButton.addActionListener(e -> game.showGame());
+        quitButton.addActionListener(e -> game.dispose());
 
+        
         add(playButton);
+        add(quitButton);
     }
 }
