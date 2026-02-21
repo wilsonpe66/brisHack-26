@@ -16,9 +16,9 @@ public class WorldState {
         generator = new AsteroidGenerator(this);
     }
 
-    private void handleSpawning(double time) {
-        if (time % Constants.FPS == 0) {
-            generator.generate(this);
+    private void handleSpawning() {
+        if (System.currentTimeMillis() % Constants.SPAWN_DELAY == 0) {
+            generator.generate();
         }
     }
 
@@ -49,11 +49,11 @@ public class WorldState {
     }
 
     private void removeDeadObjects() {
-        objects.removeIf(obj -> !obj.isAlive);
+        objects.removeIf(obj -> !obj.getIsAlive());
     }
 
-    public void updateState(double time) {
-        handleSpawning(time);
+    public void updateState() {
+        handleSpawning();
         updateAll();
         handleCollisions();
         removeDeadObjects();
