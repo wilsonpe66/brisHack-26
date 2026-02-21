@@ -1,4 +1,7 @@
+import java.awt.*;
+
 public class Bullet extends GameObject {
+    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/missile.png");
 
     // CONSTRUCTOR:
     public Bullet(double x, double y) {
@@ -8,7 +11,6 @@ public class Bullet extends GameObject {
         setHealth(1);
         setAlive(true);
     }
-
 
     @Override
     public void update() {
@@ -24,7 +26,6 @@ public class Bullet extends GameObject {
             setAlive(false);
         }
     }
-
 
     @Override
     public void collide(GameObject other) {

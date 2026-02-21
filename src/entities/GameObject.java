@@ -1,43 +1,51 @@
-public abstract class GameObject implements Updatable {
-    protected double velocityX;
-    protected double velocityY;
-    protected double rotationAngle;
-    protected double positionX;
-    protected double positionY;
-    protected double radius;
+import java.awt.*;
 
-    protected int health;
-    protected boolean isAlive;
+public abstract class GameObject implements Updatable {
+    private double velocityX;
+    private double velocityY;
+    private double rotationAngle;
+    private double positionX;
+    private double positionY;
+    private double radius;
+
+    private int health;
+    private boolean isAlive;
+
+    private Image sprite;
 
     // GETTERS:
     public double getVelocityX() {
-        return this.velocityX;
+        return velocityX;
     }
 
     public double getVelocityY() {
-        return this.velocityY;
+        return velocityY;
     }
 
     public double getRotationAngle() {
-        return this.rotationAngle;
+        return rotationAngle;
     }
 
     public double getPositionX() {
-        return this.positionX;
+        return positionX;
     }
 
     public double getPositionY() {
-        return this.positionY;
+        return positionY;
     }
 
     public double getRadius() { return this.radius; }
 
     public int getHealth() {
-        return this.health;
+        return health;
     }
 
     public boolean getIsAlive() {
-        return this.isAlive;
+        return isAlive;
+    }
+
+    public Image getSprite() {
+        return sprite;
     }
 
     // SETTERS:

@@ -1,4 +1,7 @@
+import java.awt.*;
+
 public class Player extends GameObject{
+    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/spaceship.png");
 
     // CONSTRUCTOR:
     public Player(double x, double y) {
@@ -37,7 +40,6 @@ public class Player extends GameObject{
 
     }
 
-
     @Override
     public void collide(GameObject other) {
         other.collideWith(this);
@@ -57,5 +59,4 @@ public class Player extends GameObject{
     public void collideWith(Bullet bullet) {
         throw new RuntimeException("PLAYER HIT BULLET?!?!?");
     }
-
 }

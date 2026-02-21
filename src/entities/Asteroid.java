@@ -1,4 +1,7 @@
+import java.awt.*;
+
 public class Asteroid extends GameObject{
+    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/asteroid1.png");
 
     // CONSTRUCTOR:
     public Asteroid(double x, double y, double velocityX, double velocityY) {
@@ -8,7 +11,6 @@ public class Asteroid extends GameObject{
         setHealth(1);
         setAlive(true);
     }
-
 
     @Override
     public void update() {
@@ -31,7 +33,6 @@ public class Asteroid extends GameObject{
             setAlive(false);
         }
     }
-
 
     @Override
     public void collide(GameObject other) {
