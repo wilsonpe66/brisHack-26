@@ -59,9 +59,4 @@ public class Asteroid extends GameObject{
     public void collideWith(Bullet bullet) {
         setHealth(getHealth() - 1 );
     }
-
-    @Override
-    public Image getSprite() {
-        return sprite;
-    }
 }
