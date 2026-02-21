@@ -13,7 +13,7 @@ public class WorldState {
         objects.add(player);
         updatables = new ArrayList<Updatable>();
         updatables.add(player);
-        generator = new AsteroidGenerator();
+        generator = new AsteroidGenerator(this);
     }
 
     private void handleSpawning(double time) {
