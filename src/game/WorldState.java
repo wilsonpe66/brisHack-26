@@ -8,7 +8,7 @@ public class WorldState {
     private final AsteroidGenerator generator;
 
     public WorldState() {
-        player = new Player((double) Constants.WIDTH/2, (double) Constants.HEIGHT/2);
+        player = new Player((double) Constants.MIDDLEX, (double) Constants.MIDDLEY);
         objects = new ArrayList<>();
         objects.add(player);
         updatables = new ArrayList<>();
