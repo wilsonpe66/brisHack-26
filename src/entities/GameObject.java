@@ -11,7 +11,7 @@ public abstract class GameObject implements Updatable {
     private int health;
     private boolean isAlive;
 
-    private Image sprite;
+    private static Image sprite;
 
     // GETTERS:
     public double getVelocityX() {

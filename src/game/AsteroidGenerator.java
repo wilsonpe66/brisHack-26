@@ -8,6 +8,7 @@ public class AsteroidGenerator {
         Asteroid spawn(double width, double height, double offset, double playerX, double playerY);
     }
 
+    // spawns an asteroid at an offset from one of the sides of the screen, with velocity towards the player position
     private static final SideSpawner[] SIDES = {
             (width, height, offset, px, py) -> fromPosition(random.nextDouble() * width, -offset, px, py), // top
             (width, height, offset, px, py) -> fromPosition(random.nextDouble() * width,   height + offset,         px, py), // bottom
@@ -26,6 +27,7 @@ public class AsteroidGenerator {
         return new Asteroid(x, y, Math.cos(angle) * Constants.ASTEROID_SPEED, Math.sin(angle) * Constants.ASTEROID_SPEED);
     }
 
+    // spawn an asteroid at a random side of the screen
     public void generate() {
         Asteroid asteroid = SIDES[random.nextInt(SIDES.length)].spawn(Constants.WIDTH, Constants.HEIGHT, Constants.ASTEROID_OFFSET, worldState.getPlayer().getPositionX(), worldState.getPlayer().getPositionY());
         worldState.objects.add(asteroid);
