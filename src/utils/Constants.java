@@ -20,4 +20,5 @@ public final class Constants {
     public static final double PLAYER_ACCELERATION = 0.2;
     public static final double ROTATION_SPEED = 0.06;
     public static final double PLAYER_VELOCITY_DECAY = 0.98;
+    public static final int SHOOT_COOLDOWN_FRAMES = 15;
 }

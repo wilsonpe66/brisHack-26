@@ -6,14 +6,30 @@ public class WorldState {
     public List<GameObject> objects;
     private final Player player;
     private final AsteroidGenerator generator;
+    private final InputHandler inputHandler;
+    private int shootCooldown;
 
     public WorldState(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
         player = new Player((double) Constants.MIDDLEX, (double) Constants.MIDDLEY, inputHandler);
         objects = new ArrayList<>();
         objects.add(player);
         updatables = new ArrayList<>();
         updatables.add(player);
         generator = new AsteroidGenerator(this);
+    }
+
+    private void handleShooting() {
+        if (shootCooldown > 0) {
+            shootCooldown--;
+            return;
+        }
+        if (inputHandler.isShootPressed() && player.getIsAlive()) {
+            Bullet bullet = player.shoot();
+            objects.add(bullet);
+            updatables.add(bullet);
+            shootCooldown = Constants.SHOOT_COOLDOWN_FRAMES;
+        }
     }
 
     private void handleSpawning() {
@@ -50,9 +66,11 @@ public class WorldState {
 
     private void removeDeadObjects() {
         objects.removeIf(obj -> !obj.getIsAlive());
+        updatables.removeIf(u -> u instanceof GameObject && !((GameObject) u).getIsAlive());
     }
 
     public void updateState() {
+        handleShooting();
         handleSpawning();
         updateAll();
         handleCollisions();
