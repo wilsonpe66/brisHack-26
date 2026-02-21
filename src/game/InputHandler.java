@@ -1,0 +1,36 @@
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
+public class InputHandler implements KeyListener {
+    private boolean leftPressed, rightPressed, upPressed, downPressed, shootPressed;
+
+    private final Map<Integer, Consumer<Boolean>> keyMap = new HashMap<>() {{
+        put(KeyEvent.VK_W, v -> upPressed = v);
+        put(KeyEvent.VK_UP,    v -> upPressed = v);
+        put(KeyEvent.VK_S,     v -> downPressed = v);
+        put(KeyEvent.VK_DOWN,  v -> downPressed = v);
+        put(KeyEvent.VK_A,     v -> leftPressed = v);
+        put(KeyEvent.VK_LEFT,  v -> leftPressed = v);
+        put(KeyEvent.VK_D,     v -> rightPressed = v);
+        put(KeyEvent.VK_RIGHT, v -> rightPressed = v);
+        put(KeyEvent.VK_SPACE, v -> shootPressed = v);
+    }};
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        Consumer<Boolean> action = keyMap.get(e.getKeyCode());
+        if (action != null) action.accept(true);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        Consumer<Boolean> action = keyMap.get(e.getKeyCode());
+        if (action != null) action.accept(false);
+    }
+}
