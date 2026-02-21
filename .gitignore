@@ -1,0 +1,9 @@
+# IntelliJ IDEA
+.idea/
+out/
+*.iml
+
+# Ignore Windows metadata files
+*:Zone.Identifier
+*.DS_Store
+Thumbs.db
