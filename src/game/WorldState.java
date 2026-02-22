@@ -75,10 +75,11 @@ public class WorldState {
                 obj.setAlive(false);
             }
         }
-        int deadAsteroids = (int) objects.stream()
-                .filter(obj -> !obj.getIsAlive() && obj instanceof Asteroid)
+        // only award score for asteroids shot by the player, not those that flew off or were destroyed by another asteroid
+        int shotAsteroids = (int) objects.stream()
+                .filter(obj -> !obj.getIsAlive() && obj instanceof Asteroid && ((Asteroid) obj).wasKilledByBullet())
                 .count();
-        player.setScore(player.getScore() + deadAsteroids);
+        player.setScore(player.getScore() + shotAsteroids);
 
         objects.removeIf(obj -> !obj.getIsAlive());
     }

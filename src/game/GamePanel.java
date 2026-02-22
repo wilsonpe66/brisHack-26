@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 
 public class GamePanel extends JPanel implements ActionListener {
+    private static final Image SPACE_BACKGROUND = Toolkit.getDefaultToolkit().getImage("assets/images/spacebackground.png");
     private final Timer gameTimer;
     private final InputHandler inputHandler;
     private final Game game;
@@ -58,6 +59,9 @@ public class GamePanel extends JPanel implements ActionListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+        if (SPACE_BACKGROUND != null) {
+            g.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
+        }
         drawObjects(g);
         drawHud(g);
     }

@@ -10,6 +10,8 @@ public class Asteroid extends GameObject{
         Toolkit.getDefaultToolkit().getImage("assets/images/asteroid4.png")
     };
     private final Image sprite;
+    /** True only when this asteroid was destroyed by a bullet (used for scoring). */
+    private boolean killedByBullet;
 
     // CONSTRUCTOR:
     public Asteroid(double x, double y, double velocityX, double velocityY) {
@@ -33,14 +35,16 @@ public class Asteroid extends GameObject{
         // update position according to velocity:
         setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
 
-        // kill asteroid if it goes too far off screen (with buffer for spawning)
+        // remove asteroid if it goes too far off screen (with buffer for spawning)
+        // only setAlive(false) so we don't award score for flying off - score is only for shot asteroids
         double buffer = 100;
         if (getPositionX() < -buffer || getPositionX() > Constants.WIDTH + buffer) {
-            this.setHealth(0);
+            setAlive(false);
+            return;
         }
-
         if (getPositionY() < -buffer || getPositionY() > Constants.HEIGHT + buffer) {
-            this.setHealth(0);
+            setAlive(false);
+            return;
         }
 
         if (getHealth() <= 0) {
@@ -66,6 +70,11 @@ public class Asteroid extends GameObject{
 
     @Override
     public void collideWith(Bullet bullet) {
-        setHealth(getHealth() - 1 );
+        setHealth(getHealth() - 1);
+        killedByBullet = true;
+    }
+
+    public boolean wasKilledByBullet() {
+        return killedByBullet;
     }
 }
