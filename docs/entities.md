@@ -10,7 +10,9 @@ Updatable (interface)
     └── GameObject (abstract class)
             ├── Player
             ├── Asteroid
-            └── Bullet
+            ├── Bullet
+            ├── Alien
+            └── AlienBullet
 
 HealthBar (implements Updatable — not a GameObject)
 ```
@@ -39,7 +41,7 @@ The shared base class for everything that exists in the game world. It holds:
 | `velocityX`, `velocityY` | `double` | Movement per frame (pixels/frame) |
 | `rotationAngle` | `double` | Facing direction in **radians** |
 | `radius` | `double` | Collision circle radius |
-| `health` | `int` | Hit points (player = 100, asteroid/bullet = 1) |
+| `health` | `int` | Hit points (player/alien = 100, asteroid/bullet = 1) |
 | `isAlive` | `boolean` | `false` → removed at end of frame |
 | `scale` | `double` | Sprite draw scale (default 1.0) |
 
@@ -47,7 +49,7 @@ The shared base class for everything that exists in the game world. It holds:
 
 - `getSprite()` — abstract; each subclass returns its own image.
 - `collide(GameObject other)` — abstract; entry point for double dispatch.
-- `collideWith(Player)`, `collideWith(Asteroid)`, `collideWith(Bullet)` — overridable collision response methods (default no-op).
+- `collideWith(Player)`, `collideWith(Asteroid)`, `collideWith(Bullet)`, `collideWith(Alien)`, `collideWith(AlienBullet)` — overridable collision response methods (default no-op).
 
 ---
 
@@ -77,7 +79,7 @@ The player-controlled spaceship.
 
 ### Death
 
-The player dies (health set to 0) instantly upon colliding with any asteroid.
+The player dies (health set to 0) upon colliding with any asteroid, alien, or alien bullet.
 
 ---
 
@@ -99,6 +101,7 @@ A randomly-spawned obstacle that drifts across the screen.
 - Despawns when it moves more than 100 px off-screen (no score awarded for this).
 - Destroyed by a single bullet hit (+1 score).
 - Two asteroids that collide destroy each other (no score).
+- Alien bullets that hit an asteroid destroy the alien bullet but leave the asteroid unharmed.
 
 ### `killedByBullet` Flag
 
@@ -120,7 +123,63 @@ A projectile fired by the player.
 
 - Travels in a straight line, despawning when it leaves the screen.
 - Destroyed on contact with an asteroid.
-- Has an `owner` reference (the `Player` who fired it), currently unused beyond construction.
+- Hitting an alien destroys both the bullet and the alien, awarding `ALIEN_KILL_SCORE` (5) points to the player.
+- Player bullets and alien bullets destroy each other on contact.
+- Has an `owner` reference (the `Player` who fired it), used for awarding alien kill score.
+
+---
+
+## `Alien`
+
+An enemy spaceship that chases and shoots at the player.
+
+| Property | Value |
+|----------|-------|
+| Sprite | `assets/images/shipGreen_manned.png` |
+| Radius | 20 px |
+| Health | 100 |
+| Scale | 0.5 |
+
+### Spawning
+
+- Spawned by `AlienGenerator` from a random screen edge, similar to asteroids.
+- First alien appears after `ALIEN_SPAWN_INITIAL_DELAY` (5 s), then another every `ALIEN_SPAWN_DELAY` (15 s).
+
+### Behaviour
+
+- **Tracking**: periodically re-aims its velocity towards the player's position every `ALIEN_TARGET_UPDATE_INTERVAL` (45) frames.
+- Moves at `ALIEN_SPEED` (1.0 px/frame) — slower than asteroids but actively pursues the player.
+- **Screen wrapping**: like the player, aliens wrap around screen edges.
+- **Shooting**: fires `AlienBullet`s aimed at the player. The shoot cooldown is `ALIEN_SHOOT_COOLDOWN_FRAMES` (150 frames ≈ 2.5 s). After spawning, the alien waits `ALIEN_SPAWN_NO_SHOOT_FRAMES` (120 frames ≈ 2 s) before firing its first shot.
+
+### Collision Response
+
+- Destroyed by a single player bullet (+5 score).
+- Destroyed on contact with the player (player also destroys the alien on collision, but the player survives).
+- Destroyed on contact with an asteroid.
+- Immune to its own alien bullets (friendly fire is off).
+
+---
+
+## `AlienBullet`
+
+A projectile fired by an `Alien`, aimed at the player.
+
+| Property | Value |
+|----------|-------|
+| Sprite | `assets/images/missile.png` (same as player bullet) |
+| Radius | 5 px |
+| Health | 1 |
+| Speed | `ALIEN_BULLET_SPEED` (4 px/frame) |
+
+### Behaviour
+
+- Travels in a straight line, despawning when it leaves the screen.
+- **Kills the player** on contact (player health set to 0).
+- Destroyed on contact with a player bullet (both destroyed).
+- Destroyed on contact with an asteroid (asteroid unharmed).
+- No effect on other aliens (friendly fire off).
+- Has an `alienOwner` reference to the `Alien` that fired it.
 
 ---
 
@@ -137,14 +196,16 @@ Collision response uses the **Visitor / double-dispatch** pattern to let each pa
 1. `WorldState.handleCollisions()` detects overlap between objects `a` and `b`.
 2. It calls `a.collide(b)` and `b.collide(a)`.
 3. Each `collide()` implementation calls `other.collideWith(this)`, passing its concrete type.
-4. The receiving object's `collideWith(Player)` / `collideWith(Asteroid)` / `collideWith(Bullet)` override determines the outcome.
+4. The receiving object's `collideWith(Player)` / `collideWith(Asteroid)` / `collideWith(Bullet)` / `collideWith(Alien)` / `collideWith(AlienBullet)` override determines the outcome.
 
 ### Collision Matrix
 
-| A ↓ \ B → | Player | Asteroid | Bullet |
-|------------|--------|----------|--------|
-| **Player** | Error (impossible) | Player dies | Error (impossible) |
-| **Asteroid** | (no-op on asteroid side) | Both destroyed | Asteroid takes 1 damage |
-| **Bullet** | Error | Bullet destroyed | Error |
+| A ↓ \ B → | Player | Asteroid | Bullet | Alien | AlienBullet |
+|------------|--------|----------|--------|-------|-------------|
+| **Player** | Error (impossible) | Player dies | Error (impossible) | Alien destroyed | Player dies |
+| **Asteroid** | (no-op) | Both destroyed | Asteroid takes 1 damage | Alien destroyed | AlienBullet destroyed |
+| **Bullet** | Error | Bullet destroyed | Error | Both destroyed (+5 score) | Both destroyed |
+| **Alien** | Alien destroyed | Alien destroyed | Alien destroyed | (no-op) | (no-op, friendly fire off) |
+| **AlienBullet** | Player dies, bullet destroyed | AlienBullet destroyed | Both destroyed | (no-op) | (no-op) |
 
 > "Error" cases throw a `RuntimeException` — they should never happen with the current game rules.

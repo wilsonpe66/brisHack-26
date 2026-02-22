@@ -8,7 +8,7 @@ Welcome to the docs for **(git) Push To Orbit**, a Java Swing Asteroids-style ar
 |-----|----------------|
 | [Architecture Overview](architecture.md) | High-level structure, packages, and how the pieces fit together |
 | [Game Loop & World State](game-loop.md) | Frame-by-frame update cycle, spawning, collisions, and scoring |
-| [Entities](entities.md) | `GameObject`, `Player`, `Asteroid`, `Bullet`, and the `Updatable` interface |
+| [Entities](entities.md) | `GameObject`, `Player`, `Asteroid`, `Bullet`, `Alien`, `AlienBullet`, and the `Updatable` interface |
 | [Screens & UI](screens.md) | Menu, gameplay HUD, and Game Over screens (CardLayout navigation) |
 | [Input & Controls](input.md) | Keyboard handling and control scheme |
 | [Sound](sound.md) | Sound effects and looping music via `SoundManager` |

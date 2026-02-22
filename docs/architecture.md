@@ -5,11 +5,11 @@
 ```
 brisHack-26/
 ├── src/
-│   ├── entities/       # Game objects (Player, Asteroid, Bullet, …)
-│   ├── game/           # Game loop, screens, input, audio
+│   ├── entities/       # Game objects (Player, Asteroid, Bullet, Alien, AlienBullet, …)
+│   ├── game/           # Game loop, screens, input, audio, generators
 │   └── utils/          # Shared constants
 ├── assets/
-│   ├── images/         # Sprites and backgrounds
+│   ├── images/         # Sprites, backgrounds, and logo
 │   └── sounds/         # WAV audio files
 ├── build.sh            # Compile + JAR packaging script
 └── brisHack-26.jar     # Pre-built executable JAR
@@ -32,6 +32,7 @@ Owns the application lifecycle:
 | `GameOverPanel` | End-of-game screen with score / high-score display |
 | `WorldState` | Core simulation — updates entities, detects collisions, manages scoring |
 | `AsteroidGenerator` | Spawns asteroids from random screen edges aimed at the player |
+| `AlienGenerator` | Spawns aliens from random screen edges aimed at the player |
 | `InputHandler` | Translates keyboard events into boolean flags read by `Player` |
 | `SoundManager` | Static utility for one-shot and looping audio playback |
 
@@ -49,7 +50,9 @@ Main  →  Game (JFrame)
               │       │                  │
               │       │                  ├── Player
               │       │                  ├── Asteroids (via AsteroidGenerator)
-              │       │                  └── Bullets
+              │       │                  ├── Aliens (via AlienGenerator)
+              │       │                  ├── Bullets
+              │       │                  └── AlienBullets
               │       │
               │       └── game timer fires actionPerformed() @ 60 FPS
               │

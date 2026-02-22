@@ -33,8 +33,8 @@ There are no external dependencies — the project uses only the Java standard l
 All source files are in three directories:
 
 ```
-src/entities/   → 6 files
-src/game/       → 9 files
+src/entities/   → 8 files
+src/game/       → 10 files
 src/utils/      → 1 file
 ```
 
