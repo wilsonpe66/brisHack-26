@@ -24,7 +24,8 @@ public class AsteroidGenerator {
 
     private static Asteroid fromPosition(double x, double y, double playerX, double playerY) {
         double angle = Math.atan2(playerY - y, playerX - x);
-        return new Asteroid(x, y, Math.cos(angle) * Constants.ASTEROID_SPEED, Math.sin(angle) * Constants.ASTEROID_SPEED);
+        double speed = Constants.ASTEROID_SPEED * (0.7 + random.nextDouble() * 0.6); // 0.7x to 1.3x speed variation
+        return new Asteroid(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 
     // spawn an asteroid at a random side of the screen
