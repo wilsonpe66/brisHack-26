@@ -12,7 +12,6 @@ brisHack-26/
 │   ├── images/         # Sprites and backgrounds
 │   └── sounds/         # WAV audio files
 ├── build.sh            # Compile + JAR packaging script
-├── MANIFEST.MF         # JAR manifest (Main-Class: Main)
 └── brisHack-26.jar     # Pre-built executable JAR
 ```
 

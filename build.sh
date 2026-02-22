@@ -10,5 +10,5 @@ mkdir -p "$OUT"
 echo "Compiling..."
 javac -d "$OUT" $(find "$SRC" -name "*.java")
 echo "Creating JAR..."
-jar cfm "$JAR" MANIFEST.MF -C "$OUT" .
+jar cfe "$JAR" Main -C "$OUT" .
 echo "Done. Run with: java -jar $JAR"

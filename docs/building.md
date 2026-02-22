@@ -16,7 +16,7 @@ This script:
 
 1. **Cleans** the `out/` directory.
 2. **Compiles** all `.java` files from `src/` into `out/`.
-3. **Packages** them into `brisHack-26.jar` using the `MANIFEST.MF` (which sets `Main-Class: Main`).
+3. **Packages** them into `brisHack-26.jar` with the entry point set to `Main` (via `jar cfe`).
 
 ## Run
 
