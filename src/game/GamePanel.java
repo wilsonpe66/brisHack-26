@@ -22,7 +22,14 @@ public class GamePanel extends JPanel implements ActionListener {
         worldState = new WorldState(inputHandler);
 
         gameTimer = new Timer(Constants.FRAME_DELAY, this);
-        gameTimer.start();
+        // Timer started in startGame() when user presses Play
+    }
+
+    /** Start the game loop and asteroid spawning. Called when switching to game from menu. */
+    public void startGame() {
+        if (!gameTimer.isRunning()) {
+            gameTimer.start();
+        }
     }
 
     // called every frame

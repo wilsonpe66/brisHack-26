@@ -3,7 +3,7 @@ import java.awt.*;
 public class Player extends GameObject{
     private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/spaceship.png");
     private final InputHandler inputHandler;
-
+    private int score;
     // CONSTRUCTOR:
     public Player(double x, double y, InputHandler inputHandler) {
         this.inputHandler = inputHandler;
@@ -14,6 +14,7 @@ public class Player extends GameObject{
         setHealth(100);
         setAlive(true);
         setScale(0.5); // make player sprite smaller
+        score = 0;
     }
 
     @Override
@@ -95,6 +96,14 @@ public class Player extends GameObject{
 
     public void rotateBy(double deltaAngle) {
         setRotationAngle(getRotationAngle() + deltaAngle);
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     @Override

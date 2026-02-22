@@ -1,10 +1,19 @@
 import java.awt.*;
+import java.util.Random;
 
 public class Asteroid extends GameObject{
-    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/asteroid1.png");
+    private static final Random random = new Random();
+    private static final Image[] sprites = {
+        Toolkit.getDefaultToolkit().getImage("assets/images/asteroid1.png"),
+        Toolkit.getDefaultToolkit().getImage("assets/images/asteroid2.png"),
+        Toolkit.getDefaultToolkit().getImage("assets/images/asteroid3.png"),
+        Toolkit.getDefaultToolkit().getImage("assets/images/asteroid4.png")
+    };
+    private final Image sprite;
 
     // CONSTRUCTOR:
     public Asteroid(double x, double y, double velocityX, double velocityY) {
+        sprite = sprites[random.nextInt(sprites.length)];
         setPosition(x, y);
         setVelocity(velocityX, velocityY);
         setRotationAngle(Math.random() * Math.PI * 2);
