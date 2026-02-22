@@ -3,6 +3,7 @@ import java.awt.*;
 
 public class GameOverPanel extends JPanel {
     private final JLabel scoreLabel;
+    private final JLabel highScoreLabel;
     private final Game game;
 
     public GameOverPanel(Game game) {
@@ -26,6 +27,12 @@ public class GameOverPanel extends JPanel {
         gbc.gridy = 1;
         add(scoreLabel, gbc);
 
+        highScoreLabel = new JLabel("High Score: 0");
+        highScoreLabel.setFont(new Font("Arial", Font.PLAIN, 22));
+        highScoreLabel.setForeground(new Color(255, 215, 0));
+        gbc.gridy = 2;
+        add(highScoreLabel, gbc);
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         buttonPanel.setOpaque(false);
 
@@ -40,11 +47,12 @@ public class GameOverPanel extends JPanel {
         buttonPanel.add(newGameButton);
         buttonPanel.add(quitButton);
 
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         add(buttonPanel, gbc);
     }
 
-    public void setScore(int score) {
+    public void setScore(int score, int highScore) {
         scoreLabel.setText("Score: " + score);
+        highScoreLabel.setText("High Score: " + highScore);
     }
 }
