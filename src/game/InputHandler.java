@@ -7,6 +7,8 @@ import java.util.function.Consumer;
 public class InputHandler implements KeyListener {
     private boolean leftPressed, rightPressed, upPressed, downPressed, shootPressed;
 
+    // maps keybinds to boolean variables
+    // holding a key sets it to true, releasing sets to false
     private final Map<Integer, Consumer<Boolean>> keyMap = new HashMap<>() {{
         put(KeyEvent.VK_W, v -> upPressed = v);
         put(KeyEvent.VK_UP,    v -> upPressed = v);

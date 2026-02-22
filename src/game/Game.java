@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class Game extends JFrame {
     private final CardLayout cardLayout = new CardLayout();
@@ -27,7 +28,26 @@ public class Game extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
+        registerGlobalKeyBindings();
     }
+
+    /**
+     * Register key bindings on the root pane so they work regardless of
+     * which panel or component currently has focus.
+     */
+    private void registerGlobalKeyBindings() {
+        InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getRootPane().getActionMap();
+
+        inputMap.put(KeyStroke.getKeyStroke("pressed M"), "toggleMute");
+        actionMap.put("toggleMute", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SoundManager.setMuted(!Settings.muted);
+            }
+        });
+    }
+
     public void showGame() {
         cardLayout.show(mainContainer, "GAME");
         SoundManager.stopLooping("menu_music");
