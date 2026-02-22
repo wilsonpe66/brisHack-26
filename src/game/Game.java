@@ -38,6 +38,8 @@ public class Game extends JFrame {
 
     public void showGameOver(int score) {
         gameOverPanel.setScore(score);
+        SoundManager.stopLooping("background");
+        SoundManager.playSound("assets/sounds/win.wav");
         cardLayout.show(mainContainer, "GAME OVER");
     }
 
