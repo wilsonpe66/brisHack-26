@@ -18,7 +18,7 @@ public class Game extends JFrame {
         //adding panel to the center of this JFrame
         this.add(mainContainer);
 
-        this.setTitle("Astroids");
+        this.setTitle("Asteroids");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false); // Prevents layout glitches during gameplay
 

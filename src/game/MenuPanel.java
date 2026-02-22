@@ -11,7 +11,7 @@ public class MenuPanel extends JPanel {
         gbc.gridx = 0;
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        JLabel titleLabel = new JLabel("ASTROIDS");
+        JLabel titleLabel = new JLabel("ASTEROIDS");
         titleLabel.setFont(new Font("Arial", Font.BOLD, 48));
         titleLabel.setForeground(Color.WHITE);
         gbc.gridy = 0;
