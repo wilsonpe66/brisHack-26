@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
-
+#!/bin/bash
+# Compile and build executable JAR for brisHack-26
 set -e
 SRC=src
 OUT=out
