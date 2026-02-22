@@ -1,4 +1,4 @@
-# BrisHack-26
+# (git) Push To Orbit: The Game  (BrisHack-26)
 
 Winning group repo.
 
