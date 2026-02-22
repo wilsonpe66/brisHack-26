@@ -41,8 +41,12 @@ public class WorldState {
     }
 
     private void handleAlienShooting() {
+        // Collect new bullets into a separate list first to avoid ConcurrentModificationException
+        // (we can't add to 'objects' while iterating over it)
         List<AlienBullet> newBullets = new ArrayList<>();
         for (GameObject obj : objects) {
+            // 'instanceof Alien alien' is a Java 16+ pattern match that both checks the type
+            // and creates a typed local variable 'alien' in one step
             if (obj instanceof Alien alien && alien.getIsAlive()) {
                 AlienBullet alienBullet = alien.shoot();
                 if (alienBullet != null) {
@@ -103,12 +107,15 @@ public class WorldState {
                 obj.setAlive(false);
             }
         }
-        // only award score for asteroids shot by the player, not those that flew off or were destroyed by another asteroid
+        // Count asteroids killed by player bullets this frame using a stream filter.
+        // Only asteroids with killedByBullet=true contribute to score —
+        // those that flew off-screen or were destroyed by other asteroids don't count.
         int shotAsteroids = (int) objects.stream()
                 .filter(obj -> !obj.getIsAlive() && obj instanceof Asteroid && ((Asteroid) obj).wasKilledByBullet())
                 .count();
         player.setScore(player.getScore() + shotAsteroids);
 
+        // removeIf modifies the list in-place, removing all dead objects
         objects.removeIf(obj -> !obj.getIsAlive());
     }
 

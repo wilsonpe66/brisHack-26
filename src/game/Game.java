@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class Game extends JFrame {
+    // CardLayout stacks panels on top of each other — only one is visible at a time.
+    // Calling cardLayout.show(container, "name") switches which panel is displayed.
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel mainContainer = new JPanel(cardLayout);
     private final GamePanel gamepanel;
@@ -14,17 +16,19 @@ public class Game extends JFrame {
         gamepanel = new GamePanel(this);
         gameOverPanel = new GameOverPanel(this);
 
+        // Each panel is registered under a string key used by cardLayout.show()
         mainContainer.add(menupanel, "MENU");
         mainContainer.add(gamepanel, "GAME");
         mainContainer.add(gameOverPanel, "GAME OVER");
-        //adding panel to the center of this JFrame
         this.add(mainContainer);
 
         this.setTitle("Asteroids");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false); // Prevents layout glitches during gameplay
 
-        this.pack(); // Sizes the window to fit the preferred size of its components
+        // pack() sizes the JFrame to fit the preferred sizes of its child components
+        this.pack();
+        // setLocationRelativeTo(null) centres the window on screen
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
@@ -52,8 +56,10 @@ public class Game extends JFrame {
         cardLayout.show(mainContainer, "GAME");
         SoundManager.stopLooping("menu_music");
         SoundManager.playLooping("background", "assets/sounds/background.wav");
-        gamepanel.startGame(); // start timer and asteroid spawning only when playing
-        // Focus is important for KeyListeners to work
+        gamepanel.startGame();
+        // requestFocusInWindow() is required for KeyListener to receive keyboard events.
+        // Without focus, key presses go to another component and the player can't move.
+        // getComponent(1) retrieves the GamePanel (index 1 in the CardLayout).
         mainContainer.getComponent(1).requestFocusInWindow();
     }
 

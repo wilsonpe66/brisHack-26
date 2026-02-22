@@ -8,16 +8,16 @@ public class SoundManager {
     /** Looping clips by id – can be stopped later with stopLooping(id). */
     private static final Map<String, Clip> loopingClips = new HashMap<>();
 
-    /** File paths for each active loop id, so loops can be restarted after unmute. */
-    private static final Map<String, String> loopPaths = new HashMap<>();
-
-    /** Play a one-shot sound (e.g. shoot). */
+    /** Play a one-shot sound (e.g. shoot). Creates a new Clip each time so
+     *  overlapping sounds (e.g. rapid shooting) play simultaneously. */
     public static void playSound(String path) {
         if (Settings.muted) {
             return;
         }
         try {
+            // AudioInputStream reads WAV data from a file
             AudioInputStream audio = AudioSystem.getAudioInputStream(new File(path));
+            // Clip is a pre-loaded audio buffer that can be started/stopped
             Clip clip = AudioSystem.getClip();
             clip.open(audio);
             clip.start();
@@ -47,6 +47,7 @@ public class SoundManager {
             AudioInputStream audio = AudioSystem.getAudioInputStream(new File(path));
             clip = AudioSystem.getClip();
             clip.open(audio);
+            // LOOP_CONTINUOUSLY repeats the clip until explicitly stopped
             clip.loop(Clip.LOOP_CONTINUOUSLY);
             loopingClips.put(id, clip);
         } catch (Exception e) {

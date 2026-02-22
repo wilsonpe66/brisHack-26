@@ -27,6 +27,8 @@ public class Player extends GameObject{
             double vx = getVelocityX() + ax;
             double vy = getVelocityY() + ay;
             double speed = Math.sqrt(vx * vx + vy * vy);
+            // Cap speed: scale the velocity vector down to MAX_PLAYER_SPEED
+            // while preserving direction
             if (speed > Constants.MAX_PLAYER_SPEED) {
                 double scale = Constants.MAX_PLAYER_SPEED / speed;
                 vx *= scale;
@@ -71,7 +73,7 @@ public class Player extends GameObject{
             setAlive(false);
         }
 
-        // keep angle in [0, 2π) to avoid unbounded growth
+        // Normalise angle to [0, 2π) to prevent unbounded growth from continuous rotation
         double normalized = getRotationAngle() % (Math.PI * 2);
         if (normalized < 0) {
             normalized += Math.PI * 2;

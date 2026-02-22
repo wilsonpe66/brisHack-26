@@ -7,8 +7,9 @@ import java.util.function.Consumer;
 public class InputHandler implements KeyListener {
     private boolean leftPressed, rightPressed, upPressed, downPressed, shootPressed;
 
-    // maps keybinds to boolean variables
-    // holding a key sets it to true, releasing sets to false
+    // Double-brace initializer: creates an anonymous HashMap subclass and immediately
+    // populates it. Each entry maps a key code to a lambda that sets the corresponding flag.
+    // Consumer<Boolean> accepts true (pressed) or false (released).
     private final Map<Integer, Consumer<Boolean>> keyMap = new HashMap<>() {{
         put(KeyEvent.VK_W, v -> upPressed = v);
         put(KeyEvent.VK_UP,    v -> upPressed = v);
@@ -21,6 +22,8 @@ public class InputHandler implements KeyListener {
         put(KeyEvent.VK_SPACE, v -> shootPressed = v);
     }};
 
+    // keyTyped is for character input (e.g. typing text). Not used here — we only care about
+    // key press/release for continuous movement, which is handled by keyPressed/keyReleased.
     @Override
     public void keyTyped(KeyEvent e) {}
 

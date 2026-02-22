@@ -97,12 +97,16 @@ public abstract class GameObject implements Updatable {
         this.velocityY = vy;
     }
 
-    // COLLISIONS - double dispatch:
+    // COLLISIONS - double dispatch pattern:
+    // When two objects collide, we call a.collide(b) which internally calls b.collideWith(a).
+    // This resolves both runtime types without instanceof checks, because each subclass
+    // passes 'this' (its concrete type) to the other object's overloaded collideWith().
 
-    // entry point - first dispatch
+    // entry point - first dispatch: each subclass calls other.collideWith(this)
     public abstract void collide(GameObject other);
 
-    // overloading (default responses) - not abstract as some combinations don't need to exist
+    // Second dispatch - overloaded methods for each concrete type.
+    // Defaults are no-ops; subclasses override only the pairs that need a response.
     public void collideWith(Player player) {}
     public void collideWith(Asteroid asteroid) {}
     public void collideWith(Bullet bullet) {}

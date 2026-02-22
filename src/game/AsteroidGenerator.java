@@ -3,12 +3,15 @@ import java.util.Random;
 public class AsteroidGenerator {
     private static final Random random = new Random();
 
+    // @FunctionalInterface marks an interface with exactly one abstract method,
+    // allowing it to be used as a lambda target.
     @FunctionalInterface
     interface SideSpawner {
         Asteroid spawn(double width, double height, double offset, double playerX, double playerY);
     }
 
-    // spawns an asteroid at an offset from one of the sides of the screen, with velocity towards the player position
+    // Array of lambdas, one per screen edge (top, bottom, left, right).
+    // Each spawns an asteroid just outside the visible area on that edge.
     private static final SideSpawner[] SIDES = {
             (width, height, offset, px, py) -> fromPosition(random.nextDouble() * width, -offset, px, py), // top
             (width, height, offset, px, py) -> fromPosition(random.nextDouble() * width,   height + offset,         px, py), // bottom
@@ -23,8 +26,10 @@ public class AsteroidGenerator {
     }
 
     private static Asteroid fromPosition(double x, double y, double playerX, double playerY) {
+        // atan2(dy, dx) returns the angle in radians from spawn point to player position
         double angle = Math.atan2(playerY - y, playerX - x);
-        double speed = Constants.ASTEROID_SPEED * (0.7 + random.nextDouble() * 0.6); // 0.7x to 1.3x speed variation
+        // Random speed multiplier: 0.7 + [0.0, 0.6) = [0.7x, 1.3x) base speed for variety
+        double speed = Constants.ASTEROID_SPEED * (0.7 + random.nextDouble() * 0.6);
         return new Asteroid(x, y, Math.cos(angle) * speed, Math.sin(angle) * speed);
     }
 

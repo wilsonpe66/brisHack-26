@@ -17,11 +17,14 @@ public class GamePanel extends JPanel implements ActionListener {
 
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         setBackground(Color.BLACK);
+        // setFocusable(true) allows this panel to receive keyboard events via KeyListener
         setFocusable(true);
         addKeyListener(inputHandler);
 
         worldState = new WorldState(inputHandler);
 
+        // Swing Timer fires actionPerformed() every FRAME_DELAY ms (~16 ms = 60 FPS).
+        // This is the game loop driver — each tick updates state and repaints.
         gameTimer = new Timer(Constants.FRAME_DELAY, this);
         // Timer started in startGame() when user presses Play
 
@@ -58,6 +61,8 @@ public class GamePanel extends JPanel implements ActionListener {
         repaint();
     }
 
+    // paintComponent is called by Swing whenever the panel needs to be redrawn (e.g. after repaint()).
+    // Always call super.paintComponent(g) first to clear the previous frame.
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -91,15 +96,24 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+    /**
+     * Builds an AffineTransform to position, rotate, and scale a sprite.
+     * Transforms are applied in reverse order (last added = first applied):
+     * 1. translate(-w/2, -h/2) — shift so the sprite's centre is at the origin
+     * 2. scale — resize the sprite
+     * 3. rotate — rotate around the origin (the object's centre)
+     *    +270° corrects for sprites that face right by default to face up at angle 0
+     * 4. translate(cx, cy) — move the origin to the object's world position
+     */
     private static AffineTransform getAffineTransform(GameObject object, int w, int h) {
         double cx = object.getPositionX();
         double cy = object.getPositionY();
 
         AffineTransform transform = new AffineTransform();
-        transform.translate(cx, cy);                 // move origin to object center
-        transform.rotate(object.getRotationAngle() + Math.toRadians(270)); // rotate around center
-        transform.scale(object.getScale(), object.getScale()); // apply scale
-        transform.translate(-w / 2.0, -h / 2.0);    // offset so sprite draws centered
+        transform.translate(cx, cy);
+        transform.rotate(object.getRotationAngle() + Math.toRadians(270));
+        transform.scale(object.getScale(), object.getScale());
+        transform.translate(-w / 2.0, -h / 2.0);
         return transform;
     }
 
