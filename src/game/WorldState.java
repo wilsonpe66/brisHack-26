@@ -69,11 +69,6 @@ public class WorldState {
     }
 
     private void removeDeadObjects() {
-        int deadAsteroids = (int) objects.stream()
-                .filter(obj -> !obj.getIsAlive() && obj instanceof Asteroid)
-                .count();
-        player.setScore(player.getScore() + deadAsteroids);
-
         objects.removeIf(obj -> !obj.getIsAlive());
     }
 

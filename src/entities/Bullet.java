@@ -2,13 +2,19 @@ import java.awt.*;
 
 public class Bullet extends GameObject {
     private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/missile.png");
+    private final Player owner;
 
     // CONSTRUCTOR:
     public Bullet(double x, double y) {
-        this(x, y, 10, 10, Math.PI / 4);
+        this(x, y, 10, 10, Math.PI / 4, null);
     }
 
     public Bullet(double x, double y, double velocityX, double velocityY, double rotationAngle) {
+        this(x, y, velocityX, velocityY, rotationAngle, null);
+    }
+
+    public Bullet(double x, double y, double velocityX, double velocityY, double rotationAngle, Player owner) {
+        this.owner = owner;
         setPosition(x, y);
         setVelocity(velocityX, velocityY);
         setRotationAngle(rotationAngle);
@@ -50,6 +56,9 @@ public class Bullet extends GameObject {
     @Override
     public void collideWith(Asteroid asteroid) {
         setHealth(0);
+        if (owner != null) {
+            owner.setScore(owner.getScore() + 5);
+        }
     }
 
     @Override

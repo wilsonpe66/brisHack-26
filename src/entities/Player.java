@@ -86,7 +86,7 @@ public class Player extends GameObject{
         double spawnX = getPositionX() + Math.cos(angle) * getRadius();
         double spawnY = getPositionY() + Math.sin(angle) * getRadius();
 
-        return new Bullet(spawnX, spawnY, bulletVelocityX, bulletVelocityY, angle);
+        return new Bullet(spawnX, spawnY, bulletVelocityX, bulletVelocityY, angle, this);
     }
 
     @Override
