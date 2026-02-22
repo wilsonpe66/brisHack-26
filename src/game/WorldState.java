@@ -29,6 +29,7 @@ public class WorldState {
             Bullet bullet = player.shoot();
             objects.add(bullet);
             updatables.add(bullet);
+            SoundManager.playSound("assets/sounds/shoot.wav");
             shootCooldown = Constants.SHOOT_COOLDOWN_FRAMES;
         }
     }

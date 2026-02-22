@@ -7,7 +7,7 @@ public class MenuPanel extends JPanel {
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         setBackground(Color.DARK_GRAY);
         setLayout(new GridBagLayout()); // Centers the button
-
+        SoundManager.playSound("assets/sounds/menu.wav");
         JButton playButton = new JButton("PLAY GAME");
         playButton.setPreferredSize(new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT));
 
