@@ -6,6 +6,7 @@ public class Game extends JFrame {
     private final JPanel mainContainer = new JPanel(cardLayout);
     private final GamePanel gamepanel;
     private final GameOverPanel gameOverPanel;
+    private int highScore = 0;
 
     public Game() {
         MenuPanel menupanel = new MenuPanel(this);
@@ -37,7 +38,10 @@ public class Game extends JFrame {
     }
 
     public void showGameOver(int score) {
-        gameOverPanel.setScore(score);
+        if (score > highScore) {
+            highScore = score;
+        }
+        gameOverPanel.setScore(score, highScore);
         SoundManager.stopLooping("background");
         SoundManager.playSound("assets/sounds/win.wav");
         cardLayout.show(mainContainer, "GAME OVER");
