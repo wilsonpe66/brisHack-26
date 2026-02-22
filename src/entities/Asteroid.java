@@ -74,6 +74,11 @@ public class Asteroid extends GameObject{
         killedByBullet = true;
     }
 
+    @Override
+    public void collideWith(AlienBullet alienBullet) {
+        alienBullet.setHealth(0);
+    }
+
     public boolean wasKilledByBullet() {
         return killedByBullet;
     }

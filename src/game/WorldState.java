@@ -5,10 +5,13 @@ public class WorldState {
     public List<Updatable> updatables;
     public List<GameObject> objects;
     private final Player player;
-    private final AsteroidGenerator generator;
+    private final AsteroidGenerator asteroidGenerator;
+    private final AlienGenerator alienGenerator;
     private final InputHandler inputHandler;
     private int shootCooldown;
     private long lastSpawnTime = 0;
+    private long lastAlienSpawnTime = 0;
+    private long gameStartTime;
 
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
@@ -17,7 +20,10 @@ public class WorldState {
         objects.add(player);
         updatables = new ArrayList<>();
         updatables.add(player);
-        generator = new AsteroidGenerator(this);
+        asteroidGenerator = new AsteroidGenerator(this);
+        alienGenerator = new AlienGenerator(this);
+        gameStartTime = System.currentTimeMillis();
+        lastAlienSpawnTime = gameStartTime;
     }
 
     private void handleShooting() {
@@ -34,11 +40,33 @@ public class WorldState {
         }
     }
 
+    private void handleAlienShooting() {
+        List<AlienBullet> newBullets = new ArrayList<>();
+        for (GameObject obj : objects) {
+            if (obj instanceof Alien alien && alien.getIsAlive()) {
+                AlienBullet alienBullet = alien.shoot();
+                if (alienBullet != null) {
+                    newBullets.add(alienBullet);
+                }
+            }
+        }
+        for (AlienBullet b : newBullets) {
+            objects.add(b);
+            updatables.add(b);
+        }
+    }
+
     private void handleSpawning() {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastSpawnTime >= Constants.SPAWN_DELAY) {
-            generator.generate();
+            asteroidGenerator.generate();
             lastSpawnTime = currentTime;
+        }
+        long timeSinceStart = currentTime - gameStartTime;
+        if (timeSinceStart >= Constants.ALIEN_SPAWN_INITIAL_DELAY
+                && currentTime - lastAlienSpawnTime >= Constants.ALIEN_SPAWN_DELAY) {
+            alienGenerator.generate();
+            lastAlienSpawnTime = currentTime;
         }
     }
 
@@ -86,6 +114,7 @@ public class WorldState {
 
     public void updateState() {
         handleShooting();
+        handleAlienShooting();
         handleSpawning();
         updateAll();
         handleCollisions();
@@ -110,5 +139,7 @@ public class WorldState {
         updatables.add(player);
         shootCooldown = 0;
         lastSpawnTime = 0;
+        gameStartTime = System.currentTimeMillis();
+        lastAlienSpawnTime = gameStartTime;
     }
 }

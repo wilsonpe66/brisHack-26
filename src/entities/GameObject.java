@@ -106,4 +106,6 @@ public abstract class GameObject implements Updatable {
     public void collideWith(Player player) {}
     public void collideWith(Asteroid asteroid) {}
     public void collideWith(Bullet bullet) {}
+    public void collideWith(Alien alien) {}
+    public void collideWith(AlienBullet alienBullet) {}
 }

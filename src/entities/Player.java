@@ -127,4 +127,14 @@ public class Player extends GameObject{
     public void collideWith(Bullet bullet) {
         throw new RuntimeException("PLAYER HIT BULLET?!?!?");
     }
+
+    @Override
+    public void collideWith(Alien alien) {
+        alien.setHealth(0);
+    }
+
+    @Override
+    public void collideWith(AlienBullet alienBullet) {
+        setHealth(0);
+    }
 }
