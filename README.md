@@ -18,4 +18,4 @@ java -jar brisHack-26.jar
 
 ## Docs
 
-[TBC]
+See the [docs/](docs/README.md) folder for full documentation.
