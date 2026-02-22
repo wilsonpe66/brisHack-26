@@ -10,7 +10,7 @@ public class Player extends GameObject{
         setPosition(x, y);
         setVelocity(0, 0);
         setRotationAngle(-Math.PI / 2); // straight up in radians
-        setRadius(20);
+        setRadius(25);
         setHealth(100);
         setAlive(true);
         setScale(0.5); // make player sprite smaller

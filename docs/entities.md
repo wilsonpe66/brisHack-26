@@ -62,7 +62,7 @@ The player-controlled spaceship.
 | Sprite | `assets/images/spaceship.png` |
 | Starting position | Centre of screen (`MIDDLE_X`, `MIDDLE_Y`) |
 | Initial rotation | −π/2 (pointing **up**) |
-| Radius | 20 px |
+| Radius | 25 px |
 | Health | 100 |
 | Scale | 0.5 |
 
