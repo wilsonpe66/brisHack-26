@@ -56,9 +56,6 @@ public class Bullet extends GameObject {
     @Override
     public void collideWith(Asteroid asteroid) {
         setHealth(0);
-        if (owner != null) {
-            owner.setScore(owner.getScore() + 5);
-        }
     }
 
     @Override
