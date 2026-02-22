@@ -21,7 +21,7 @@ public class Player extends GameObject{
     public void update() {
         // respond to input: thrust (W/Up) and rotation (A/D)
         if (inputHandler.isUpPressed()) {
-            SoundManager.playSound("assets/sounds/engine.wav");
+            SoundManager.playSound("assets/sounds/thruster.wav");
             double ax = Math.cos(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
             double ay = Math.sin(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
             double vx = getVelocityX() + ax;
