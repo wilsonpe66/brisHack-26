@@ -69,6 +69,17 @@ public class WorldState {
     }
 
     private void removeDeadObjects() {
+        // Mark asteroids that reached 0 health this frame (e.g. from bullets) so we count them this frame
+        for (GameObject obj : objects) {
+            if (obj instanceof Asteroid && obj.getHealth() <= 0) {
+                obj.setAlive(false);
+            }
+        }
+        int deadAsteroids = (int) objects.stream()
+                .filter(obj -> !obj.getIsAlive() && obj instanceof Asteroid)
+                .count();
+        player.setScore(player.getScore() + deadAsteroids);
+
         objects.removeIf(obj -> !obj.getIsAlive());
     }
 

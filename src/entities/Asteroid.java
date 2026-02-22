@@ -55,7 +55,7 @@ public class Asteroid extends GameObject{
 
     @Override
     public void collideWith(Player player) {
-        setHealth(0);
+        // Don't kill this asteroid - only the player dies. Avoids awarding +1 score when player dies.
     }
 
     @Override
