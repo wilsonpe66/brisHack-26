@@ -10,7 +10,6 @@ public class GameOverPanel extends JPanel {
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         setBackground(new Color(30, 30, 40));
         setLayout(new GridBagLayout());
-        SoundManager.playSound("assets/sounds/win.wav");
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.insets = new Insets(10, 0, 10, 0);
