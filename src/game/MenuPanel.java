@@ -39,6 +39,6 @@ public class MenuPanel extends JPanel {
 
         gbc.gridy = 2;
         add(buttonPanel, gbc);
-        SoundManager.playSound("assets/sounds/space_oddity.wav");
+        SoundManager.playLooping("menu_music", "assets/sounds/space_oddity.wav");
     }
 }

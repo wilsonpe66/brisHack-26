@@ -43,6 +43,7 @@ public class GamePanel extends JPanel implements ActionListener {
     /** Reset world state for a new game. */
     public void reset() {
         inputHandler.clearAllKeys(); // keys held during game over never got keyReleased (panel lost focus)
+        SoundManager.stopLooping("thruster");
         worldState.reset();
     }
 

@@ -21,7 +21,7 @@ public class Player extends GameObject{
     public void update() {
         // respond to input: thrust (W/Up) and rotation (A/D)
         if (inputHandler.isUpPressed()) {
-            SoundManager.playSound("assets/sounds/thruster.wav");
+            SoundManager.playLooping("thruster", "assets/sounds/thruster.wav");
             double ax = Math.cos(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
             double ay = Math.sin(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
             double vx = getVelocityX() + ax;
@@ -34,6 +34,7 @@ public class Player extends GameObject{
             }
             setVelocity(vx, vy);
         } else {
+            SoundManager.stopLooping("thruster");
             // decay velocity when thrust is not pressed
             double vx = getVelocityX() * Constants.PLAYER_VELOCITY_DECAY;
             double vy = getVelocityY() * Constants.PLAYER_VELOCITY_DECAY;

@@ -29,7 +29,8 @@ public class Game extends JFrame {
     }
     public void showGame() {
         cardLayout.show(mainContainer, "GAME");
-        SoundManager.playSound("assets/sounds/background.wav");
+        SoundManager.stopLooping("menu_music");
+        SoundManager.playLooping("background", "assets/sounds/background.wav");
         gamepanel.startGame(); // start timer and asteroid spawning only when playing
         // Focus is important for KeyListeners to work
         mainContainer.getComponent(1).requestFocusInWindow();
