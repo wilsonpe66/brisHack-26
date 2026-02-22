@@ -12,7 +12,7 @@ public class WorldState {
 
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
-        player = new Player((double) Constants.MIDDLEX, (double) Constants.MIDDLEY, inputHandler);
+        player = new Player((double) Constants.MIDDLE_X, (double) Constants.MIDDLE_Y, inputHandler);
         objects = new ArrayList<>();
         objects.add(player);
         updatables = new ArrayList<>();
@@ -100,7 +100,7 @@ public class WorldState {
     public void reset() {
         objects.clear();
         updatables.clear();
-        player.setPosition(Constants.MIDDLEX, Constants.MIDDLEY);
+        player.setPosition(Constants.MIDDLE_X, Constants.MIDDLE_Y);
         player.setVelocity(0, 0);
         player.setHealth(100);
         player.setAlive(true);

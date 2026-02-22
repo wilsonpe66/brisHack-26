@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Game extends JFrame {
-    private CardLayout cardLayout = new CardLayout();
-    private JPanel mainContainer = new JPanel(cardLayout);
+    private final CardLayout cardLayout = new CardLayout();
+    private final JPanel mainContainer = new JPanel(cardLayout);
     private final GamePanel gamepanel;
     private final GameOverPanel gameOverPanel;
 
@@ -14,7 +14,7 @@ public class Game extends JFrame {
 
         mainContainer.add(menupanel, "MENU");
         mainContainer.add(gamepanel, "GAME");
-        mainContainer.add(gameOverPanel, "GAMEOVER");
+        mainContainer.add(gameOverPanel, "GAME OVER");
         //adding panel to the center of this JFrame
         this.add(mainContainer);
 
@@ -29,6 +29,7 @@ public class Game extends JFrame {
     }
     public void showGame() {
         cardLayout.show(mainContainer, "GAME");
+        SoundManager.playSound("assets/sounds/background.wav");
         gamepanel.startGame(); // start timer and asteroid spawning only when playing
         // Focus is important for KeyListeners to work
         mainContainer.getComponent(1).requestFocusInWindow();
@@ -36,7 +37,7 @@ public class Game extends JFrame {
 
     public void showGameOver(int score) {
         gameOverPanel.setScore(score);
-        cardLayout.show(mainContainer, "GAMEOVER");
+        cardLayout.show(mainContainer, "GAME OVER");
     }
 
     public void restartGame() {

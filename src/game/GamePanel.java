@@ -24,6 +24,8 @@ public class GamePanel extends JPanel implements ActionListener {
 
         gameTimer = new Timer(Constants.FRAME_DELAY, this);
         // Timer started in startGame() when user presses Play
+
+
     }
 
     /** Start the game loop and asteroid spawning. Called when switching to game from menu. */
@@ -82,17 +84,22 @@ public class GamePanel extends JPanel implements ActionListener {
             int w = sprite.getWidth(null);
             int h = sprite.getHeight(null);
             if (w <= 0 || h <= 0) continue; // image not yet loaded
-            double cx = object.getPositionX();
-            double cy = object.getPositionY();
-
-            AffineTransform transform = new AffineTransform();
-            transform.translate(cx, cy);                 // move origin to object center
-            transform.rotate(object.getRotationAngle() + Math.toRadians(270)); // rotate around center
-            transform.scale(object.getScale(), object.getScale()); // apply scale
-            transform.translate(-w / 2.0, -h / 2.0);    // offset so sprite draws centered
+            AffineTransform transform = getAffineTransform(object, w, h);
 
             g2d.drawImage(sprite, transform, null);
         }
+    }
+
+    private static AffineTransform getAffineTransform(GameObject object, int w, int h) {
+        double cx = object.getPositionX();
+        double cy = object.getPositionY();
+
+        AffineTransform transform = new AffineTransform();
+        transform.translate(cx, cy);                 // move origin to object center
+        transform.rotate(object.getRotationAngle() + Math.toRadians(270)); // rotate around center
+        transform.scale(object.getScale(), object.getScale()); // apply scale
+        transform.translate(-w / 2.0, -h / 2.0);    // offset so sprite draws centered
+        return transform;
     }
 
 }
