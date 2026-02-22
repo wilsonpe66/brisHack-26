@@ -44,8 +44,13 @@ public class GamePanel extends JPanel implements ActionListener {
         super.paintComponent(g);
 
         drawObjects(g);
+        drawHud(g);
+    }
 
-        // draw hud
+    private void drawHud(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 24));
+        g.drawString("Score: " + worldState.getPlayer().getScore(), 20, 40);
     }
 
     private void drawObjects(Graphics g) {
