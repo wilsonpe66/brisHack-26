@@ -88,4 +88,20 @@ public class WorldState {
     public Player getPlayer() {
         return player;
     }
+
+    /** Reset player and clear all objects for a new game. */
+    public void reset() {
+        objects.clear();
+        updatables.clear();
+        player.setPosition(Constants.MIDDLEX, Constants.MIDDLEY);
+        player.setVelocity(0, 0);
+        player.setHealth(100);
+        player.setAlive(true);
+        player.setScore(0);
+        player.setRotationAngle(-Math.PI / 2);
+        objects.add(player);
+        updatables.add(player);
+        shootCooldown = 0;
+        lastSpawnTime = 0;
+    }
 }

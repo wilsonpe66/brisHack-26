@@ -6,12 +6,12 @@ import java.awt.geom.AffineTransform;
 
 public class GamePanel extends JPanel implements ActionListener {
     private final Timer gameTimer;
-
     private final InputHandler inputHandler;
-
+    private final Game game;
     WorldState worldState;
 
-    public GamePanel() {
+    public GamePanel(Game game) {
+        this.game = game;
         inputHandler = new InputHandler();
 
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
@@ -32,10 +32,25 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
+    /** Stop the game loop. Called when player dies. */
+    public void stopGame() {
+        gameTimer.stop();
+    }
+
+    /** Reset world state for a new game. */
+    public void reset() {
+        inputHandler.clearAllKeys(); // keys held during game over never got keyReleased (panel lost focus)
+        worldState.reset();
+    }
+
     // called every frame
     @Override
     public void actionPerformed(ActionEvent e) {
         worldState.updateState();
+        if (!worldState.getPlayer().getIsAlive()) {
+            stopGame();
+            game.showGameOver(worldState.getPlayer().getScore());
+        }
         repaint();
     }
 
@@ -76,5 +91,4 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    private void drawHud() {}
 }

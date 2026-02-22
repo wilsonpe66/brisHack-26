@@ -39,4 +39,13 @@ public class InputHandler implements KeyListener {
     public boolean isLeftPressed() { return leftPressed; }
     public boolean isRightPressed() { return rightPressed; }
     public boolean isShootPressed() { return shootPressed; }
+
+    /** Clear all key states. Call when restarting so keys held during game over don't carry over. */
+    public void clearAllKeys() {
+        leftPressed = false;
+        rightPressed = false;
+        upPressed = false;
+        downPressed = false;
+        shootPressed = false;
+    }
 }
