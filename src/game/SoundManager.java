@@ -8,6 +8,8 @@ public class SoundManager {
     /** Looping clips by id – can be stopped later with stopLooping(id). */
     private static final Map<String, Clip> loopingClips = new HashMap<>();
 
+    private static final Map<String, String> loopPaths = new HashMap<>();
+
     /** Play a one-shot sound (e.g. shoot). Creates a new Clip each time so
      *  overlapping sounds (e.g. rapid shooting) play simultaneously. */
     public static void playSound(String path) {
