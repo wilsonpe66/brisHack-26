@@ -5,13 +5,15 @@ import utils.Constants;
 import java.awt.*;
 import java.util.Random;
 
+import static assets.AssetManager.getImage;
+
 public class Asteroid extends GameObject{
     private static final Random random = new Random();
     private static final Image[] sprites = {
-        getImage("assets/images/asteroid1.png"),
-        getImage("assets/images/asteroid2.png"),
-        getImage("assets/images/asteroid3.png"),
-        getImage("assets/images/asteroid4.png")
+        getImage("asteroid1.png").get(),
+        getImage("asteroid2.png").get(),
+        getImage("asteroid3.png").get(),
+        getImage("asteroid4.png").get()
     };
     private final Image sprite;
     /** True only when this asteroid was destroyed by a bullet (used for scoring). */

@@ -59,7 +59,7 @@ public class Game extends JFrame {
     public void showGame() {
         cardLayout.show(mainContainer, "GAME");
         SoundManager.stopLooping("menu_music");
-        SoundManager.playLooping("background","assets/sounds/background.wav");
+        SoundManager.playLooping("background","background.wav");
         gamepanel.startGame();
         // requestFocusInWindow() is required for KeyListener to receive keyboard events.
         // Without focus, key presses go to another component and the player can't move.
@@ -73,7 +73,7 @@ public class Game extends JFrame {
         }
         gameOverPanel.setScore(score, highScore);
         SoundManager.stopLooping("background");
-        SoundManager.playSound("assets/sounds/win.wav");
+        SoundManager.playSound("win.wav");
         cardLayout.show(mainContainer, "GAME OVER");
     }
 
