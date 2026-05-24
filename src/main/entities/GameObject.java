@@ -1,4 +1,10 @@
+package entities;
+
+import game.GamePanel;
+
 import java.awt.*;
+import java.net.URL;
+import java.util.Optional;
 
 public abstract class GameObject implements Updatable {
     private double velocityX;
@@ -35,7 +41,9 @@ public abstract class GameObject implements Updatable {
         return positionY;
     }
 
-    public double getRadius() { return this.radius; }
+    public double getRadius() {
+        return this.radius;
+    }
 
     public int getHealth() {
         return health;
@@ -72,7 +80,9 @@ public abstract class GameObject implements Updatable {
         this.positionY = positionY;
     }
 
-    public void setRadius(double radius) { this.radius = radius; } // TODO: fix arbitrary magic numbers for radius in all gameobjects
+    public void setRadius(double radius) {
+        this.radius = radius;
+    } // TODO: fix arbitrary magic numbers for radius in all gameobjects
 
     public void setHealth(int health) {
         this.health = health;
@@ -107,9 +117,25 @@ public abstract class GameObject implements Updatable {
 
     // Second dispatch - overloaded methods for each concrete type.
     // Defaults are no-ops; subclasses override only the pairs that need a response.
-    public void collideWith(Player player) {}
-    public void collideWith(Asteroid asteroid) {}
-    public void collideWith(Bullet bullet) {}
-    public void collideWith(Alien alien) {}
-    public void collideWith(AlienBullet alienBullet) {}
+    public void collideWith(Player player) {
+    }
+
+    public void collideWith(Asteroid asteroid) {
+    }
+
+    public void collideWith(Bullet bullet) {
+    }
+
+    public void collideWith(Alien alien) {
+    }
+
+    public void collideWith(AlienBullet alienBullet) {
+    }
+
+    public static Image getImage(final String path) {
+        return Optional.of(path)
+                .map(GamePanel.class::getResource)
+                .map(Toolkit.getDefaultToolkit()::getImage)
+                .orElse(null);
+    }
 }

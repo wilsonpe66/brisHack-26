@@ -1,3 +1,8 @@
+package game;
+
+import entities.*;
+import utils.Constants;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -11,7 +11,7 @@
 From the project root:
 
 ```bash
-java -jar brisHack-26.jar
+java -jar target/brisHack-26.jar
 ```
 
 ## Docs

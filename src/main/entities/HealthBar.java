@@ -1,3 +1,5 @@
+package entities;
+
 public class HealthBar implements Updatable{
 
     private Player player; // the current player associated with the health

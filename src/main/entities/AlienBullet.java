@@ -1,7 +1,11 @@
+package entities;
+
+import utils.Constants;
+
 import java.awt.*;
 
 public class AlienBullet extends GameObject {
-    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/missile.png");
+    private final static Image sprite = getImage("assets/images/missile.png");
     private final Alien alienOwner;
 
     public AlienBullet(double x, double y, double velocityX, double velocityY, double rotationAngle, Alien alienOwner) {

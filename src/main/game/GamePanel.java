@@ -1,11 +1,19 @@
+package game;
+
+import entities.GameObject;
+import utils.Constants;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 
+import static entities.GameObject.getImage;
+
 public class GamePanel extends JPanel implements ActionListener {
-    private static final Image SPACE_BACKGROUND = Toolkit.getDefaultToolkit().getImage("assets/images/spacebackground.png");
+    private static final Image SPACE_BACKGROUND = getImage("assets/images/spacebackground.png");
+
     private final Timer gameTimer;
     private final InputHandler inputHandler;
     private final Game game;
