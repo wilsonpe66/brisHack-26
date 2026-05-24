@@ -35,15 +35,15 @@ Any object that needs per-frame logic implements `Updatable`. The game loop iter
 
 The shared base class for everything that exists in the game world. It holds:
 
-| Field | Type | Purpose |
-|-------|------|---------|
-| `positionX`, `positionY` | `double` | World position (pixels) |
-| `velocityX`, `velocityY` | `double` | Movement per frame (pixels/frame) |
-| `rotationAngle` | `double` | Facing direction in **radians** |
-| `radius` | `double` | Collision circle radius |
-| `health` | `int` | Hit points (player/alien = 100, asteroid/bullet = 1) |
-| `isAlive` | `boolean` | `false` → removed at end of frame |
-| `scale` | `double` | Sprite draw scale (default 1.0) |
+| Field                    | Type       | Purpose                                              |
+|--------------------------|------------|------------------------------------------------------|
+| `positionX`, `positionY` | `double`   | World position (pixels)                              |
+| `velocityX`, `velocityY` | `double`   | Movement per frame (pixels/frame)                    |
+| `rotationAngle`          | `double`   | Facing direction in **radians**                      |
+| `radius`                 | `double`   | Collision circle radius                              |
+| `health`                 | `int`      | Hit points (player/alien = 100, asteroid/bullet = 1) |
+| `isAlive`                | `boolean`  | `false` → removed at end of frame                    |
+| `scale`                  | `double`   | Sprite draw scale (default 1.0)                      |
 
 ### Key Methods
 
@@ -57,14 +57,14 @@ The shared base class for everything that exists in the game world. It holds:
 
 The player-controlled spaceship.
 
-| Property | Value |
-|----------|-------|
-| Sprite | `assets/images/spaceship.png` |
+| Property          | Value                                     |
+|-------------------|-------------------------------------------|
+| Sprite            | `assets/images/spaceship.png`             |
 | Starting position | Centre of screen (`MIDDLE_X`, `MIDDLE_Y`) |
-| Initial rotation | −π/2 (pointing **up**) |
-| Radius | 25 px |
-| Health | 100 |
-| Scale | 0.5 |
+| Initial rotation  | −π/2 (pointing **up**)                    |
+| Radius            | 25 px                                     |
+| Health            | 100                                       |
+| Scale             | 0.5                                       |
 
 ### Movement
 
@@ -87,13 +87,13 @@ The player dies (health set to 0) upon colliding with any asteroid, alien, or al
 
 A randomly-spawned obstacle that drifts across the screen.
 
-| Property | Value |
-|----------|-------|
-| Sprites | `asteroid1.png` – `asteroid4.png` (random per instance) |
-| Rotation | Random angle on spawn |
-| Radius | 30 px |
-| Health | 1 |
-| Scale | 0.3 |
+| Property  | Value                                                   |
+|-----------|---------------------------------------------------------|
+| Sprites   | `asteroid1.png` – `asteroid4.png` (random per instance) |
+| Rotation  | Random angle on spawn                                   |
+| Radius    | 30 px                                                   |
+| Health    | 1                                                       |
+| Scale     | 0.3                                                     |
 
 ### Behaviour
 
@@ -113,11 +113,11 @@ A boolean that is set to `true` when an asteroid takes damage from a bullet. Thi
 
 A projectile fired by the player.
 
-| Property | Value |
-|----------|-------|
-| Sprite | `assets/images/missile.png` |
-| Radius | 5 px |
-| Health | 1 |
+| Property | Value                       |
+|----------|-----------------------------|
+| Sprite   | `assets/images/missile.png` |
+| Radius   | 5 px                        |
+| Health   | 1                           |
 
 ### Behaviour
 
@@ -133,12 +133,12 @@ A projectile fired by the player.
 
 An enemy spaceship that chases and shoots at the player.
 
-| Property | Value |
-|----------|-------|
-| Sprite | `assets/images/shipGreen_manned.png` |
-| Radius | 20 px |
-| Health | 100 |
-| Scale | 0.5 |
+| Property | Value                                |
+|----------|--------------------------------------|
+| Sprite   | `assets/images/shipGreen_manned.png` |
+| Radius   | 20 px                                |
+| Health   | 100                                  |
+| Scale    | 0.5                                  |
 
 ### Spawning
 
@@ -165,12 +165,12 @@ An enemy spaceship that chases and shoots at the player.
 
 A projectile fired by an `Alien`, aimed at the player.
 
-| Property | Value |
-|----------|-------|
-| Sprite | `assets/images/missile.png` (same as player bullet) |
-| Radius | 5 px |
-| Health | 1 |
-| Speed | `ALIEN_BULLET_SPEED` (4 px/frame) |
+| Property | Value                                                |
+|----------|------------------------------------------------------|
+| Sprite   |  `assets/images/missile.png` (same as player bullet) |
+| Radius   | 5 px                                                 |
+| Health   | 1                                                    |
+| Speed    | `ALIEN_BULLET_SPEED` (4 px/frame)                    |
 
 ### Behaviour
 
@@ -200,12 +200,12 @@ Collision response uses the **Visitor / double-dispatch** pattern to let each pa
 
 ### Collision Matrix
 
-| A ↓ \ B → | Player | Asteroid | Bullet | Alien | AlienBullet |
-|------------|--------|----------|--------|-------|-------------|
-| **Player** | Error (impossible) | Player dies | Error (impossible) | Alien destroyed | Player dies |
-| **Asteroid** | (no-op) | Both destroyed | Asteroid takes 1 damage | Alien destroyed | AlienBullet destroyed |
-| **Bullet** | Error | Bullet destroyed | Error | Both destroyed (+5 score) | Both destroyed |
-| **Alien** | Alien destroyed | Alien destroyed | Alien destroyed | (no-op) | (no-op, friendly fire off) |
-| **AlienBullet** | Player dies, bullet destroyed | AlienBullet destroyed | Both destroyed | (no-op) | (no-op) |
+| A ↓ \ B →       | Player                        | Asteroid              | Bullet                  | Alien                     | AlienBullet                |
+|-----------------|-------------------------------|-----------------------|-------------------------|---------------------------|----------------------------|
+| **Player**      |  Error (impossible)           | Player dies           | Error (impossible)      | Alien destroyed           | Player dies                |
+| **Asteroid**    | (no-op)                       | Both destroyed        | Asteroid takes 1 damage | Alien destroyed           | AlienBullet destroyed      |
+| **Bullet**      | Error                         | Bullet destroyed      | Error                   | Both destroyed (+5 score) | Both destroyed             |
+| **Alien**       | Alien destroyed               | Alien destroyed       | Alien destroyed         | (no-op)                   | (no-op, friendly fire off) |
+| **AlienBullet** | Player dies, bullet destroyed | AlienBullet destroyed | Both destroyed          | (no-op)                   | (no-op)                    |
 
 > "Error" cases throw a `RuntimeException` — they should never happen with the current game rules.

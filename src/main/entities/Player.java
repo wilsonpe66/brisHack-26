@@ -1,7 +1,13 @@
+package entities;
+
+import game.InputHandler;
+import game.SoundManager;
+import utils.Constants;
+
 import java.awt.*;
 
 public class Player extends GameObject{
-    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/spaceship.png");
+    private final static Image sprite = getImage("assets/images/spaceship.png");
     private final InputHandler inputHandler;
     private int score;
     // CONSTRUCTOR:

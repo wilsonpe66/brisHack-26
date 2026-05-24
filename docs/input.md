@@ -2,13 +2,13 @@
 
 ## Control Scheme
 
-| Action | Keys |
-|--------|------|
-| Thrust forward | `W` or `↑` |
+| Action                   | Keys                                               |
+|--------------------------|----------------------------------------------------|
+| Thrust forward           | `W` or `↑`                                         |
 | Brake / reverse (unused) | `S` or `↓` (tracked but the player doesn't use it) |
-| Rotate left | `A` or `←` |
-| Rotate right | `D` or `→` |
-| Shoot | `Space` |
+| Rotate left              | `A` or `←`                                         |
+| Rotate right             | `D` or `→`                                         |
+| Shoot                    | `Space`                                            |
 
 Both WASD and arrow keys are supported for movement.
 

@@ -1,3 +1,8 @@
+package game;
+
+import entities.Asteroid;
+import utils.Constants;
+
 import java.util.Random;
 
 public class AsteroidGenerator {

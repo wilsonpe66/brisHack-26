@@ -1,13 +1,17 @@
+package entities;
+
+import utils.Constants;
+
 import java.awt.*;
 import java.util.Random;
 
 public class Asteroid extends GameObject{
     private static final Random random = new Random();
     private static final Image[] sprites = {
-        Toolkit.getDefaultToolkit().getImage("assets/images/asteroid1.png"),
-        Toolkit.getDefaultToolkit().getImage("assets/images/asteroid2.png"),
-        Toolkit.getDefaultToolkit().getImage("assets/images/asteroid3.png"),
-        Toolkit.getDefaultToolkit().getImage("assets/images/asteroid4.png")
+        getImage("assets/images/asteroid1.png"),
+        getImage("assets/images/asteroid2.png"),
+        getImage("assets/images/asteroid3.png"),
+        getImage("assets/images/asteroid4.png")
     };
     private final Image sprite;
     /** True only when this asteroid was destroyed by a bullet (used for scoring). */

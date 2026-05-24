@@ -23,18 +23,18 @@ Contains every object that can exist in the game world. All concrete entities ex
 ### `game`
 Owns the application lifecycle:
 
-| Class | Role |
-|-------|------|
-| `Main` | Entry point — launches the Swing UI on the Event Dispatch Thread |
-| `Game` | Top-level `JFrame`; manages screen navigation with a `CardLayout` |
-| `GamePanel` | The gameplay screen; runs the game timer and renders sprites |
-| `MenuPanel` | Main menu shown at startup |
-| `GameOverPanel` | End-of-game screen with score / high-score display |
-| `WorldState` | Core simulation — updates entities, detects collisions, manages scoring |
-| `AsteroidGenerator` | Spawns asteroids from random screen edges aimed at the player |
-| `AlienGenerator` | Spawns aliens from random screen edges aimed at the player |
-| `InputHandler` | Translates keyboard events into boolean flags read by `Player` |
-| `SoundManager` | Static utility for one-shot and looping audio playback |
+| Class               | Role                                                                    |
+|---------------------|-------------------------------------------------------------------------|
+| `Main`              | Entry point — launches the Swing UI on the Event Dispatch Thread        |
+| `Game`              | Top-level `JFrame`; manages screen navigation with a `CardLayout`       |
+| `GamePanel`         | The gameplay screen; runs the game timer and renders sprites            |
+| `MenuPanel`         | Main menu shown at startup                                              |
+| `GameOverPanel`     | End-of-game screen with score / high-score display                      |
+| `WorldState`        | Core simulation — updates entities, detects collisions, manages scoring |
+| `AsteroidGenerator` | Spawns asteroids from random screen edges aimed at the player           |
+| `AlienGenerator`    | Spawns aliens from random screen edges aimed at the player              |
+| `InputHandler`      | Translates keyboard events into boolean flags read by `Player`          |
+| `SoundManager`      | Static utility for one-shot and looping audio playback                  |
 
 ### `utils`
 A single `Constants` class holding every tunable number (window size, speeds, cooldowns, etc.).

@@ -1,3 +1,9 @@
+package game;
+
+import entities.Alien;
+import entities.Player;
+import utils.Constants;
+
 import java.util.Random;
 
 public class AlienGenerator {

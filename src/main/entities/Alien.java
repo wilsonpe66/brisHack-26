@@ -1,7 +1,11 @@
+package entities;
+
+import utils.Constants;
+
 import java.awt.*;
 
 public class Alien extends GameObject {
-    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/shipGreen_manned.png");
+    private final static Image sprite = getImage("assets/images/shipGreen_manned.png");
     private final Player player;
     /** Frames until the alien can shoot again (slower than player). */
     private int shootCooldown;

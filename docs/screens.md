@@ -68,9 +68,9 @@ Shown when the player dies.
 
 ## Window Configuration
 
-| Setting | Value |
-|---------|-------|
-| Size | 1000 × 1000 px (set via panel preferred sizes) |
-| Resizable | No |
-| Background | Black (game panel), dark grey-blue `rgb(30, 30, 40)` (menus) |
-| Positioning | Centred on screen |
+| Setting     | Value                                                        |
+|-------------|--------------------------------------------------------------|
+| Size        | 1000 × 1000 px (set via panel preferred sizes)               |
+| Resizable   | No                                                           |
+| Background  | Black (game panel), dark grey-blue `rgb(30, 30, 40)` (menus) |
+| Positioning | Centred on screen                                            |

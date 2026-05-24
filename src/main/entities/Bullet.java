@@ -1,7 +1,11 @@
+package entities;
+
+import utils.Constants;
+
 import java.awt.*;
 
 public class Bullet extends GameObject {
-    private final static Image sprite = Toolkit.getDefaultToolkit().getImage("assets/images/missile.png");
+    private final static Image sprite = getImage("assets/images/missile.png");
     private final Player owner;
 
     // CONSTRUCTOR:

@@ -1,3 +1,7 @@
+package game;
+
+import utils.Constants;
+
 import javax.swing.*;
 import java.awt.*;
 

@@ -1,24 +1,37 @@
+package game;
+
+import utils.Settings;
+
 import javax.sound.sampled.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class SoundManager {
 
-    /** Looping clips by id – can be stopped later with stopLooping(id). */
+    /**
+     * Looping clips by id – can be stopped later with stopLooping(id).
+     */
     private static final Map<String, Clip> loopingClips = new HashMap<>();
 
     private static final Map<String, String> loopPaths = new HashMap<>();
 
-    /** Play a one-shot sound (e.g. shoot). Creates a new Clip each time so
-     *  overlapping sounds (e.g. rapid shooting) play simultaneously. */
+    /**
+     * Play a one-shot sound (e.g. shoot). Creates a new Clip each time so
+     * overlapping sounds (e.g. rapid shooting) play simultaneously.
+     */
     public static void playSound(String path) {
         if (Settings.muted) {
             return;
         }
         try {
-            // AudioInputStream reads WAV data from a file
-            AudioInputStream audio = AudioSystem.getAudioInputStream(new File(path));
+            AudioInputStream audio = getAudioInputStream(path);
             // Clip is a pre-loaded audio buffer that can be started/stopped
             Clip clip = AudioSystem.getClip();
             clip.open(audio);
@@ -28,7 +41,14 @@ public class SoundManager {
         }
     }
 
-    /** Start a looping sound under the given id. No-op if that id is already playing. */
+    private static AudioInputStream getAudioInputStream(String path) throws UnsupportedAudioFileException, IOException, URISyntaxException {
+        // AudioInputStream reads WAV data fromv a file
+        return AudioSystem.getAudioInputStream(SoundManager.class.getResource(path));
+    }
+
+    /**
+     * Start a looping sound under the given id. No-op if that id is already playing.
+     */
     public static void playLooping(String id, String path) {
         // Always remember the path so we can resume after unmute
         loopPaths.put(id, path);
@@ -46,7 +66,7 @@ public class SoundManager {
                 clip.close();
                 loopingClips.remove(id);
             }
-            AudioInputStream audio = AudioSystem.getAudioInputStream(new File(path));
+            AudioInputStream audio = getAudioInputStream(path);
             clip = AudioSystem.getClip();
             clip.open(audio);
             // LOOP_CONTINUOUSLY repeats the clip until explicitly stopped
@@ -57,7 +77,9 @@ public class SoundManager {
         }
     }
 
-    /** Stop a looping sound by id. Safe to call if not playing. */
+    /**
+     * Stop a looping sound by id. Safe to call if not playing.
+     */
     public static void stopLooping(String id) {
         loopPaths.remove(id);
         Clip clip = loopingClips.remove(id);
@@ -67,7 +89,9 @@ public class SoundManager {
         }
     }
 
-    /** Stop all currently looping sounds. */
+    /**
+     * Stop all currently looping sounds.
+     */
     public static void stopAllLooping() {
         for (Clip clip : loopingClips.values()) {
             clip.stop();
