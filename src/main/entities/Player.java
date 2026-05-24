@@ -6,8 +6,10 @@ import utils.Constants;
 
 import java.awt.*;
 
+import static assets.AssetManager.getImage;
+
 public class Player extends GameObject{
-    private final static Image sprite = getImage("assets/images/spaceship.png");
+    private final static Image sprite = getImage("spaceship.png").get();
     private final InputHandler inputHandler;
     private int score;
     // CONSTRUCTOR:
@@ -27,7 +29,7 @@ public class Player extends GameObject{
     public void update() {
         // respond to input: thrust (W/Up) and rotation (A/D)
         if (inputHandler.isUpPressed()) {
-            SoundManager.playLooping("thruster", "assets/sounds/thruster.wav");
+            SoundManager.playLooping("thruster", "thruster.wav");
             double ax = Math.cos(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
             double ay = Math.sin(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
             double vx = getVelocityX() + ax;

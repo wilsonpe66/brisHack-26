@@ -23,8 +23,8 @@
 
         <resources>
             <resource>
-                <directory>src/resource/game/assets</directory>
-                <targetPath>game/assets</targetPath>
+                <directory>src/resource/assets</directory>
+                <targetPath>assets</targetPath>
             </resource>
         </resources>
 

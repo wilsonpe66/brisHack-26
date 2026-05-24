@@ -4,8 +4,10 @@ import utils.Constants;
 
 import java.awt.*;
 
+import static assets.AssetManager.getImage;
+
 public class AlienBullet extends GameObject {
-    private final static Image sprite = getImage("assets/images/missile.png");
+    private final static Image sprite = getImage("missile.png").get();
     private final Alien alienOwner;
 
     public AlienBullet(double x, double y, double velocityX, double velocityY, double rotationAngle, Alien alienOwner) {

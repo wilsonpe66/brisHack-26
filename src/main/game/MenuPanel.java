@@ -50,6 +50,6 @@ public class MenuPanel extends JPanel {
         add(buttonPanel, gbc);
 
         // Start menu music immediately when the menu panel is constructed
-        SoundManager.playLooping("menu_music", "assets/sounds/space_oddity.wav");
+        SoundManager.playLooping("menu_music", "space_oddity.wav");
     }
 }

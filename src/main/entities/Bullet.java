@@ -4,8 +4,10 @@ import utils.Constants;
 
 import java.awt.*;
 
+import static assets.AssetManager.getImage;
+
 public class Bullet extends GameObject {
-    private final static Image sprite = getImage("assets/images/missile.png");
+    private final static Image sprite = getImage("missile.png").get();
     private final Player owner;
 
     // CONSTRUCTOR:

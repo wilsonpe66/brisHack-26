@@ -131,11 +131,4 @@ public abstract class GameObject implements Updatable {
 
     public void collideWith(AlienBullet alienBullet) {
     }
-
-    public static Image getImage(final String path) {
-        return Optional.of(path)
-                .map(GamePanel.class::getResource)
-                .map(Toolkit.getDefaultToolkit()::getImage)
-                .orElse(null);
-    }
 }

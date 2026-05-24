@@ -4,8 +4,10 @@ import utils.Constants;
 
 import java.awt.*;
 
+import static assets.AssetManager.getImage;
+
 public class Alien extends GameObject {
-    private final static Image sprite = getImage("assets/images/shipGreen_manned.png");
+    private final static Image sprite = getImage("shipGreen_manned.png").get();
     private final Player player;
     /** Frames until the alien can shoot again (slower than player). */
     private int shootCooldown;

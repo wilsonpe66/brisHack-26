@@ -9,10 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 
-import static entities.GameObject.getImage;
+import static assets.AssetManager.getImage;
 
 public class GamePanel extends JPanel implements ActionListener {
-    private static final Image SPACE_BACKGROUND = getImage("assets/images/spacebackground.png");
+    private static final Image SPACE_BACKGROUND = getImage("spacebackground.png").get();
 
     private final Timer gameTimer;
     private final InputHandler inputHandler;
