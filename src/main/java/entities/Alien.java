@@ -118,6 +118,8 @@ public class Alien extends GameObject {
             case Player _ -> setHealth(0);
             case Asteroid _ -> setHealth(0);
             case Bullet _ -> setHealth(0);
+            case AlienBullet _ -> {
+            }
             case null -> {
             }
             default -> setHealth(0);

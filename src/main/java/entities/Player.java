@@ -123,19 +123,20 @@ public class Player extends GameObject {
 
     @Override
     public void collideWith(GameObject gameObject) {
+        final int health = getHealth();
         switch (gameObject) {
             case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
             case Alien alien -> alien.setHealth(0);
             case Asteroid asteroid -> {
-                setHealth(Math.max(getHealth() - 10, 0));
+                setHealth(Math.max(health - 10, 0));
                 asteroid.setHealth(0);
-                System.out.printf("Player is with asteroid %d!%n", getHealth());
+                System.out.printf("Player is with asteroid %d!%n", health);
             }
             case Bullet _ -> throw new RuntimeException("PLAYER HIT BULLET?!?!?");
             case AlienBullet alienBullet -> {
-                setHealth(Math.max(getHealth() - 2, 0));
+                setHealth(Math.max(health - 2, 0));
                 alienBullet.setHealth(0);
-                System.out.printf("Player is with asteroid %d!%n", getHealth());
+                System.out.printf("Player is with asteroid %d!%n", health);
             }
             case null -> {
             }
