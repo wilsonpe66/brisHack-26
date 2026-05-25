@@ -1,6 +1,6 @@
 package game;
 
-import GameObject;
+import entities.GameObject;
 import utils.Constants;
 
 import javax.swing.*;
@@ -49,10 +49,10 @@ public class GamePanel extends JPanel implements ActionListener {
      * 4. translate(cx, cy) — move the origin to the object's world position
      */
     private static AffineTransform getAffineTransform(GameObject object, int w, int h) {
-        double cx = object.getPositionX();
-        double cy = object.getPositionY();
+        final double cx = object.getPositionX();
+        final double cy = object.getPositionY();
 
-        AffineTransform transform = new AffineTransform();
+        final AffineTransform transform = new AffineTransform();
         transform.translate(cx, cy);
         transform.rotate(object.getRotationAngle() + Math.toRadians(270));
         transform.scale(object.getScale(), object.getScale());
@@ -96,23 +96,22 @@ public class GamePanel extends JPanel implements ActionListener {
         repaint();
     }
 
-    // paintComponent is called by Swing whenever the panel needs to be redrawn (e.g. after repaint()).
-    // Always call super.paintComponent(g) first to clear the previous frame.
+    // paintComponent is called by Swing whenever the panel needs to be redrawn (e.game. after repaint()).
+    // Always call super.paintComponent(game) first to clear the previous frame.
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void paintComponent(Graphics game) {
+        super.paintComponent(game);
 
-        if (SPACE_BACKGROUND != null) {
-            g.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
-        }
-        drawObjects(g);
-        drawHud(g);
+        game.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
+        drawObjects(game);
+        drawHud(game);
     }
 
-    private void drawHud(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 24));
-        g.drawString("Score: " + worldState.getPlayer().getScore(), 20, 40);
+    private void drawHud(Graphics graphics) {
+        graphics.setColor(Color.WHITE);
+        graphics.setFont(new Font("Arial", Font.BOLD, 24));
+        graphics.drawString("Score: " + worldState.getPlayer().getScore(), 20, 40);
+        graphics.drawString("Health: " + worldState.getPlayer().getHealth(), 20, 80);
     }
 
     private void drawObjects(Graphics g) {

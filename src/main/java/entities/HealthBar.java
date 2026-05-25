@@ -1,8 +1,12 @@
 package entities;
 
-public class HealthBar implements Updatable{
+import lombok.Getter;
 
-    private Player player; // the current player associated with the health
+public class HealthBar implements Updatable {
+
+    private final Player player; // the current player associated with the health
+
+    @Getter
     private int displayedHealth; // the number shown on screen
 
     public HealthBar(Player player) {

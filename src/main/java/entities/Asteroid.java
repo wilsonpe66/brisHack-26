@@ -7,16 +7,18 @@ import java.util.Random;
 
 import static assets.AssetManager.getImage;
 
-public class Asteroid extends GameObject{
+public class Asteroid extends GameObject {
     private static final Random random = new Random();
     private static final Image[] sprites = {
-        getImage("asteroid1.png").get(),
-        getImage("asteroid2.png").get(),
-        getImage("asteroid3.png").get(),
-        getImage("asteroid4.png").get()
+            getImage("asteroid1.png").get(),
+            getImage("asteroid2.png").get(),
+            getImage("asteroid3.png").get(),
+            getImage("asteroid4.png").get()
     };
     private final Image sprite;
-    /** True only when this asteroid was destroyed by a bullet (used for scoring). */
+    /**
+     * True only when this asteroid was destroyed by a bullet (used for scoring).
+     */
     private boolean killedByBullet;
 
     // CONSTRUCTOR:

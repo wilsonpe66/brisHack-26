@@ -1,6 +1,7 @@
 package game;
 
 import entities.*;
+import lombok.Getter;
 import utils.Constants;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.function.Predicate;
 public class WorldState {
     public List<Updatable> updatables;
     public List<GameObject> objects;
+    @Getter
     private final Player player;
     private final AsteroidGenerator asteroidGenerator;
     private final AlienGenerator alienGenerator;
@@ -21,7 +23,7 @@ public class WorldState {
 
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
-        player = new Player((double) Constants.MIDDLE_X, (double) Constants.MIDDLE_Y, inputHandler);
+        player = new Player(Constants.MIDDLE_X, Constants.MIDDLE_Y, inputHandler);
         objects = new ArrayList<>();
         objects.add(player);
         updatables = new ArrayList<>();
@@ -134,11 +136,9 @@ public class WorldState {
         removeDeadObjects();
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    /** Reset player and clear all objects for a new game. */
+    /**
+     * Reset player and clear all objects for a new game.
+     */
     public void reset() {
         objects.clear();
         updatables.clear();

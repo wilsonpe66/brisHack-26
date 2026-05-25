@@ -2,16 +2,22 @@ package entities;
 
 import game.InputHandler;
 import game.SoundManager;
+import lombok.Getter;
+import lombok.Setter;
 import utils.Constants;
 
 import java.awt.*;
 
 import static assets.AssetManager.getImage;
 
-public class Player extends GameObject{
+public class Player extends GameObject {
     private final static Image sprite = getImage("spaceship.png").get();
+    @Getter
     private final InputHandler inputHandler;
+    @Getter
+    @Setter
     private int score;
+
     // CONSTRUCTOR:
     public Player(double x, double y, InputHandler inputHandler) {
         this.inputHandler = inputHandler;
@@ -110,14 +116,6 @@ public class Player extends GameObject{
         setRotationAngle(getRotationAngle() + deltaAngle);
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     @Override
     public void collide(GameObject other) {
         other.collideWith(this);
@@ -130,7 +128,7 @@ public class Player extends GameObject{
 
     @Override
     public void collideWith(final Asteroid asteroid) {
-        setHealth(Math.max(getHealth()-10, 0));
+        setHealth(Math.max(getHealth() - 10, 0));
         asteroid.setHealth(0);
         System.out.printf("Player is with asteroid %d!%n", getHealth());
     }
@@ -147,7 +145,7 @@ public class Player extends GameObject{
 
     @Override
     public void collideWith(final AlienBullet alienBullet) {
-        setHealth(Math.max(getHealth()-2, 0));
+        setHealth(Math.max(getHealth() - 2, 0));
         alienBullet.setHealth(0);
         System.out.printf("Player is with asteroid %d!%n", getHealth());
     }

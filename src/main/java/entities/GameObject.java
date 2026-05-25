@@ -1,65 +1,30 @@
 package entities;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.*;
 
+@Setter
 @Getter
-public abstract class GameObject implements entities.Updatable {
+public abstract class GameObject implements Updatable {
     private static Image sprite;
-    // GETTERS:
     private double velocityX;
     private double velocityY;
     private double rotationAngle; // radians
     private double positionX;
     private double positionY;
+    // TODO: fix arbitrary magic numbers for radius in all gameobjects
     private double radius;
     private int health;
     private boolean isAlive;
     private double scale = 1.0;
-
-    // SETTERS:
-    public void setVelocityX(double velocityX) {
-        this.velocityX = velocityX;
-    }
-
-    public void setVelocityY(double velocityY) {
-        this.velocityY = velocityY;
-    }
-
-    public void setRotationAngle(double rotationAngle) {
-        this.rotationAngle = rotationAngle;
-    }
-
-    public void setPositionX(double positionX) {
-        this.positionX = positionX;
-    }
-
-    public void setPositionY(double positionY) {
-        this.positionY = positionY;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
-    } // TODO: fix arbitrary magic numbers for radius in all gameobjects
-
-    public void setHealth(int health) {
-        this.health = health;
-    }
 
     public boolean getIsAlive() {
         return isAlive;
     }
 
     public abstract Image getSprite();
-
-    public void setScale(double scale) {
-        this.scale = scale;
-    }
-
-    public void setAlive(boolean alive) {
-        this.isAlive = alive;
-    }
 
     // SET X and Y TOGETHER:
     public void setPosition(double x, double y) {
@@ -82,18 +47,18 @@ public abstract class GameObject implements entities.Updatable {
 
     // Second dispatch - overloaded methods for each concrete type.
     // Defaults are no-ops; subclasses override only the pairs that need a response.
-    public void collideWith(entities.Player player) {
+    public void collideWith(Player player) {
     }
 
-    public void collideWith(entities.Asteroid asteroid) {
+    public void collideWith(Asteroid asteroid) {
     }
 
-    public void collideWith(entities.Bullet bullet) {
+    public void collideWith(Bullet bullet) {
     }
 
-    public void collideWith(entities.Alien alien) {
+    public void collideWith(Alien alien) {
     }
 
-    public void collideWith(entities.AlienBullet alienBullet) {
+    public void collideWith(AlienBullet alienBullet) {
     }
 }

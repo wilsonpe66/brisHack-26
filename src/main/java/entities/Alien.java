@@ -1,6 +1,5 @@
 package entities;
 
-import main.entities.GameObject;
 import utils.Constants;
 
 import java.awt.*;
@@ -10,16 +9,24 @@ import static assets.AssetManager.getImage;
 public class Alien extends GameObject {
     private final static Image sprite = getImage("shipGreen_manned.png").get();
     private final Player player;
-    /** Frames until the alien can shoot again (slower than player). */
+    /**
+     * Frames until the alien can shoot again (slower than player).
+     */
     private int shootCooldown;
-    /** Grace period after spawning before the alien starts shooting.
-     *  Gives the player a brief window to react to a new alien. */
+    /**
+     * Grace period after spawning before the alien starts shooting.
+     * Gives the player a brief window to react to a new alien.
+     */
     private int noShootTimer;
-    /** Frames until we next recalculate velocity direction towards the player.
-     *  This makes alien movement "steppy" rather than perfectly smooth tracking. */
+    /**
+     * Frames until we next recalculate velocity direction towards the player.
+     * This makes alien movement "steppy" rather than perfectly smooth tracking.
+     */
     private int targetUpdateTimer;
 
-    /** Spawn from side of screen with given position and initial velocity. */
+    /**
+     * Spawn from side of screen with given position and initial velocity.
+     */
     public Alien(double x, double y, double velocityX, double velocityY, Player player) {
         this.player = player;
         setPosition(x, y);
@@ -34,7 +41,9 @@ public class Alien extends GameObject {
         targetUpdateTimer = 0;
     }
 
-    /** Returns an AlienBullet aimed at the player, or null if on cooldown. */
+    /**
+     * Returns an AlienBullet aimed at the player, or null if on cooldown.
+     */
     public AlienBullet shoot() {
         if (shootCooldown > 0 || noShootTimer > 0 || !player.getIsAlive()) return null;
 
@@ -95,7 +104,7 @@ public class Alien extends GameObject {
     }
 
     @Override
-    public void collide(GameObject other) {
+    public void collide(final GameObject other) {
         other.collideWith(this);
     }
 
