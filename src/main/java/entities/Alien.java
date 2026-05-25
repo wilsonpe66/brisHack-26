@@ -115,9 +115,6 @@ public class Alien extends GameObject {
     @Override
     public void collideWith(GameObject gameObject) {
         switch (gameObject) {
-            case Player _ -> setHealth(0);
-            case Asteroid _ -> setHealth(0);
-            case Bullet _ -> setHealth(0);
             case AlienBullet _ -> {
             }
             case null -> {

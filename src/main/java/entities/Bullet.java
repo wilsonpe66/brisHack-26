@@ -57,20 +57,14 @@ public class Bullet extends GameObject {
     @Override
     public void collideWith(GameObject gameObject) {
         switch (gameObject) {
-            case Player _ -> throw new RuntimeException("BULLET HIT PLAYER?!?!?");
-            case Asteroid _ -> setHealth(0);
-            case Bullet _ -> throw new RuntimeException("BULLET HIT BULLET?!?!?");
-            case Alien alien -> {
+            case Player _, Asteroid _, Bullet _, AlienBullet _ -> setHealth(0);
+            case Alien _ -> {
                 setHealth(0);
-                alien.setHealth(0);
                 if (owner != null) {
                     owner.setScore(owner.getScore() + Constants.ALIEN_KILL_SCORE);
                 }
             }
-            case AlienBullet alienBullet -> {
-                setHealth(0);
-                alienBullet.setHealth(0);
-            }
+
             case null, default -> {
             }
         }

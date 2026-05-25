@@ -68,17 +68,11 @@ public class Asteroid extends GameObject {
     @Override
     public void collideWith(GameObject gameObject) {
         switch (gameObject) {
-            case Player _ -> {
-            }
-            case Asteroid asteroid -> {
-                setHealth(0);
-                asteroid.setHealth(0);
-            }
+            case Asteroid _, AlienBullet _ -> setHealth(0);
             case Bullet _ -> {
                 setHealth(getHealth() - 1);
                 killedByBullet = true;
             }
-            case AlienBullet alienBullet -> alienBullet.setHealth(0);
             case null, default -> {
             }
         }
