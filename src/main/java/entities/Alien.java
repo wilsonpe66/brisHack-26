@@ -1,12 +1,12 @@
 package entities;
 
-import utils.Constants;
-
-import java.awt.*;
-
 import static assets.AssetManager.getImage;
 
+import java.awt.Image;
+import utils.Constants;
+
 public class Alien extends GameObject {
+
     private final static Image sprite = getImage("shipGreen_manned.png").get();
     private final Player player;
     /**
@@ -14,13 +14,11 @@ public class Alien extends GameObject {
      */
     private int shootCooldown;
     /**
-     * Grace period after spawning before the alien starts shooting.
-     * Gives the player a brief window to react to a new alien.
+     * Grace period after spawning before the alien starts shooting. Gives the player a brief window to react to a new alien.
      */
     private int noShootTimer;
     /**
-     * Frames until we next recalculate velocity direction towards the player.
-     * This makes alien movement "steppy" rather than perfectly smooth tracking.
+     * Frames until we next recalculate velocity direction towards the player. This makes alien movement "steppy" rather than perfectly smooth tracking.
      */
     private int targetUpdateTimer;
 
@@ -45,12 +43,14 @@ public class Alien extends GameObject {
      * Returns an AlienBullet aimed at the player, or null if on cooldown.
      */
     public AlienBullet shoot() {
-        if (shootCooldown > 0 || noShootTimer > 0 || !player.getIsAlive()) return null;
+        if (shootCooldown > 0 || noShootTimer > 0 || !player.getIsAlive()) {
+            return null;
+        }
 
         // atan2(dy, dx) calculates the angle from this alien to the player
         double angle = Math.atan2(
-                player.getPositionY() - getPositionY(),
-                player.getPositionX() - getPositionX()
+            player.getPositionY() - getPositionY(),
+            player.getPositionX() - getPositionX()
         );
         setRotationAngle(angle); // face the player when shooting
         double bulletVelocityX = Math.cos(angle) * Constants.ALIEN_BULLET_SPEED;
@@ -65,13 +65,17 @@ public class Alien extends GameObject {
 
     @Override
     public void update() {
-        if (shootCooldown > 0) shootCooldown--;
-        if (noShootTimer > 0) noShootTimer--;
+        if (shootCooldown > 0) {
+            shootCooldown--;
+        }
+        if (noShootTimer > 0) {
+            noShootTimer--;
+        }
         targetUpdateTimer--;
         if (targetUpdateTimer <= 0 && player.getIsAlive()) {
             double angle = Math.atan2(
-                    player.getPositionY() - getPositionY(),
-                    player.getPositionX() - getPositionX()
+                player.getPositionY() - getPositionY(),
+                player.getPositionX() - getPositionX()
             );
             setVelocity(Math.cos(angle) * Constants.ALIEN_SPEED, Math.sin(angle) * Constants.ALIEN_SPEED);
             setRotationAngle(angle);
@@ -109,22 +113,14 @@ public class Alien extends GameObject {
     }
 
     @Override
-    public void collideWith(Player player) {
-        setHealth(0);
-    }
-
-    @Override
-    public void collideWith(Asteroid asteroid) {
-        setHealth(0);
-    }
-
-    @Override
-    public void collideWith(Bullet bullet) {
-        setHealth(0);
-    }
-
-    @Override
-    public void collideWith(AlienBullet alienBullet) {
-        // friendly fire off
+    public void collideWith(GameObject gameObject) {
+        switch (gameObject) {
+            case Player _ -> setHealth(0);
+            case Asteroid _ -> setHealth(0);
+            case Bullet _ -> setHealth(0);
+            case null -> {
+            }
+            default -> setHealth(0);
+        }
     }
 }

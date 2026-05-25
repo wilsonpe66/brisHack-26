@@ -1,13 +1,13 @@
 package entities;
 
+import java.awt.Image;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.awt.*;
 
 @Setter
 @Getter
 public abstract class GameObject implements Updatable {
+
     private static Image sprite;
     private double velocityX;
     private double velocityY;
@@ -45,20 +45,5 @@ public abstract class GameObject implements Updatable {
     // entry point - first dispatch: each subclass calls other.collideWith(this)
     public abstract void collide(GameObject other);
 
-    // Second dispatch - overloaded methods for each concrete type.
-    // Defaults are no-ops; subclasses override only the pairs that need a response.
-    public void collideWith(Player player) {
-    }
-
-    public void collideWith(Asteroid asteroid) {
-    }
-
-    public void collideWith(Bullet bullet) {
-    }
-
-    public void collideWith(Alien alien) {
-    }
-
-    public void collideWith(AlienBullet alienBullet) {
-    }
+    public abstract void collideWith(GameObject gameObject);
 }

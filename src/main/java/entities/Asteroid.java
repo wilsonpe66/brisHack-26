@@ -1,19 +1,19 @@
 package entities;
 
-import utils.Constants;
-
-import java.awt.*;
-import java.util.Random;
-
 import static assets.AssetManager.getImage;
 
+import java.awt.Image;
+import java.util.Random;
+import utils.Constants;
+
 public class Asteroid extends GameObject {
+
     private static final Random random = new Random();
     private static final Image[] sprites = {
-            getImage("asteroid1.png").get(),
-            getImage("asteroid2.png").get(),
-            getImage("asteroid3.png").get(),
-            getImage("asteroid4.png").get()
+        getImage("asteroid1.png").get(),
+        getImage("asteroid2.png").get(),
+        getImage("asteroid3.png").get(),
+        getImage("asteroid4.png").get()
     };
     private final Image sprite;
     /**
@@ -66,25 +66,22 @@ public class Asteroid extends GameObject {
     }
 
     @Override
-    public void collideWith(Player player) {
-        // Don't kill this asteroid - only the player dies. Avoids awarding +1 score when player dies.
-    }
-
-    @Override
-    public void collideWith(Asteroid asteroid) {
-        setHealth(0);
-        asteroid.setHealth(0);
-    }
-
-    @Override
-    public void collideWith(Bullet bullet) {
-        setHealth(getHealth() - 1);
-        killedByBullet = true;
-    }
-
-    @Override
-    public void collideWith(AlienBullet alienBullet) {
-        alienBullet.setHealth(0);
+    public void collideWith(GameObject gameObject) {
+        switch (gameObject) {
+            case Player _ -> {
+            }
+            case Asteroid asteroid -> {
+                setHealth(0);
+                asteroid.setHealth(0);
+            }
+            case Bullet _ -> {
+                setHealth(getHealth() - 1);
+                killedByBullet = true;
+            }
+            case AlienBullet alienBullet -> alienBullet.setHealth(0);
+            case null, default -> {
+            }
+        }
     }
 
     public boolean wasKilledByBullet() {

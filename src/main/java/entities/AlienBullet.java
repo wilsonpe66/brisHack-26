@@ -1,12 +1,12 @@
 package entities;
 
-import utils.Constants;
-
-import java.awt.*;
-
 import static assets.AssetManager.getImage;
 
+import java.awt.Image;
+import utils.Constants;
+
 public class AlienBullet extends GameObject {
+
     private final static Image sprite = getImage("missile.png").get();
     private final Alien alienOwner;
 
@@ -30,9 +30,9 @@ public class AlienBullet extends GameObject {
         setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
 
         boolean outOfBounds = getPositionX() < 0
-                || getPositionX() > Constants.WIDTH
-                || getPositionY() < 0
-                || getPositionY() > Constants.HEIGHT;
+            || getPositionX() > Constants.WIDTH
+            || getPositionY() < 0
+            || getPositionY() > Constants.HEIGHT;
 
         if (outOfBounds || getHealth() <= 0) {
             setAlive(false);
@@ -45,24 +45,19 @@ public class AlienBullet extends GameObject {
     }
 
     @Override
-    public void collideWith(Player player) {
-        setHealth(0);
-        player.setHealth(0);
-    }
-
-    @Override
-    public void collideWith(Asteroid asteroid) {
-        setHealth(0);
-    }
-
-    @Override
-    public void collideWith(Bullet bullet) {
-        setHealth(0);
-        bullet.setHealth(0);
-    }
-
-    @Override
-    public void collideWith(Alien alien) {
-        // friendly fire off - no effect
+    public void collideWith(GameObject gameObject) {
+        switch (gameObject) {
+            case Player player -> {
+                setHealth(0);
+                player.setHealth(0);
+            }
+            case Asteroid _ -> setHealth(0);
+            case Bullet bullet -> {
+                setHealth(0);
+                bullet.setHealth(0);
+            }
+            case null, default -> {
+            }
+        }
     }
 }

@@ -1,12 +1,12 @@
 package entities;
 
-import utils.Constants;
-
-import java.awt.*;
-
 import static assets.AssetManager.getImage;
 
+import java.awt.Image;
+import utils.Constants;
+
 public class Bullet extends GameObject {
+
     private final static Image sprite = getImage("missile.png").get();
     private final Player owner;
 
@@ -40,9 +40,9 @@ public class Bullet extends GameObject {
         setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
 
         boolean outOfBounds = getPositionX() < 0
-                || getPositionX() > Constants.WIDTH
-                || getPositionY() < 0
-                || getPositionY() > Constants.HEIGHT;
+            || getPositionX() > Constants.WIDTH
+            || getPositionY() < 0
+            || getPositionY() > Constants.HEIGHT;
 
         if (outOfBounds || getHealth() <= 0) {
             setAlive(false);
@@ -55,32 +55,24 @@ public class Bullet extends GameObject {
     }
 
     @Override
-    public void collideWith(Player player) {
-        throw new RuntimeException("BULLET HIT PLAYER?!?!?");
-    }
-
-    @Override
-    public void collideWith(Asteroid asteroid) {
-        setHealth(0);
-    }
-
-    @Override
-    public void collideWith(Bullet bullet) {
-        throw new RuntimeException("BULLET HIT BULLET?!?!?");
-    }
-
-    @Override
-    public void collideWith(Alien alien) {
-        setHealth(0);
-        alien.setHealth(0);
-        if (owner != null) {
-            owner.setScore(owner.getScore() + Constants.ALIEN_KILL_SCORE);
+    public void collideWith(GameObject gameObject) {
+        switch (gameObject) {
+            case Player _ -> throw new RuntimeException("BULLET HIT PLAYER?!?!?");
+            case Asteroid _ -> setHealth(0);
+            case Bullet _ -> throw new RuntimeException("BULLET HIT BULLET?!?!?");
+            case Alien alien -> {
+                setHealth(0);
+                alien.setHealth(0);
+                if (owner != null) {
+                    owner.setScore(owner.getScore() + Constants.ALIEN_KILL_SCORE);
+                }
+            }
+            case AlienBullet alienBullet -> {
+                setHealth(0);
+                alienBullet.setHealth(0);
+            }
+            case null, default -> {
+            }
         }
-    }
-
-    @Override
-    public void collideWith(AlienBullet alienBullet) {
-        setHealth(0);
-        alienBullet.setHealth(0);
     }
 }

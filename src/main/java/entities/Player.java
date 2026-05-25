@@ -1,16 +1,16 @@
 package entities;
 
+import static assets.AssetManager.getImage;
+
 import game.InputHandler;
 import game.SoundManager;
+import java.awt.Image;
 import lombok.Getter;
 import lombok.Setter;
 import utils.Constants;
 
-import java.awt.*;
-
-import static assets.AssetManager.getImage;
-
 public class Player extends GameObject {
+
     private final static Image sprite = getImage("spaceship.png").get();
     @Getter
     private final InputHandler inputHandler;
@@ -122,31 +122,24 @@ public class Player extends GameObject {
     }
 
     @Override
-    public void collideWith(Player player) {
-        throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
-    }
-
-    @Override
-    public void collideWith(final Asteroid asteroid) {
-        setHealth(Math.max(getHealth() - 10, 0));
-        asteroid.setHealth(0);
-        System.out.printf("Player is with asteroid %d!%n", getHealth());
-    }
-
-    @Override
-    public void collideWith(Bullet bullet) {
-        throw new RuntimeException("PLAYER HIT BULLET?!?!?");
-    }
-
-    @Override
-    public void collideWith(Alien alien) {
-        alien.setHealth(0);
-    }
-
-    @Override
-    public void collideWith(final AlienBullet alienBullet) {
-        setHealth(Math.max(getHealth() - 2, 0));
-        alienBullet.setHealth(0);
-        System.out.printf("Player is with asteroid %d!%n", getHealth());
+    public void collideWith(GameObject gameObject) {
+        switch (gameObject) {
+            case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
+            case Alien alien -> alien.setHealth(0);
+            case Asteroid asteroid -> {
+                setHealth(Math.max(getHealth() - 10, 0));
+                asteroid.setHealth(0);
+                System.out.printf("Player is with asteroid %d!%n", getHealth());
+            }
+            case Bullet _ -> throw new RuntimeException("PLAYER HIT BULLET?!?!?");
+            case AlienBullet alienBullet -> {
+                setHealth(Math.max(getHealth() - 2, 0));
+                alienBullet.setHealth(0);
+                System.out.printf("Player is with asteroid %d!%n", getHealth());
+            }
+            case null -> {
+            }
+            default -> setHealth(0);
+        }
     }
 }
