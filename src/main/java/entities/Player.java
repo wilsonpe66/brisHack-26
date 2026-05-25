@@ -1,17 +1,23 @@
 package entities;
 
-import game.InputHandler;
-import game.SoundManager;
-import utils.Constants;
-
-import java.awt.*;
-
 import static assets.AssetManager.getImage;
 
-public class Player extends GameObject{
+import game.InputHandler;
+import game.SoundManager;
+import java.awt.Image;
+import lombok.Getter;
+import lombok.Setter;
+import utils.Constants;
+
+public class Player extends GameObject {
+
     private final static Image sprite = getImage("spaceship.png").get();
+    @Getter
     private final InputHandler inputHandler;
+    @Getter
+    @Setter
     private int score;
+
     // CONSTRUCTOR:
     public Player(double x, double y, InputHandler inputHandler) {
         this.inputHandler = inputHandler;
@@ -110,41 +116,30 @@ public class Player extends GameObject{
         setRotationAngle(getRotationAngle() + deltaAngle);
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     @Override
     public void collide(GameObject other) {
         other.collideWith(this);
     }
 
     @Override
-    public void collideWith(Player player) {
-        throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
-    }
-
-    @Override
-    public void collideWith(Asteroid asteroid) {
-        this.setHealth(0);
-    }
-
-    @Override
-    public void collideWith(Bullet bullet) {
-        throw new RuntimeException("PLAYER HIT BULLET?!?!?");
-    }
-
-    @Override
-    public void collideWith(Alien alien) {
-        alien.setHealth(0);
-    }
-
-    @Override
-    public void collideWith(AlienBullet alienBullet) {
-        setHealth(0);
+    public void collideWith(GameObject gameObject) {
+        switch (gameObject) {
+            case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
+            case Alien alien -> alien.setHealth(0);
+            case Asteroid asteroid -> {
+                setHealth(Math.max(getHealth() - 10, 0));
+                asteroid.setHealth(0);
+                System.out.printf("Player is with asteroid %d!%n", getHealth());
+            }
+            case Bullet _ -> throw new RuntimeException("PLAYER HIT BULLET?!?!?");
+            case AlienBullet alienBullet -> {
+                setHealth(Math.max(getHealth() - 2, 0));
+                alienBullet.setHealth(0);
+                System.out.printf("Player is with asteroid %d!%n", getHealth());
+            }
+            case null -> {
+            }
+            default -> setHealth(0);
+        }
     }
 }

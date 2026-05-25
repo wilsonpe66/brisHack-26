@@ -39,19 +39,46 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
-    /** Start the game loop and asteroid spawning. Called when switching to game from menu. */
+    /**
+     * Builds an AffineTransform to position, rotate, and scale a sprite.
+     * Transforms are applied in reverse order (last added = first applied):
+     * 1. translate(-w/2, -h/2) — shift so the sprite's centre is at the origin
+     * 2. scale — resize the sprite
+     * 3. rotate — rotate around the origin (the object's centre)
+     * +270° corrects for sprites that face right by default to face up at angle 0
+     * 4. translate(cx, cy) — move the origin to the object's world position
+     */
+    private static AffineTransform getAffineTransform(GameObject object, int w, int h) {
+        final double cx = object.getPositionX();
+        final double cy = object.getPositionY();
+
+        final AffineTransform transform = new AffineTransform();
+        transform.translate(cx, cy);
+        transform.rotate(object.getRotationAngle() + Math.toRadians(270));
+        transform.scale(object.getScale(), object.getScale());
+        transform.translate(-w / 2.0, -h / 2.0);
+        return transform;
+    }
+
+    /**
+     * Start the game loop and asteroid spawning. Called when switching to game from menu.
+     */
     public void startGame() {
         if (!gameTimer.isRunning()) {
             gameTimer.start();
         }
     }
 
-    /** Stop the game loop. Called when player dies. */
+    /**
+     * Stop the game loop. Called when player dies.
+     */
     public void stopGame() {
         gameTimer.stop();
     }
 
-    /** Reset world state for a new game. */
+    /**
+     * Reset world state for a new game.
+     */
     public void reset() {
         inputHandler.clearAllKeys(); // keys held during game over never got keyReleased (panel lost focus)
         SoundManager.stopLooping("thruster");
@@ -69,23 +96,22 @@ public class GamePanel extends JPanel implements ActionListener {
         repaint();
     }
 
-    // paintComponent is called by Swing whenever the panel needs to be redrawn (e.g. after repaint()).
-    // Always call super.paintComponent(g) first to clear the previous frame.
+    // paintComponent is called by Swing whenever the panel needs to be redrawn (e.game. after repaint()).
+    // Always call super.paintComponent(game) first to clear the previous frame.
     @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    protected void paintComponent(Graphics game) {
+        super.paintComponent(game);
 
-        if (SPACE_BACKGROUND != null) {
-            g.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
-        }
-        drawObjects(g);
-        drawHud(g);
+        game.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
+        drawObjects(game);
+        drawHud(game);
     }
 
-    private void drawHud(Graphics g) {
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 24));
-        g.drawString("Score: " + worldState.getPlayer().getScore(), 20, 40);
+    private void drawHud(Graphics graphics) {
+        graphics.setColor(Color.WHITE);
+        graphics.setFont(new Font("Arial", Font.BOLD, 24));
+        graphics.drawString("Score: " + worldState.getPlayer().getScore(), 20, 40);
+        graphics.drawString("Health: " + worldState.getPlayer().getHealth(), 20, 80);
     }
 
     private void drawObjects(Graphics g) {
@@ -102,27 +128,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
             g2d.drawImage(sprite, transform, null);
         }
-    }
-
-    /**
-     * Builds an AffineTransform to position, rotate, and scale a sprite.
-     * Transforms are applied in reverse order (last added = first applied):
-     * 1. translate(-w/2, -h/2) — shift so the sprite's centre is at the origin
-     * 2. scale — resize the sprite
-     * 3. rotate — rotate around the origin (the object's centre)
-     *    +270° corrects for sprites that face right by default to face up at angle 0
-     * 4. translate(cx, cy) — move the origin to the object's world position
-     */
-    private static AffineTransform getAffineTransform(GameObject object, int w, int h) {
-        double cx = object.getPositionX();
-        double cy = object.getPositionY();
-
-        AffineTransform transform = new AffineTransform();
-        transform.translate(cx, cy);
-        transform.rotate(object.getRotationAngle() + Math.toRadians(270));
-        transform.scale(object.getScale(), object.getScale());
-        transform.translate(-w / 2.0, -h / 2.0);
-        return transform;
     }
 
 }

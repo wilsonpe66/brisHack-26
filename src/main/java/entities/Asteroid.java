@@ -1,13 +1,13 @@
 package entities;
 
-import utils.Constants;
-
-import java.awt.*;
-import java.util.Random;
-
 import static assets.AssetManager.getImage;
 
-public class Asteroid extends GameObject{
+import java.awt.Image;
+import java.util.Random;
+import utils.Constants;
+
+public class Asteroid extends GameObject {
+
     private static final Random random = new Random();
     private static final Image[] sprites = {
         getImage("asteroid1.png").get(),
@@ -16,7 +16,9 @@ public class Asteroid extends GameObject{
         getImage("asteroid4.png").get()
     };
     private final Image sprite;
-    /** True only when this asteroid was destroyed by a bullet (used for scoring). */
+    /**
+     * True only when this asteroid was destroyed by a bullet (used for scoring).
+     */
     private boolean killedByBullet;
 
     // CONSTRUCTOR:
@@ -64,25 +66,22 @@ public class Asteroid extends GameObject{
     }
 
     @Override
-    public void collideWith(Player player) {
-        // Don't kill this asteroid - only the player dies. Avoids awarding +1 score when player dies.
-    }
-
-    @Override
-    public void collideWith(Asteroid asteroid) {
-        setHealth(0);
-        asteroid.setHealth(0);
-    }
-
-    @Override
-    public void collideWith(Bullet bullet) {
-        setHealth(getHealth() - 1);
-        killedByBullet = true;
-    }
-
-    @Override
-    public void collideWith(AlienBullet alienBullet) {
-        alienBullet.setHealth(0);
+    public void collideWith(GameObject gameObject) {
+        switch (gameObject) {
+            case Player _ -> {
+            }
+            case Asteroid asteroid -> {
+                setHealth(0);
+                asteroid.setHealth(0);
+            }
+            case Bullet _ -> {
+                setHealth(getHealth() - 1);
+                killedByBullet = true;
+            }
+            case AlienBullet alienBullet -> alienBullet.setHealth(0);
+            case null, default -> {
+            }
+        }
     }
 
     public boolean wasKilledByBullet() {

@@ -1,14 +1,17 @@
 package game;
 
 import entities.*;
+import lombok.Getter;
 import utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class WorldState {
     public List<Updatable> updatables;
     public List<GameObject> objects;
+    @Getter
     private final Player player;
     private final AsteroidGenerator asteroidGenerator;
     private final AlienGenerator alienGenerator;
@@ -20,7 +23,7 @@ public class WorldState {
 
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
-        player = new Player((double) Constants.MIDDLE_X, (double) Constants.MIDDLE_Y, inputHandler);
+        player = new Player(Constants.MIDDLE_X, Constants.MIDDLE_Y, inputHandler);
         objects = new ArrayList<>();
         objects.add(player);
         updatables = new ArrayList<>();
@@ -93,16 +96,15 @@ public class WorldState {
     }
 
     private void handleCollisions() {
-        for (int i = 0; i < objects.size(); i++) {
-            for (int j = i+1; j < objects.size(); j++) {
-                GameObject a = objects.get(i);
-                GameObject b = objects.get(j);
+        objects.forEach(a -> {
+            objects.forEach(b -> {
+                if (a == b) return;
                 if (checkCollision(a, b)) {
                     a.collide(b);
                     b.collide(a);
                 }
-            }
-        }
+            });
+        });
     }
 
     private void removeDeadObjects() {
@@ -116,12 +118,13 @@ public class WorldState {
         // Only asteroids with killedByBullet=true contribute to score —
         // those that flew off-screen or were destroyed by other asteroids don't count.
         int shotAsteroids = (int) objects.stream()
-                .filter(obj -> !obj.getIsAlive() && obj instanceof Asteroid && ((Asteroid) obj).wasKilledByBullet())
+                .filter(Predicate.not(GameObject::getIsAlive))
+                .filter(obj -> obj instanceof Asteroid && ((Asteroid) obj).wasKilledByBullet())
                 .count();
         player.setScore(player.getScore() + shotAsteroids);
 
         // removeIf modifies the list in-place, removing all dead objects
-        objects.removeIf(obj -> !obj.getIsAlive());
+        objects.removeIf(Predicate.not(GameObject::getIsAlive));
     }
 
     public void updateState() {
@@ -133,11 +136,9 @@ public class WorldState {
         removeDeadObjects();
     }
 
-    public Player getPlayer() {
-        return player;
-    }
-
-    /** Reset player and clear all objects for a new game. */
+    /**
+     * Reset player and clear all objects for a new game.
+     */
     public void reset() {
         objects.clear();
         updatables.clear();

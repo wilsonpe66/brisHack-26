@@ -19,7 +19,7 @@ public class AsteroidGenerator {
     // Each spawns an asteroid just outside the visible area on that edge.
     private static final SideSpawner[] SIDES = {
             (width, height, offset, px, py) -> fromPosition(random.nextDouble() * width, -offset, px, py), // top
-            (width, height, offset, px, py) -> fromPosition(random.nextDouble() * width,   height + offset,         px, py), // bottom
+            (width, height, offset, px, py) -> fromPosition(random.nextDouble() * width, height + offset, px, py), // bottom
             (width, height, offset, px, py) -> fromPosition(-offset, random.nextDouble() * height, px, py), // left
             (width, height, offset, px, py) -> fromPosition(width + offset, random.nextDouble() * height, px, py)  // right
     };

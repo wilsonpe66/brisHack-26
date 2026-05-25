@@ -35,8 +35,8 @@ public class AlienGenerator {
 
     // spawn an alien at a random side of the screen
     public void generate() {
-        Player player = worldState.getPlayer();
-        Alien alien = SIDES[random.nextInt(SIDES.length)].spawn(Constants.WIDTH, Constants.HEIGHT, Constants.ASTEROID_OFFSET, player.getPositionX(), player.getPositionY(), player);
+        final Player player = worldState.getPlayer();
+        final Alien alien = SIDES[random.nextInt(SIDES.length)].spawn(Constants.WIDTH, Constants.HEIGHT, Constants.ASTEROID_OFFSET, player.getPositionX(), player.getPositionY(), player);
         worldState.objects.add(alien);
         worldState.updatables.add(alien);
     }

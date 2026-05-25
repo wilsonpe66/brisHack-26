@@ -14,12 +14,12 @@ public class InputHandler implements KeyListener {
     // Consumer<Boolean> accepts true (pressed) or false (released).
     private final Map<Integer, Consumer<Boolean>> keyMap = new HashMap<>() {{
         put(KeyEvent.VK_W, v -> upPressed = v);
-        put(KeyEvent.VK_UP,    v -> upPressed = v);
-        put(KeyEvent.VK_S,     v -> downPressed = v);
-        put(KeyEvent.VK_DOWN,  v -> downPressed = v);
-        put(KeyEvent.VK_A,     v -> leftPressed = v);
-        put(KeyEvent.VK_LEFT,  v -> leftPressed = v);
-        put(KeyEvent.VK_D,     v -> rightPressed = v);
+        put(KeyEvent.VK_UP, v -> upPressed = v);
+        put(KeyEvent.VK_S, v -> downPressed = v);
+        put(KeyEvent.VK_DOWN, v -> downPressed = v);
+        put(KeyEvent.VK_A, v -> leftPressed = v);
+        put(KeyEvent.VK_LEFT, v -> leftPressed = v);
+        put(KeyEvent.VK_D, v -> rightPressed = v);
         put(KeyEvent.VK_RIGHT, v -> rightPressed = v);
         put(KeyEvent.VK_SPACE, v -> shootPressed = v);
     }};
@@ -27,7 +27,8 @@ public class InputHandler implements KeyListener {
     // keyTyped is for character input (e.g. typing text). Not used here — we only care about
     // key press/release for continuous movement, which is handled by keyPressed/keyReleased.
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -41,13 +42,29 @@ public class InputHandler implements KeyListener {
         if (action != null) action.accept(false);
     }
 
-    public boolean isUpPressed() { return upPressed; }
-    public boolean isDownPressed() { return downPressed; }
-    public boolean isLeftPressed() { return leftPressed; }
-    public boolean isRightPressed() { return rightPressed; }
-    public boolean isShootPressed() { return shootPressed; }
+    public boolean isUpPressed() {
+        return upPressed;
+    }
 
-    /** Clear all key states. Call when restarting so keys held during game over don't carry over. */
+    public boolean isDownPressed() {
+        return downPressed;
+    }
+
+    public boolean isLeftPressed() {
+        return leftPressed;
+    }
+
+    public boolean isRightPressed() {
+        return rightPressed;
+    }
+
+    public boolean isShootPressed() {
+        return shootPressed;
+    }
+
+    /**
+     * Clear all key states. Call when restarting so keys held during game over don't carry over.
+     */
     public void clearAllKeys() {
         leftPressed = false;
         rightPressed = false;
