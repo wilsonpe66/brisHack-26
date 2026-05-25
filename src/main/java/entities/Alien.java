@@ -1,5 +1,6 @@
 package entities;
 
+import main.entities.GameObject;
 import utils.Constants;
 
 import java.awt.*;

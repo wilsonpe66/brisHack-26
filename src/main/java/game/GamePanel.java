@@ -1,6 +1,6 @@
 package game;
 
-import entities.GameObject;
+import GameObject;
 import utils.Constants;
 
 import javax.swing.*;
@@ -39,19 +39,46 @@ public class GamePanel extends JPanel implements ActionListener {
 
     }
 
-    /** Start the game loop and asteroid spawning. Called when switching to game from menu. */
+    /**
+     * Builds an AffineTransform to position, rotate, and scale a sprite.
+     * Transforms are applied in reverse order (last added = first applied):
+     * 1. translate(-w/2, -h/2) — shift so the sprite's centre is at the origin
+     * 2. scale — resize the sprite
+     * 3. rotate — rotate around the origin (the object's centre)
+     * +270° corrects for sprites that face right by default to face up at angle 0
+     * 4. translate(cx, cy) — move the origin to the object's world position
+     */
+    private static AffineTransform getAffineTransform(GameObject object, int w, int h) {
+        double cx = object.getPositionX();
+        double cy = object.getPositionY();
+
+        AffineTransform transform = new AffineTransform();
+        transform.translate(cx, cy);
+        transform.rotate(object.getRotationAngle() + Math.toRadians(270));
+        transform.scale(object.getScale(), object.getScale());
+        transform.translate(-w / 2.0, -h / 2.0);
+        return transform;
+    }
+
+    /**
+     * Start the game loop and asteroid spawning. Called when switching to game from menu.
+     */
     public void startGame() {
         if (!gameTimer.isRunning()) {
             gameTimer.start();
         }
     }
 
-    /** Stop the game loop. Called when player dies. */
+    /**
+     * Stop the game loop. Called when player dies.
+     */
     public void stopGame() {
         gameTimer.stop();
     }
 
-    /** Reset world state for a new game. */
+    /**
+     * Reset world state for a new game.
+     */
     public void reset() {
         inputHandler.clearAllKeys(); // keys held during game over never got keyReleased (panel lost focus)
         SoundManager.stopLooping("thruster");
@@ -102,27 +129,6 @@ public class GamePanel extends JPanel implements ActionListener {
 
             g2d.drawImage(sprite, transform, null);
         }
-    }
-
-    /**
-     * Builds an AffineTransform to position, rotate, and scale a sprite.
-     * Transforms are applied in reverse order (last added = first applied):
-     * 1. translate(-w/2, -h/2) — shift so the sprite's centre is at the origin
-     * 2. scale — resize the sprite
-     * 3. rotate — rotate around the origin (the object's centre)
-     *    +270° corrects for sprites that face right by default to face up at angle 0
-     * 4. translate(cx, cy) — move the origin to the object's world position
-     */
-    private static AffineTransform getAffineTransform(GameObject object, int w, int h) {
-        double cx = object.getPositionX();
-        double cy = object.getPositionY();
-
-        AffineTransform transform = new AffineTransform();
-        transform.translate(cx, cy);
-        transform.rotate(object.getRotationAngle() + Math.toRadians(270));
-        transform.scale(object.getScale(), object.getScale());
-        transform.translate(-w / 2.0, -h / 2.0);
-        return transform;
     }
 
 }

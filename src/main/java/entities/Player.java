@@ -129,8 +129,10 @@ public class Player extends GameObject{
     }
 
     @Override
-    public void collideWith(Asteroid asteroid) {
-        this.setHealth(0);
+    public void collideWith(final Asteroid asteroid) {
+        setHealth(Math.max(getHealth()-10, 0));
+        asteroid.setHealth(0);
+        System.out.printf("Player is with asteroid %d!%n", getHealth());
     }
 
     @Override
@@ -144,7 +146,9 @@ public class Player extends GameObject{
     }
 
     @Override
-    public void collideWith(AlienBullet alienBullet) {
-        setHealth(0);
+    public void collideWith(final AlienBullet alienBullet) {
+        setHealth(Math.max(getHealth()-2, 0));
+        alienBullet.setHealth(0);
+        System.out.printf("Player is with asteroid %d!%n", getHealth());
     }
 }
