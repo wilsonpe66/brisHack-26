@@ -1,21 +1,27 @@
 package game;
 
-import entities.*;
+import entities.Alien;
+import entities.AlienBullet;
+import entities.Asteroid;
+import entities.Bullet;
+import entities.GameObject;
+import entities.Player;
+import entities.Updatable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
 import lombok.Getter;
 import utils.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
-
 public class WorldState {
-    public List<Updatable> updatables;
-    public List<GameObject> objects;
+
     @Getter
     private final Player player;
     private final AsteroidGenerator asteroidGenerator;
     private final AlienGenerator alienGenerator;
     private final InputHandler inputHandler;
+    public List<Updatable> updatables;
+    public List<GameObject> objects;
     private int shootCooldown;
     private long lastSpawnTime = 0;
     private long lastAlienSpawnTime = 0;
@@ -39,7 +45,7 @@ public class WorldState {
             shootCooldown--;
             return;
         }
-        if (inputHandler.isShootPressed() && player.getIsAlive()) {
+        if (inputHandler.isShootPressed() && player.isAlive()) {
             Bullet bullet = player.shoot();
             objects.add(bullet);
             updatables.add(bullet);
@@ -55,7 +61,7 @@ public class WorldState {
         for (GameObject obj : objects) {
             // 'instanceof Alien alien' is a Java 16+ pattern match that both checks the type
             // and creates a typed local variable 'alien' in one step
-            if (obj instanceof Alien alien && alien.getIsAlive()) {
+            if (obj instanceof Alien alien && alien.isAlive()) {
                 AlienBullet alienBullet = alien.shoot();
                 if (alienBullet != null) {
                     newBullets.add(alienBullet);
@@ -76,7 +82,7 @@ public class WorldState {
         }
         long timeSinceStart = currentTime - gameStartTime;
         if (timeSinceStart >= Constants.ALIEN_SPAWN_INITIAL_DELAY
-                && currentTime - lastAlienSpawnTime >= Constants.ALIEN_SPAWN_DELAY) {
+            && currentTime - lastAlienSpawnTime >= Constants.ALIEN_SPAWN_DELAY) {
             alienGenerator.generate();
             lastAlienSpawnTime = currentTime;
         }
@@ -88,7 +94,11 @@ public class WorldState {
         }
     }
 
-    private boolean checkCollision(GameObject a, GameObject b) {
+    private boolean checkCollision(final GameObject a, final GameObject b) {
+        if (a == b || a == null || b == null) {
+            return false;
+        }
+
         double xDistance = a.getPositionX() - b.getPositionX();
         double yDistance = a.getPositionY() - b.getPositionY();
         double collisionDistance = a.getRadius() + b.getRadius();
@@ -96,35 +106,39 @@ public class WorldState {
     }
 
     private void handleCollisions() {
-        objects.forEach(a -> {
-            objects.forEach(b -> {
-                if (a == b) return;
-                if (checkCollision(a, b)) {
-                    a.collide(b);
-                    b.collide(a);
-                }
+        final List<GameObject> livingObjects = objects
+            .stream()
+            .filter(GameObject::isAlive)
+            .toList();
+
+        IntStream
+            .range(0, livingObjects.size())
+            .forEach(outerIndex -> {
+                IntStream
+                    .range(outerIndex + 1, livingObjects.size())
+                    .forEach(innerIndex -> {
+                        final GameObject a = livingObjects.get(outerIndex);
+                        final GameObject b = livingObjects.get(innerIndex);
+                        if (checkCollision(a, b)) {
+                            a.collide(b);
+                            b.collide(a);
+                        }
+                    });
             });
-        });
     }
 
     private void removeDeadObjects() {
-        // Mark asteroids that reached 0 health this frame (e.g. from bullets) so we count them this frame
-        for (GameObject obj : objects) {
-            if (obj instanceof Asteroid && obj.getHealth() <= 0) {
-                obj.setAlive(false);
-            }
-        }
         // Count asteroids killed by player bullets this frame using a stream filter.
         // Only asteroids with killedByBullet=true contribute to score —
         // those that flew off-screen or were destroyed by other asteroids don't count.
         int shotAsteroids = (int) objects.stream()
-                .filter(Predicate.not(GameObject::getIsAlive))
-                .filter(obj -> obj instanceof Asteroid && ((Asteroid) obj).wasKilledByBullet())
-                .count();
+            .filter(GameObject::isDead)
+            .filter(obj -> obj instanceof Asteroid && ((Asteroid) obj).wasKilledByBullet())
+            .count();
         player.setScore(player.getScore() + shotAsteroids);
 
         // removeIf modifies the list in-place, removing all dead objects
-        objects.removeIf(Predicate.not(GameObject::getIsAlive));
+        objects.removeIf(GameObject::isDead);
     }
 
     public void updateState() {
@@ -145,7 +159,6 @@ public class WorldState {
         player.setPosition(Constants.MIDDLE_X, Constants.MIDDLE_Y);
         player.setVelocity(0, 0);
         player.setHealth(100);
-        player.setAlive(true);
         player.setScore(0);
         player.setRotationAngle(-Math.PI / 2);
         objects.add(player);

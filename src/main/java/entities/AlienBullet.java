@@ -10,14 +10,13 @@ public class AlienBullet extends GameObject {
     private final static Image sprite = getImage("missile.png").get();
     private final Alien alienOwner;
 
-    public AlienBullet(double x, double y, double velocityX, double velocityY, double rotationAngle, Alien alienOwner) {
+    public AlienBullet(final double x, final double y, final double velocityX, final double velocityY, final double rotationAngle, final Alien alienOwner) {
         this.alienOwner = alienOwner;
         setPosition(x, y);
         setVelocity(velocityX, velocityY);
         setRotationAngle(rotationAngle);
         setRadius(5);
         setHealth(1);
-        setAlive(true);
     }
 
     @Override
@@ -34,20 +33,15 @@ public class AlienBullet extends GameObject {
             || getPositionY() < 0
             || getPositionY() > Constants.HEIGHT;
 
-        if (outOfBounds || getHealth() <= 0) {
-            setAlive(false);
+        if (outOfBounds) {
+            dei();
         }
     }
 
     @Override
-    public void collide(GameObject other) {
-        other.collideWith(this);
-    }
-
-    @Override
-    public void collideWith(GameObject gameObject) {
+    public void collide(final GameObject gameObject) {
         switch (gameObject) {
-            case Player _, Asteroid _, Bullet _ -> setHealth(0);
+            case Player _, Asteroid _, Bullet _ -> dei();
             case null, default -> {
             }
         }

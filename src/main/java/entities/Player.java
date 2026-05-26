@@ -26,7 +26,6 @@ public class Player extends GameObject {
         setRotationAngle(-Math.PI / 2); // straight up in radians
         setRadius(25);
         setHealth(100);
-        setAlive(true);
         setScale(0.5); // make player sprite smaller
         score = 0;
     }
@@ -83,10 +82,6 @@ public class Player extends GameObject {
             setPositionY(0);
         }
 
-        if (getHealth() <= 0) {
-            setAlive(false);
-        }
-
         // Normalise angle to [0, 2π) to prevent unbounded growth from continuous rotation
         double normalized = getRotationAngle() % (Math.PI * 2);
         if (normalized < 0) {
@@ -117,29 +112,16 @@ public class Player extends GameObject {
     }
 
     @Override
-    public void collide(GameObject other) {
-        other.collideWith(this);
-    }
-
-    @Override
-    public void collideWith(GameObject gameObject) {
+    public void collide(final GameObject gameObject) {
         final int health = getHealth();
         switch (gameObject) {
             case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
-            case Alien _ -> setHealth(0);
-            case Asteroid asteroid -> {
-                setHealth(Math.max(health - 10, 0));
-                asteroid.setHealth(0);
-                System.out.printf("Player is with asteroid %d!%n", health);
-            }
+            case Asteroid _ -> setHealth(Math.max(health - 10, 0));
             case Bullet _ -> throw new RuntimeException("PLAYER HIT BULLET?!?!?");
-            case AlienBullet _ -> {
-                setHealth(Math.max(health - 2, 0));
-                System.out.printf("Player is with asteroid %d!%n", health);
-            }
+            case AlienBullet _ -> setHealth(Math.max(health - 2, 0));
             case null -> {
             }
-            default -> setHealth(0);
+            default -> dei();
         }
     }
 }

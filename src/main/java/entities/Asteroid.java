@@ -29,7 +29,6 @@ public class Asteroid extends GameObject {
         setRotationAngle(Math.random() * Math.PI * 2);
         setRadius(30);
         setHealth(1);
-        setAlive(true);
         setScale(0.3);
     }
 
@@ -47,30 +46,20 @@ public class Asteroid extends GameObject {
         // only setAlive(false) so we don't award score for flying off - score is only for shot asteroids
         double buffer = 100;
         if (getPositionX() < -buffer || getPositionX() > Constants.WIDTH + buffer) {
-            setAlive(false);
+            dei();
             return;
         }
         if (getPositionY() < -buffer || getPositionY() > Constants.HEIGHT + buffer) {
-            setAlive(false);
-            return;
-        }
-
-        if (getHealth() <= 0) {
-            setAlive(false);
+            dei();
         }
     }
 
     @Override
-    public void collide(GameObject other) {
-        other.collideWith(this);
-    }
-
-    @Override
-    public void collideWith(GameObject gameObject) {
+    public void collide(final GameObject gameObject) {
         switch (gameObject) {
-            case Asteroid _, AlienBullet _ -> setHealth(0);
+            case Asteroid _, AlienBullet _, Player _ -> dei();
             case Bullet _ -> {
-                setHealth(getHealth() - 1);
+                dei();
                 killedByBullet = true;
             }
             case null, default -> {

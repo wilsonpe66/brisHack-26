@@ -1,6 +1,7 @@
 package game;
 
 import entities.GameObject;
+import entities.Player;
 import utils.Constants;
 
 import javax.swing.*;
@@ -87,11 +88,12 @@ public class GamePanel extends JPanel implements ActionListener {
 
     // called every frame
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         worldState.updateState();
-        if (!worldState.getPlayer().getIsAlive()) {
+        final Player player = worldState.getPlayer();
+        if (player.isDead()) {
             stopGame();
-            game.showGameOver(worldState.getPlayer().getScore());
+            game.showGameOver(player.getScore());
         }
         repaint();
     }

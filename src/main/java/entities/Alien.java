@@ -25,14 +25,14 @@ public class Alien extends GameObject {
     /**
      * Spawn from side of screen with given position and initial velocity.
      */
-    public Alien(double x, double y, double velocityX, double velocityY, Player player) {
+    public Alien(final double x, final double y, final double velocityX, final double velocityY, final Player player) {
+        super();
         this.player = player;
         setPosition(x, y);
         setVelocity(velocityX, velocityY);
         setRotationAngle(Math.atan2(velocityY, velocityX));
         setRadius(20);
         setHealth(100);
-        setAlive(true);
         setScale(0.5);
         shootCooldown = 0;
         noShootTimer = Constants.ALIEN_SPAWN_NO_SHOOT_FRAMES;
@@ -43,7 +43,7 @@ public class Alien extends GameObject {
      * Returns an AlienBullet aimed at the player, or null if on cooldown.
      */
     public AlienBullet shoot() {
-        if (shootCooldown > 0 || noShootTimer > 0 || !player.getIsAlive()) {
+        if (shootCooldown > 0 || noShootTimer > 0 || player.isDead()) {
             return null;
         }
 
@@ -72,7 +72,7 @@ public class Alien extends GameObject {
             noShootTimer--;
         }
         targetUpdateTimer--;
-        if (targetUpdateTimer <= 0 && player.getIsAlive()) {
+        if (targetUpdateTimer <= 0 && player.isAlive()) {
             double angle = Math.atan2(
                 player.getPositionY() - getPositionY(),
                 player.getPositionX() - getPositionX()
@@ -96,10 +96,6 @@ public class Alien extends GameObject {
         } else if (getPositionY() > Constants.HEIGHT) {
             setPositionY(0);
         }
-
-        if (getHealth() <= 0) {
-            setAlive(false);
-        }
     }
 
     @Override
@@ -108,18 +104,13 @@ public class Alien extends GameObject {
     }
 
     @Override
-    public void collide(final GameObject other) {
-        other.collideWith(this);
-    }
-
-    @Override
-    public void collideWith(GameObject gameObject) {
+    public void collide(final GameObject gameObject) {
         switch (gameObject) {
             case AlienBullet _ -> {
             }
             case null -> {
             }
-            default -> setHealth(0);
+            default -> dei();
         }
     }
 }
