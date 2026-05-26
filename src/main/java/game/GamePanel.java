@@ -18,7 +18,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private final Timer gameTimer;
     private final InputHandler inputHandler;
     private final Game game;
-    WorldState worldState;
+    final WorldState worldState;
 
     public GamePanel(Game game) {
         this.game = game;
@@ -49,9 +49,9 @@ public class GamePanel extends JPanel implements ActionListener {
      * +270° corrects for sprites that face right by default to face up at angle 0
      * 4. translate(cx, cy) — move the origin to the object's world position
      */
-    private static AffineTransform getAffineTransform(GameObject object, int w, int h) {
-        final double cx = object.getPositionX();
-        final double cy = object.getPositionY();
+    private static AffineTransform getAffineTransform(final GameObject object, int w, int h) {
+        final double cx = object.getPosition().x();
+        final double cy = object.getPosition().y();
 
         final AffineTransform transform = new AffineTransform();
         transform.translate(cx, cy);
@@ -101,7 +101,7 @@ public class GamePanel extends JPanel implements ActionListener {
     // paintComponent is called by Swing whenever the panel needs to be redrawn (e.game. after repaint()).
     // Always call super.paintComponent(game) first to clear the previous frame.
     @Override
-    protected void paintComponent(Graphics game) {
+    protected void paintComponent(final Graphics game) {
         super.paintComponent(game);
 
         game.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
@@ -116,15 +116,15 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.drawString("Health: " + worldState.getPlayer().getHealth(), 20, 80);
     }
 
-    private void drawObjects(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+    private void drawObjects(final Graphics graphics) {
+        final Graphics2D g2d = (Graphics2D) graphics;
 
         // iterate over worldState
-        for (GameObject object : worldState.objects) {
-            Image sprite = object.getSprite();
+        for (final GameObject object : worldState.objects) {
+            final Image sprite = object.getSprite();
             if (sprite == null) continue;
-            int w = sprite.getWidth(null);
-            int h = sprite.getHeight(null);
+            final int w = sprite.getWidth(null);
+            final int h = sprite.getHeight(null);
             if (w <= 0 || h <= 0) continue; // image not yet loaded
             AffineTransform transform = getAffineTransform(object, w, h);
 

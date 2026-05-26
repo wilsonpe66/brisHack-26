@@ -6,7 +6,9 @@ import entities.Asteroid;
 import entities.Bullet;
 import entities.GameObject;
 import entities.Player;
+import entities.Position;
 import entities.Updatable;
+import entities.Velocity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -29,7 +31,7 @@ public class WorldState {
 
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
-        player = new Player(Constants.MIDDLE_X, Constants.MIDDLE_Y, inputHandler);
+        player = new Player(new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y), inputHandler);
         objects = new ArrayList<>();
         objects.add(player);
         updatables = new ArrayList<>();
@@ -99,10 +101,8 @@ public class WorldState {
             return false;
         }
 
-        double xDistance = a.getPositionX() - b.getPositionX();
-        double yDistance = a.getPositionY() - b.getPositionY();
-        double collisionDistance = a.getRadius() + b.getRadius();
-        return (xDistance * xDistance) + (yDistance * yDistance) <= collisionDistance * collisionDistance;
+        final double collisionDistance = a.getRadius() + b.getRadius();
+        return a.getPosition().minus(b.getPosition()).getSpeed() <= collisionDistance;
     }
 
     private void handleCollisions() {
@@ -156,8 +156,8 @@ public class WorldState {
     public void reset() {
         objects.clear();
         updatables.clear();
-        player.setPosition(Constants.MIDDLE_X, Constants.MIDDLE_Y);
-        player.setVelocity(0, 0);
+        player.setPosition(new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y));
+        player.setVelocity(Velocity.ZERO);
         player.setHealth(100);
         player.setScore(0);
         player.setRotationAngle(-Math.PI / 2);

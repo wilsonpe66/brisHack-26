@@ -4,6 +4,7 @@ import java.awt.Image;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import utils.Constants;
 
 @Setter
 @Getter
@@ -11,11 +12,9 @@ import lombok.ToString;
 public abstract class GameObject implements Updatable {
 
     private static Image sprite;
-    private double velocityX;
-    private double velocityY;
+    private Velocity velocity;
     private double rotationAngle; // radians
-    private double positionX;
-    private double positionY;
+    private Position position;
     // TODO: fix arbitrary magic numbers for radius in all gameobjects
     private double radius;
     private int health;
@@ -34,17 +33,6 @@ public abstract class GameObject implements Updatable {
     }
 
     public abstract Image getSprite();
-
-    // SET X and Y TOGETHER:
-    public void setPosition(double x, double y) {
-        this.positionX = x;
-        this.positionY = y;
-    }
-
-    public void setVelocity(double vx, double vy) {
-        this.velocityX = vx;
-        this.velocityY = vy;
-    }
 
     public abstract void collide(final GameObject gameObject);
 }

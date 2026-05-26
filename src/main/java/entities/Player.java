@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import utils.Constants;
 
-public class Player extends GameObject {
+public class Player extends GameObject implements Wrappable {
 
     private final static Image sprite = getImage("spaceship.png").get();
     @Getter
@@ -19,10 +19,10 @@ public class Player extends GameObject {
     private int score;
 
     // CONSTRUCTOR:
-    public Player(double x, double y, InputHandler inputHandler) {
+    public Player(final Position position, final InputHandler inputHandler) {
         this.inputHandler = inputHandler;
-        setPosition(x, y);
-        setVelocity(0, 0);
+        setPosition(position);
+        setVelocity(Velocity.ZERO);
         setRotationAngle(-Math.PI / 2); // straight up in radians
         setRadius(25);
         setHealth(100);
@@ -33,31 +33,25 @@ public class Player extends GameObject {
     @Override
     public void update() {
         // respond to input: thrust (W/Up) and rotation (A/D)
+        final Velocity velocity = getVelocity();
         if (inputHandler.isUpPressed()) {
             SoundManager.playLooping("thruster", "thruster.wav");
-            double ax = Math.cos(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
-            double ay = Math.sin(getRotationAngle()) * Constants.PLAYER_ACCELERATION;
-            double vx = getVelocityX() + ax;
-            double vy = getVelocityY() + ay;
-            double speed = Math.sqrt(vx * vx + vy * vy);
+            Velocity v = velocity.add(Velocity.fromAngleAndSpeed(getRotationAngle(), Constants.PLAYER_ACCELERATION));
+            final double speed = v.getSpeed();
             // Cap speed: scale the velocity vector down to MAX_PLAYER_SPEED
             // while preserving direction
             if (speed > Constants.MAX_PLAYER_SPEED) {
-                double scale = Constants.MAX_PLAYER_SPEED / speed;
-                vx *= scale;
-                vy *= scale;
+                v = v.scale(Constants.MAX_PLAYER_SPEED / speed);
             }
-            setVelocity(vx, vy);
+            setVelocity(v);
         } else {
             SoundManager.stopLooping("thruster");
             // decay velocity when thrust is not pressed
-            double vx = getVelocityX() * Constants.PLAYER_VELOCITY_DECAY;
-            double vy = getVelocityY() * Constants.PLAYER_VELOCITY_DECAY;
-            if (Math.abs(vx) < 0.01 && Math.abs(vy) < 0.01) {
-                vx = 0;
-                vy = 0;
+            Velocity v = velocity.scale(Constants.PLAYER_VELOCITY_DECAY);
+            if (v.getSpeed() < .01) {
+                v = Velocity.ZERO;
             }
-            setVelocity(vx, vy);
+            setVelocity(v);
         }
         if (inputHandler.isLeftPressed()) {
             setRotationAngle(getRotationAngle() - Constants.ROTATION_SPEED);
@@ -67,20 +61,8 @@ public class Player extends GameObject {
         }
 
         // update position according to velocity:
-        setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
-
-        // check if off the screen - put to other side:
-        if (getPositionX() < 0) {
-            setPositionX(Constants.WIDTH);
-        } else if (getPositionX() > Constants.WIDTH) {
-            setPositionX(0);
-        }
-
-        if (getPositionY() < 0) {
-            setPositionY(Constants.HEIGHT);
-        } else if (getPositionY() > Constants.HEIGHT) {
-            setPositionY(0);
-        }
+        setPosition(getPosition().add(velocity));
+        wrapPosition();
 
         // Normalise angle to [0, 2π) to prevent unbounded growth from continuous rotation
         double normalized = getRotationAngle() % (Math.PI * 2);
@@ -91,15 +73,12 @@ public class Player extends GameObject {
     }
 
     public Bullet shoot() {
-        double angle = getRotationAngle(); // radians
-        double bulletVelocityX = Math.cos(angle) * 16;
-        double bulletVelocityY = Math.sin(angle) * 16;
-
-        // spawn at the ship nose, along the current facing angle
-        double spawnX = getPositionX() + Math.cos(angle) * getRadius();
-        double spawnY = getPositionY() + Math.sin(angle) * getRadius();
-
-        return new Bullet(spawnX, spawnY, bulletVelocityX, bulletVelocityY, angle, this);
+        final double angle = getRotationAngle(); // radians
+        return new Bullet(
+            getPosition().add(Velocity.fromAngleAndSpeed(angle, getRadius())),
+            Velocity.fromAngleAndSpeed(angle, 16),
+            angle, this
+        );
     }
 
     @Override

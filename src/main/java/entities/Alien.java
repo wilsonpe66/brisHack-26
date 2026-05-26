@@ -5,7 +5,7 @@ import static assets.AssetManager.getImage;
 import java.awt.Image;
 import utils.Constants;
 
-public class Alien extends GameObject {
+public class Alien extends GameObject implements Wrappable {
 
     private final static Image sprite = getImage("shipGreen_manned.png").get();
     private final Player player;
@@ -25,12 +25,12 @@ public class Alien extends GameObject {
     /**
      * Spawn from side of screen with given position and initial velocity.
      */
-    public Alien(final double x, final double y, final double velocityX, final double velocityY, final Player player) {
+    public Alien(final Position position, final Velocity velocity, final Player player) {
         super();
         this.player = player;
-        setPosition(x, y);
-        setVelocity(velocityX, velocityY);
-        setRotationAngle(Math.atan2(velocityY, velocityX));
+        setPosition(position);
+        setVelocity(velocity);
+        setRotationAngle(velocity.getRotation());
         setRadius(20);
         setHealth(100);
         setScale(0.5);
@@ -47,20 +47,18 @@ public class Alien extends GameObject {
             return null;
         }
 
-        // atan2(dy, dx) calculates the angle from this alien to the player
-        double angle = Math.atan2(
-            player.getPositionY() - getPositionY(),
-            player.getPositionX() - getPositionX()
-        );
-        setRotationAngle(angle); // face the player when shooting
-        double bulletVelocityX = Math.cos(angle) * Constants.ALIEN_BULLET_SPEED;
-        double bulletVelocityY = Math.sin(angle) * Constants.ALIEN_BULLET_SPEED;
-
-        double spawnX = getPositionX() + Math.cos(angle) * getRadius();
-        double spawnY = getPositionY() + Math.sin(angle) * getRadius();
-
         shootCooldown = Constants.ALIEN_SHOOT_COOLDOWN_FRAMES;
-        return new AlienBullet(spawnX, spawnY, bulletVelocityX, bulletVelocityY, angle, this);
+
+        // atan2(dy, dx) calculates the angle from this alien to the player
+        final Velocity bulletVelocityInit = player.getPosition().minus(getPosition());
+        final double angle = bulletVelocityInit.getRotation();
+        setRotationAngle(angle); // face the player when shooting
+
+        return new AlienBullet(
+            getPosition().add(Velocity.fromAngleAndSpeed(angle, getRadius())),
+            Velocity.fromAngleAndSpeed(angle, Constants.ALIEN_BULLET_SPEED),
+            angle, this
+        );
     }
 
     @Override
@@ -73,29 +71,14 @@ public class Alien extends GameObject {
         }
         targetUpdateTimer--;
         if (targetUpdateTimer <= 0 && player.isAlive()) {
-            double angle = Math.atan2(
-                player.getPositionY() - getPositionY(),
-                player.getPositionX() - getPositionX()
-            );
-            setVelocity(Math.cos(angle) * Constants.ALIEN_SPEED, Math.sin(angle) * Constants.ALIEN_SPEED);
+            final double angle = player.getPosition().minus(getPosition()).getRotation();
+            setVelocity(Velocity.fromAngleAndSpeed(angle, Constants.ALIEN_SPEED));
             setRotationAngle(angle);
             targetUpdateTimer = Constants.ALIEN_TARGET_UPDATE_INTERVAL;
         }
         // update position according to velocity:
-        setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
-
-        // check if off the screen - put to other side:
-        if (getPositionX() < 0) {
-            setPositionX(Constants.WIDTH);
-        } else if (getPositionX() > Constants.WIDTH) {
-            setPositionX(0);
-        }
-
-        if (getPositionY() < 0) {
-            setPositionY(Constants.HEIGHT);
-        } else if (getPositionY() > Constants.HEIGHT) {
-            setPositionY(0);
-        }
+        setPosition(getPosition().add(getVelocity()));
+        wrapPosition();
     }
 
     @Override
