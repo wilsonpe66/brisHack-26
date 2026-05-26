@@ -11,18 +11,18 @@ public class Bullet extends GameObject {
     private final Player owner;
 
     // CONSTRUCTOR:
-    public Bullet(double x, double y) {
-        this(x, y, 10, 10, Math.PI / 4, null);
+    public Bullet(final Position position) {
+        this(position, new Velocity(10, 10), Math.PI / 4, null);
     }
 
-    public Bullet(double x, double y, double velocityX, double velocityY, double rotationAngle) {
-        this(x, y, velocityX, velocityY, rotationAngle, null);
+    public Bullet(final Position position, final Velocity velocity, double rotationAngle) {
+        this(position, velocity, rotationAngle, null);
     }
 
-    public Bullet(double x, double y, double velocityX, double velocityY, double rotationAngle, Player owner) {
+    public Bullet(final Position position, final Velocity velocity, double rotationAngle, Player owner) {
         this.owner = owner;
-        setPosition(x, y);
-        setVelocity(velocityX, velocityY);
+        setPosition(position);
+        setVelocity(velocity);
         setRotationAngle(rotationAngle);
         setRadius(5);
         setHealth(1);
@@ -36,12 +36,15 @@ public class Bullet extends GameObject {
     @Override
     public void update() {
         // update position according to velocity:
-        setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
+        setPosition(getPosition().add(getVelocity()));
 
-        boolean outOfBounds = getPositionX() < 0
-            || getPositionX() > Constants.WIDTH
-            || getPositionY() < 0
-            || getPositionY() > Constants.HEIGHT;
+        final Position position = getPosition();
+        final double x = position.x();
+        final double y = position.y();
+        boolean outOfBounds = x < 0
+            ||  x > Constants.WIDTH
+            ||  y < 0
+            ||  y > Constants.HEIGHT;
 
         if (outOfBounds) {
             dei();

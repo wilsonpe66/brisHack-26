@@ -22,10 +22,10 @@ public class Asteroid extends GameObject {
     private boolean killedByBullet;
 
     // CONSTRUCTOR:
-    public Asteroid(double x, double y, double velocityX, double velocityY) {
+    public Asteroid(final Position position, final Velocity velocity) {
         sprite = sprites[random.nextInt(sprites.length)];
-        setPosition(x, y);
-        setVelocity(velocityX, velocityY);
+        setPosition(position);
+        setVelocity(velocity);
         setRotationAngle(Math.random() * Math.PI * 2);
         setRadius(30);
         setHealth(1);
@@ -40,17 +40,20 @@ public class Asteroid extends GameObject {
     @Override
     public void update() {
         // update position according to velocity:
-        setPosition(getPositionX() + getVelocityX(), getPositionY() + getVelocityY());
+        setPosition(getPosition().add(getVelocity()));
 
-        // remove asteroid if it goes too far off screen (with buffer for spawning)
+        // remove asteroid if it goes too far off-screen (with buffer for spawning)
         // only setAlive(false) so we don't award score for flying off - score is only for shot asteroids
         double buffer = 100;
-        if (getPositionX() < -buffer || getPositionX() > Constants.WIDTH + buffer) {
-            dei();
-            return;
-        }
-        if (getPositionY() < -buffer || getPositionY() > Constants.HEIGHT + buffer) {
-            dei();
+
+        if (getPosition() instanceof Position(double x, double y)) {
+            if (x < -buffer || x > Constants.WIDTH + buffer) {
+                dei();
+                return;
+            }
+            if (y < -buffer || y > Constants.HEIGHT + buffer) {
+                dei();
+            }
         }
     }
 
