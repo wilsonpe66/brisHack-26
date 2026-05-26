@@ -3,9 +3,11 @@ package entities;
 import java.awt.Image;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 public abstract class GameObject implements Updatable {
 
     private static Image sprite;
@@ -17,11 +19,18 @@ public abstract class GameObject implements Updatable {
     // TODO: fix arbitrary magic numbers for radius in all gameobjects
     private double radius;
     private int health;
-    private boolean isAlive;
     private double scale = 1.0;
 
-    public boolean getIsAlive() {
-        return isAlive;
+    public final boolean isAlive() {
+        return health > 0;
+    }
+
+    public final boolean isDead() {
+        return !isAlive();
+    }
+
+    public void dei() {
+        health = 0;
     }
 
     public abstract Image getSprite();
@@ -37,13 +46,5 @@ public abstract class GameObject implements Updatable {
         this.velocityY = vy;
     }
 
-    // COLLISIONS - double dispatch pattern:
-    // When two objects collide, we call a.collide(b) which internally calls b.collideWith(a).
-    // This resolves both runtime types without instanceof checks, because each subclass
-    // passes 'this' (its concrete type) to the other object's overloaded collideWith().
-
-    // entry point - first dispatch: each subclass calls other.collideWith(this)
-    public abstract void collide(GameObject other);
-
-    public abstract void collideWith(GameObject gameObject);
+    public abstract void collide(final GameObject gameObject);
 }
