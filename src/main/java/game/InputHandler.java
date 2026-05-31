@@ -5,9 +5,19 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import lombok.Getter;
 
 public class InputHandler implements KeyListener {
-    private boolean leftPressed, rightPressed, upPressed, downPressed, shootPressed;
+    @Getter
+    private boolean leftPressed;
+    @Getter
+    private boolean rightPressed;
+    @Getter
+    private boolean upPressed;
+    @Getter
+    private boolean downPressed;
+    @Getter
+    private boolean shootPressed;
 
     // Double-brace initializer: creates an anonymous HashMap subclass and immediately
     // populates it. Each entry maps a key code to a lambda that sets the corresponding flag.
@@ -27,39 +37,19 @@ public class InputHandler implements KeyListener {
     // keyTyped is for character input (e.g. typing text). Not used here — we only care about
     // key press/release for continuous movement, which is handled by keyPressed/keyReleased.
     @Override
-    public void keyTyped(KeyEvent e) {
+    public void keyTyped(final KeyEvent event) {
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        Consumer<Boolean> action = keyMap.get(e.getKeyCode());
+    public void keyPressed(final KeyEvent event) {
+        final Consumer<Boolean> action = keyMap.get(event.getKeyCode());
         if (action != null) action.accept(true);
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        Consumer<Boolean> action = keyMap.get(e.getKeyCode());
+    public void keyReleased(final KeyEvent event) {
+        final Consumer<Boolean> action = keyMap.get(event.getKeyCode());
         if (action != null) action.accept(false);
-    }
-
-    public boolean isUpPressed() {
-        return upPressed;
-    }
-
-    public boolean isDownPressed() {
-        return downPressed;
-    }
-
-    public boolean isLeftPressed() {
-        return leftPressed;
-    }
-
-    public boolean isRightPressed() {
-        return rightPressed;
-    }
-
-    public boolean isShootPressed() {
-        return shootPressed;
     }
 
     /**

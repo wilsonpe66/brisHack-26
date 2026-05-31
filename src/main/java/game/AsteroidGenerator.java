@@ -36,7 +36,7 @@ public class AsteroidGenerator {
     public void generate() {
         final Asteroid asteroid = SIDES[random.nextInt(SIDES.length)].spawn(worldState.getPlayer());
         worldState.objects.add(asteroid);
-        worldState.updatables.add(asteroid);
+        worldState.updatableObjects.add(asteroid);
     }
 
     // @FunctionalInterface marks an interface with exactly one abstract method,

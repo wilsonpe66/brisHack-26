@@ -3,24 +3,25 @@ package entities;
 import static assets.AssetManager.getImage;
 
 import java.awt.Image;
+import java.util.List;
 import utils.Constants;
 
-public class Alien extends GameObject implements Wrappable {
+public class Alien extends GameObject implements Wrappable, SelfDefendable {
 
     private final static Image sprite = getImage("shipGreen_manned.png").get();
-    private final Player player;
+    protected final Player player;
     /**
      * Frames until the alien can shoot again (slower than player).
      */
-    private int shootCooldown;
+    protected int shootCooldown;
     /**
      * Grace period after spawning before the alien starts shooting. Gives the player a brief window to react to a new alien.
      */
-    private int noShootTimer;
+    protected int noShootTimer;
     /**
      * Frames until we next recalculate velocity direction towards the player. This makes alien movement "steppy" rather than perfectly smooth tracking.
      */
-    private int targetUpdateTimer;
+    protected int targetUpdateTimer;
 
     /**
      * Spawn from side of screen with given position and initial velocity.
@@ -42,22 +43,26 @@ public class Alien extends GameObject implements Wrappable {
     /**
      * Returns an AlienBullet aimed at the player, or null if on cooldown.
      */
-    public AlienBullet shoot() {
+    @Override
+    public List<? extends Bullet> shoot() {
         if (shootCooldown > 0 || noShootTimer > 0 || player.isDead()) {
-            return null;
+            return List.of();
         }
 
         shootCooldown = Constants.ALIEN_SHOOT_COOLDOWN_FRAMES;
 
         // atan2(dy, dx) calculates the angle from this alien to the player
-        final Velocity bulletVelocityInit = player.getPosition().minus(getPosition());
+        final Position playerPosition = getPosition();
+        final Velocity bulletVelocityInit = player.getPosition().minus(playerPosition);
         final double angle = bulletVelocityInit.getRotation();
         setRotationAngle(angle); // face the player when shooting
 
-        return new AlienBullet(
-            getPosition().add(Velocity.fromAngleAndSpeed(angle, getRadius())),
-            Velocity.fromAngleAndSpeed(angle, Constants.ALIEN_BULLET_SPEED),
-            angle, this
+        return List.of(
+            new AlienBullet(
+                playerPosition.add(Velocity.fromAngleAndSpeed(angle, getRadius())),
+                Velocity.fromAngleAndSpeed(angle, Constants.ALIEN_BULLET_SPEED),
+                angle, this
+            )
         );
     }
 
@@ -89,8 +94,7 @@ public class Alien extends GameObject implements Wrappable {
     @Override
     public void collide(final GameObject gameObject) {
         switch (gameObject) {
-            case AlienBullet _ -> {
-            }
+            case AlienBullet _ -> setHealth(getHealth() - 2);
             case null -> {
             }
             default -> dei();

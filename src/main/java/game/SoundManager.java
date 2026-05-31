@@ -1,15 +1,14 @@
 package game;
 
-import utils.Settings;
+import static assets.AssetManager.getAudioInputStream;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static assets.AssetManager.getAudioInputStream;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import utils.Settings;
 
 public class SoundManager {
 
@@ -21,15 +20,14 @@ public class SoundManager {
     private static final Map<String, String> loopPaths = new HashMap<>();
 
     /**
-     * Play a one-shot sound (e.g. shoot). Creates a new Clip each time so
-     * overlapping sounds (e.g. rapid shooting) play simultaneously.
+     * Play a one-shot sound (e.g. shoot). Creates a new Clip each time so overlapping sounds (e.g. rapid shooting) play simultaneously.
      */
     public static void playSound(String path) {
         if (Settings.muted) {
             return;
         }
         try {
-            AudioInputStream audio = getAudioInputStream(path).get();
+            final AudioInputStream audio = getAudioInputStream(path).get();
             // Clip is a pre-loaded audio buffer that can be started/stopped
             Clip clip = AudioSystem.getClip();
             clip.open(audio);
@@ -61,20 +59,20 @@ public class SoundManager {
         }
 
         getAudioInputStream(path)
-                .ifPresent(audio -> {
-                    try {
+            .ifPresent(audio -> {
+                try {
 
-                        clip.set(AudioSystem.getClip());
-                        clip.get().open(audio);
-                        // LOOP_CONTINUOUSLY repeats the clip until explicitly stopped
-                        clip.get().loop(Clip.LOOP_CONTINUOUSLY);
-                        loopingClips.put(id, clip.get());
-                    } catch (Exception e) {
-                        System.err.println("Error loading audio file: " + path);
-                        System.err.println("Exception: " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                });
+                    clip.set(AudioSystem.getClip());
+                    clip.get().open(audio);
+                    // LOOP_CONTINUOUSLY repeats the clip until explicitly stopped
+                    clip.get().loop(Clip.LOOP_CONTINUOUSLY);
+                    loopingClips.put(id, clip.get());
+                } catch (Exception e) {
+                    System.err.println("Error loading audio file: " + path);
+                    System.err.println("Exception: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            });
     }
 
     /**
@@ -101,8 +99,7 @@ public class SoundManager {
     }
 
     /**
-     * Set the muted state. When muting, all currently looping sounds are
-     * stopped but remembered. When unmuting, remembered loops are restarted.
+     * Set the muted state. When muting, all currently looping sounds are stopped but remembered. When unmuting, remembered loops are restarted.
      */
     public static void setMuted(boolean muted) {
         Settings.muted = muted;

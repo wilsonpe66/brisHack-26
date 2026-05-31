@@ -1,22 +1,29 @@
 package game;
 
+import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
+import leaderboard.PlayerScore;
 import utils.Settings;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-
 public class Game extends JFrame {
+
     // CardLayout stacks panels on top of each other — only one is visible at a time.
     // Calling cardLayout.show(container, "name") switches which panel is displayed.
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel mainContainer = new JPanel(cardLayout);
     private final GamePanel gamepanel;
     private final GameOverPanel gameOverPanel;
-    private int highScore = 0;
 
     public Game() {
-        MenuPanel menupanel = new MenuPanel(this);
+        final MenuPanel menupanel = new MenuPanel(this);
         gamepanel = new GamePanel(this);
         gameOverPanel = new GameOverPanel(this);
 
@@ -40,12 +47,12 @@ public class Game extends JFrame {
     }
 
     /**
-     * Register key bindings on the root pane so they work regardless of
-     * which panel or component currently has focus.
+     * Register key bindings on the root pane so they work regardless of which panel or component currently has focus.
      */
     private void registerGlobalKeyBindings() {
-        InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap actionMap = getRootPane().getActionMap();
+        final JRootPane rootPane1 = getRootPane();
+        final InputMap inputMap = rootPane1.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        final ActionMap actionMap = rootPane1.getActionMap();
 
         inputMap.put(KeyStroke.getKeyStroke("pressed M"), "toggleMute");
         actionMap.put("toggleMute", new AbstractAction() {
@@ -68,13 +75,19 @@ public class Game extends JFrame {
     }
 
     public void showGameOver(int score) {
-        if (score > highScore) {
-            highScore = score;
-        }
-        gameOverPanel.setScore(score, highScore);
+        gamepanel.worldState.getLeaderBoard().scores().add(
+            PlayerScore
+                .builder()
+                .name("Pete")
+                .score(score)
+                .build()
+        );
+
+        gameOverPanel.setScore(score, gamepanel.worldState.getLeaderBoard());
         SoundManager.stopLooping("background");
         SoundManager.playSound("win.wav");
         cardLayout.show(mainContainer, "GAME OVER");
+
     }
 
     public void restartGame() {

@@ -60,8 +60,8 @@ public class Asteroid extends GameObject {
     @Override
     public void collide(final GameObject gameObject) {
         switch (gameObject) {
-            case Asteroid _, AlienBullet _, Player _ -> dei();
-            case Bullet _ -> {
+            case Asteroid _, AlienBullet _, Player _, Alien _ -> dei();
+            case PlayerBullet _ -> {
                 dei();
                 killedByBullet = true;
             }

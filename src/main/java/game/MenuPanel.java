@@ -13,35 +13,37 @@ public class MenuPanel extends JPanel {
         setLayout(new GridBagLayout());
 
         // GridBagConstraints controls where each component sits in the grid
-        GridBagConstraints gbc = new GridBagConstraints();
+        final GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; // all components in column 0 (single column layout)
         // Insets(top, left, bottom, right) — adds spacing around each component
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        JLabel titleLabel = new JLabel("(git) Push To Orbit");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 48));
+        final JLabel titleLabel = new JLabel("(git) Push To Orbit");
+        titleLabel.setFont(CustomFonts.TITLE);
         titleLabel.setForeground(Color.WHITE);
         gbc.gridy = 0; // row 0 of the grid
         add(titleLabel, gbc);
 
-        JLabel subtitleLabel = new JLabel("Press PLAY to start");
-        subtitleLabel.setFont(new Font("Arial", Font.PLAIN, 28));
+        final JLabel subtitleLabel = new JLabel("Press PLAY to start");
+        subtitleLabel.setFont(CustomFonts.PLAIN_28);
         subtitleLabel.setForeground(new Color(220, 220, 220));
         gbc.gridy = 1; // row 1 of the grid
         add(subtitleLabel, gbc);
 
         // FlowLayout(CENTER, hgap, vgap) places buttons side-by-side, centred
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         // setOpaque(false) makes the panel transparent so the parent's background shows through
         buttonPanel.setOpaque(false);
 
-        JButton playButton = new JButton("PLAY GAME");
-        playButton.setPreferredSize(new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT));
-        playButton.addActionListener(e -> game.showGame());
+        final Dimension preferredSize = new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
 
-        JButton quitButton = new JButton("QUIT");
-        quitButton.setPreferredSize(new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT));
-        quitButton.addActionListener(e -> game.quit());
+        final JButton playButton = new JButton("PLAY GAME");
+        playButton.setPreferredSize(preferredSize);
+        playButton.addActionListener(_ -> game.showGame());
+
+        final JButton quitButton = new JButton("QUIT");
+        quitButton.setPreferredSize(preferredSize);
+        quitButton.addActionListener(_ -> game.quit());
 
         buttonPanel.add(playButton);
         buttonPanel.add(quitButton);
