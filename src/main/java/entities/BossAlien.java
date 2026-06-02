@@ -52,7 +52,7 @@ public class BossAlien extends Alien {
 
     @Override
     public void collide(final GameObject gameObject) {
-        final int health = getHealth();
+         final int health = getHealth();
         switch (gameObject) {
             case AlienBullet _ -> setHealth(health - 2);
             case Asteroid _ -> setHealth(health - 50);

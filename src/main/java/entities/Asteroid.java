@@ -44,14 +44,11 @@ public class Asteroid extends GameObject {
 
         // remove asteroid if it goes too far off-screen (with buffer for spawning)
         // only setAlive(false) so we don't award score for flying off - score is only for shot asteroids
-        double buffer = 100;
+        final double buffer = 100;
 
         if (getPosition() instanceof Position(double x, double y)) {
-            if (x < -buffer || x > Constants.WIDTH + buffer) {
-                dei();
-                return;
-            }
-            if (y < -buffer || y > Constants.HEIGHT + buffer) {
+            if (x < -buffer || x > Constants.WIDTH + buffer
+                || y < -buffer || y > Constants.HEIGHT + buffer) {
                 dei();
             }
         }

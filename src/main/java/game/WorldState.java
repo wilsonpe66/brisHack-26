@@ -4,14 +4,15 @@ import entities.Alien;
 import entities.AlienBullet;
 import entities.Asteroid;
 import entities.Bullet;
-import entities.PlayerBullet;
 import entities.GameObject;
 import entities.Player;
 import entities.Position;
+import entities.SelfDefendable;
 import entities.Updatable;
 import entities.Velocity;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
 import leaderboard.LeaderBoard;
@@ -57,9 +58,11 @@ public class WorldState {
             return;
         }
         if (inputHandler.isShootPressed() && player.isAlive()) {
-            final List<PlayerBullet> bullet = player.shoot();
-            objects.addAll(bullet);
-            updatableObjects.addAll(bullet);
+            player.shoot().forEach(bullet -> {
+                objects.add(bullet);
+                updatableObjects.add(bullet);
+            });
+
             SoundManager.playSound("shoot.wav");
             shootCooldown = Constants.SHOOT_COOLDOWN_FRAMES;
         }
@@ -68,17 +71,19 @@ public class WorldState {
     private void handleAlienShooting() {
         // Collect new bullets into a separate list first to avoid ConcurrentModificationException
         // (we can't add to 'objects' while iterating over it)
-        final List<? extends Bullet> newBullets = objects
+        objects
             .stream()
+            .filter(Objects::nonNull)
             .filter(GameObject::isAlive)
             .filter(Alien.class::isInstance)
-            .map(Alien.class::cast)
-            .map(Alien::shoot)
+            .map(SelfDefendable.class::cast)
+            .map(SelfDefendable::shoot)
             .flatMap(List::stream)
-            .toList();
-
-        objects.addAll(newBullets);
-        updatableObjects.addAll(newBullets);
+            .toList()
+            .forEach(bullet -> {
+                objects.add(bullet);
+                updatableObjects.add(bullet);
+            });
     }
 
     private void handleSpawning() {
@@ -145,6 +150,7 @@ public class WorldState {
 
         // removeIf modifies the list in-place, removing all dead objects
         objects.removeIf(GameObject::isDead);
+        updatableObjects.removeIf(obj -> obj instanceof GameObject go && go.isDead());
     }
 
     public void updateState() {

@@ -34,10 +34,8 @@ public abstract class Bullet extends GameObject {
         setPosition(getPosition().add(getVelocity()));
 
         if (getPosition() instanceof Position(var x, var y)) {
-            boolean outOfBounds = x < 0 || x > Constants.WIDTH
-                || y < 0 || y > Constants.HEIGHT;
-
-            if (outOfBounds) {
+            if(x < 0 || x > Constants.WIDTH
+                || y < 0 || y > Constants.HEIGHT) {
                 dei();
             }
         }
