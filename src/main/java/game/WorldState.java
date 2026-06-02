@@ -7,11 +7,15 @@ import entities.Bullet;
 import entities.GameObject;
 import entities.Player;
 import entities.Position;
+import entities.SelfDefendable;
 import entities.Updatable;
 import entities.Velocity;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.IntStream;
+import leaderboard.LeaderBoard;
 import lombok.Getter;
 import utils.Constants;
 
@@ -22,8 +26,10 @@ public class WorldState {
     private final AsteroidGenerator asteroidGenerator;
     private final AlienGenerator alienGenerator;
     private final InputHandler inputHandler;
-    public List<Updatable> updatables;
-    public List<GameObject> objects;
+    @Getter
+    private final LeaderBoard leaderBoard = LeaderBoard.builder().build();
+    public Set<Updatable> updatableObjects;
+    public Set<GameObject> objects;
     private int shootCooldown;
     private long lastSpawnTime = 0;
     private long lastAlienSpawnTime = 0;
@@ -32,14 +38,18 @@ public class WorldState {
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
         player = new Player(new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y), inputHandler);
-        objects = new ArrayList<>();
+        objects = new HashSet<>();
         objects.add(player);
-        updatables = new ArrayList<>();
-        updatables.add(player);
+        updatableObjects = new HashSet<>();
+        updatableObjects.add(player);
         asteroidGenerator = new AsteroidGenerator(this);
         alienGenerator = new AlienGenerator(this);
         gameStartTime = System.currentTimeMillis();
         lastAlienSpawnTime = gameStartTime;
+    }
+
+    private static String aaa(final GameObject a) {
+        return "%s@%s: %d".formatted(a.getClass().getCanonicalName(), System.identityHashCode(a), a.getHealth());
     }
 
     private void handleShooting() {
@@ -48,9 +58,11 @@ public class WorldState {
             return;
         }
         if (inputHandler.isShootPressed() && player.isAlive()) {
-            Bullet bullet = player.shoot();
-            objects.add(bullet);
-            updatables.add(bullet);
+            player.shoot().forEach(bullet -> {
+                objects.add(bullet);
+                updatableObjects.add(bullet);
+            });
+
             SoundManager.playSound("shoot.wav");
             shootCooldown = Constants.SHOOT_COOLDOWN_FRAMES;
         }
@@ -59,21 +71,19 @@ public class WorldState {
     private void handleAlienShooting() {
         // Collect new bullets into a separate list first to avoid ConcurrentModificationException
         // (we can't add to 'objects' while iterating over it)
-        List<AlienBullet> newBullets = new ArrayList<>();
-        for (GameObject obj : objects) {
-            // 'instanceof Alien alien' is a Java 16+ pattern match that both checks the type
-            // and creates a typed local variable 'alien' in one step
-            if (obj instanceof Alien alien && alien.isAlive()) {
-                AlienBullet alienBullet = alien.shoot();
-                if (alienBullet != null) {
-                    newBullets.add(alienBullet);
-                }
-            }
-        }
-        for (AlienBullet b : newBullets) {
-            objects.add(b);
-            updatables.add(b);
-        }
+        objects
+            .stream()
+            .filter(Objects::nonNull)
+            .filter(GameObject::isAlive)
+            .filter(Alien.class::isInstance)
+            .map(SelfDefendable.class::cast)
+            .map(SelfDefendable::shoot)
+            .flatMap(List::stream)
+            .toList()
+            .forEach(bullet -> {
+                objects.add(bullet);
+                updatableObjects.add(bullet);
+            });
     }
 
     private void handleSpawning() {
@@ -91,7 +101,7 @@ public class WorldState {
     }
 
     private void updateAll() {
-        for (Updatable obj : updatables) {
+        for (Updatable obj : updatableObjects) {
             obj.update();
         }
     }
@@ -120,6 +130,7 @@ public class WorldState {
                         final GameObject a = livingObjects.get(outerIndex);
                         final GameObject b = livingObjects.get(innerIndex);
                         if (checkCollision(a, b)) {
+                            //System.out.printf("a=%s, b=%s%n", aaa(a), aaa(b));
                             a.collide(b);
                             b.collide(a);
                         }
@@ -135,10 +146,11 @@ public class WorldState {
             .filter(GameObject::isDead)
             .filter(obj -> obj instanceof Asteroid && ((Asteroid) obj).wasKilledByBullet())
             .count();
-        player.setScore(player.getScore() + shotAsteroids);
+        player.incrementScore(shotAsteroids);
 
         // removeIf modifies the list in-place, removing all dead objects
         objects.removeIf(GameObject::isDead);
+        updatableObjects.removeIf(obj -> obj instanceof GameObject go && go.isDead());
     }
 
     public void updateState() {
@@ -155,14 +167,14 @@ public class WorldState {
      */
     public void reset() {
         objects.clear();
-        updatables.clear();
+        updatableObjects.clear();
         player.setPosition(new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y));
         player.setVelocity(Velocity.ZERO);
         player.setHealth(100);
         player.setScore(0);
         player.setRotationAngle(-Math.PI / 2);
         objects.add(player);
-        updatables.add(player);
+        updatableObjects.add(player);
         shootCooldown = 0;
         lastSpawnTime = 0;
         gameStartTime = System.currentTimeMillis();

@@ -4,8 +4,8 @@ public final class Constants {
     private Constants() {
     }
 
-    public static final int WIDTH = 1000;
-    public static final int HEIGHT = 1000;
+    public static final int WIDTH = 1500;
+    public static final int HEIGHT = 900;
     public static final int BUTTON_WIDTH = 200;
     public static final int BUTTON_HEIGHT = 50;
 

@@ -109,11 +109,12 @@ public class GamePanel extends JPanel implements ActionListener {
         drawHud(game);
     }
 
-    private void drawHud(Graphics graphics) {
+    private void drawHud(final Graphics graphics) {
         graphics.setColor(Color.WHITE);
-        graphics.setFont(new Font("Arial", Font.BOLD, 24));
-        graphics.drawString("Score: " + worldState.getPlayer().getScore(), 20, 40);
-        graphics.drawString("Health: " + worldState.getPlayer().getHealth(), 20, 80);
+        graphics.setFont(CustomFonts.PLAIN_24);
+        final Player player = worldState.getPlayer();
+        graphics.drawString("Score: " + player.getScore(), 20, 40);
+        graphics.drawString("Health: " + player.getHealth(), 20, 80);
     }
 
     private void drawObjects(final Graphics graphics) {

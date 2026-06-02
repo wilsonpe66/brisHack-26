@@ -5,11 +5,12 @@ import static assets.AssetManager.getImage;
 import game.InputHandler;
 import game.SoundManager;
 import java.awt.Image;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import utils.Constants;
 
-public class Player extends GameObject implements Wrappable {
+public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     private final static Image sprite = getImage("spaceship.png").get();
     @Getter
@@ -28,6 +29,10 @@ public class Player extends GameObject implements Wrappable {
         setHealth(100);
         setScale(0.5); // make player sprite smaller
         score = 0;
+    }
+
+    public void incrementScore(final int offset) {
+        score += offset;
     }
 
     @Override
@@ -72,12 +77,15 @@ public class Player extends GameObject implements Wrappable {
         setRotationAngle(normalized);
     }
 
-    public Bullet shoot() {
+    @Override
+    public List<PlayerBullet> shoot() {
         final double angle = getRotationAngle(); // radians
-        return new Bullet(
-            getPosition().add(Velocity.fromAngleAndSpeed(angle, getRadius())),
-            Velocity.fromAngleAndSpeed(angle, 16),
-            angle, this
+        return List.of(
+            new PlayerBullet(
+                getPosition().add(Velocity.fromAngleAndSpeed(angle, getRadius())),
+                Velocity.fromAngleAndSpeed(angle, 16),
+                angle, this
+            )
         );
     }
 
@@ -96,7 +104,7 @@ public class Player extends GameObject implements Wrappable {
         switch (gameObject) {
             case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
             case Asteroid _ -> setHealth(Math.max(health - 10, 0));
-            case Bullet _ -> throw new RuntimeException("PLAYER HIT BULLET?!?!?");
+            case PlayerBullet _ -> throw new RuntimeException("PLAYER HIT BULLET?!?!?");
             case AlienBullet _ -> setHealth(Math.max(health - 2, 0));
             case null -> {
             }
