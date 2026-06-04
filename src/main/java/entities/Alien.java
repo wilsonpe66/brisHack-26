@@ -2,6 +2,7 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import game.SoundManager;
 import java.awt.Image;
 import java.util.List;
 import utils.Constants;
@@ -97,7 +98,13 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
             case AlienBullet _ -> setHealth(getHealth() - 2);
             case null -> {
             }
-            default -> dei();
+            default -> {
+                dei();
+            }
+        }
+
+        if (isDead()) {
+            SoundManager.playSound("explosion.wav");
         }
     }
 }

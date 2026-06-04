@@ -1,5 +1,7 @@
 package entities;
 
+import game.SoundManager;
+
 public class AlienBullet extends Bullet {
 
     public AlienBullet(final Position position, final Velocity velocity, final double rotationAngle, final Alien alienOwner) {

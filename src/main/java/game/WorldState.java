@@ -134,6 +134,7 @@ public class WorldState {
                             a.collide(b);
                             b.collide(a);
                         }
+
                     });
             });
     }

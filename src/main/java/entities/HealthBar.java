@@ -9,7 +9,7 @@ public class HealthBar implements Updatable {
     @Getter
     private int displayedHealth; // the number shown on screen
 
-    public HealthBar(Player player) {
+    public HealthBar(final Player player) {
         this.player = player;
         this.displayedHealth = player.getHealth();
     }

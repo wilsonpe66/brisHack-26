@@ -2,6 +2,7 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import game.SoundManager;
 import java.awt.Image;
 import lombok.Getter;
 import utils.Constants;
