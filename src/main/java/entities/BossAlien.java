@@ -1,5 +1,6 @@
 package entities;
 
+import game.SoundManager;
 import java.util.List;
 import utils.Constants;
 
@@ -61,6 +62,10 @@ public class BossAlien extends Alien {
             case null -> {
             }
             default -> dei();
+        }
+
+        if (isDead()) {
+            SoundManager.playSound("explosion.wav");
         }
     }
 }
