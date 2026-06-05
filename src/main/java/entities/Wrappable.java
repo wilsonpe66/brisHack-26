@@ -1,5 +1,6 @@
 package entities;
 
+import entities.motion.Position;
 import utils.Constants;
 
 public interface Wrappable {

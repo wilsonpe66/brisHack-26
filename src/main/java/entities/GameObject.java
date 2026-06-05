@@ -1,10 +1,11 @@
 package entities;
 
+import entities.motion.Position;
+import entities.motion.Velocity;
 import java.awt.Image;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import utils.Constants;
 
 @Setter
 @Getter

@@ -2,10 +2,14 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import entities.amo.Bullet;
+import entities.motion.Position;
+import entities.motion.Velocity;
 import game.SoundManager;
 import java.awt.Image;
 import java.util.List;
 import utils.Constants;
+import utils.GameLevel;
 
 public class Alien extends GameObject implements Wrappable, SelfDefendable {
 
@@ -37,7 +41,7 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
         setHealth(100);
         setScale(0.5);
         shootCooldown = 0;
-        noShootTimer = Constants.ALIEN_SPAWN_NO_SHOOT_FRAMES;
+        noShootTimer = Constants.GAME_LEVELS.get(0).ALIEN_SPAWN_NO_SHOOT_FRAMES();
         targetUpdateTimer = 0;
     }
 
@@ -50,7 +54,8 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
             return List.of();
         }
 
-        shootCooldown = Constants.ALIEN_SHOOT_COOLDOWN_FRAMES;
+        final GameLevel gameLevel = Constants.GAME_LEVELS.get(0);
+        shootCooldown = gameLevel.ALIEN_SHOOT_COOLDOWN_FRAMES();
 
         // atan2(dy, dx) calculates the angle from this alien to the player
         final Position playerPosition = getPosition();
@@ -58,13 +63,7 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
         final double angle = bulletVelocityInit.getRotation();
         setRotationAngle(angle); // face the player when shooting
 
-        return List.of(
-            new AlienBullet(
-                playerPosition.add(Velocity.fromAngleAndSpeed(angle, getRadius())),
-                Velocity.fromAngleAndSpeed(angle, Constants.ALIEN_BULLET_SPEED),
-                angle, this
-            )
-        );
+        return getSingleShoot(playerPosition, getRadius(), gameLevel.ALIEN_BULLET_SPEED(), angle);
     }
 
     @Override
@@ -78,9 +77,10 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
         targetUpdateTimer--;
         if (targetUpdateTimer <= 0 && player.isAlive()) {
             final double angle = player.getPosition().minus(getPosition()).getRotation();
-            setVelocity(Velocity.fromAngleAndSpeed(angle, Constants.ALIEN_SPEED));
+            final GameLevel gameLevel = Constants.GAME_LEVELS.get(0);
+            setVelocity(Velocity.fromAngleAndSpeed(angle, gameLevel.ALIEN_SPEED()));
             setRotationAngle(angle);
-            targetUpdateTimer = Constants.ALIEN_TARGET_UPDATE_INTERVAL;
+            targetUpdateTimer = gameLevel.ALIEN_TARGET_UPDATE_INTERVAL();
         }
         // update position according to velocity:
         setPosition(getPosition().add(getVelocity()));
@@ -95,12 +95,11 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
     @Override
     public void collide(final GameObject gameObject) {
         switch (gameObject) {
-            case AlienBullet _ -> setHealth(getHealth() - 2);
+            case Bullet bullet when(bullet.getOwner() == this) -> {
+            }
             case null -> {
             }
-            default -> {
-                dei();
-            }
+            default -> dei();
         }
 
         if (isDead()) {

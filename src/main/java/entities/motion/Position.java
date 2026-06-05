@@ -1,4 +1,4 @@
-package entities;
+package entities.motion;
 
 public record Position(
     double x,

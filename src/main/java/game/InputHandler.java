@@ -18,6 +18,8 @@ public class InputHandler implements KeyListener {
     private boolean downPressed;
     @Getter
     private boolean shootPressed;
+    @Getter
+    private boolean superShootPressed;
 
     // Double-brace initializer: creates an anonymous HashMap subclass and immediately
     // populates it. Each entry maps a key code to a lambda that sets the corresponding flag.
@@ -32,6 +34,7 @@ public class InputHandler implements KeyListener {
         put(KeyEvent.VK_D, v -> rightPressed = v);
         put(KeyEvent.VK_RIGHT, v -> rightPressed = v);
         put(KeyEvent.VK_SPACE, v -> shootPressed = v);
+        put(KeyEvent.VK_END, v -> superShootPressed = v);
     }};
 
     // keyTyped is for character input (e.g. typing text). Not used here — we only care about
@@ -61,5 +64,6 @@ public class InputHandler implements KeyListener {
         upPressed = false;
         downPressed = false;
         shootPressed = false;
+        superShootPressed = false;
     }
 }
