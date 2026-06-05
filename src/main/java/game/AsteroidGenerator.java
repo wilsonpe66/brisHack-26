@@ -2,8 +2,8 @@ package game;
 
 import entities.Asteroid;
 import entities.Player;
-import entities.Position;
-import entities.Velocity;
+import entities.motion.Position;
+import entities.motion.Velocity;
 import java.util.Random;
 import utils.Constants;
 

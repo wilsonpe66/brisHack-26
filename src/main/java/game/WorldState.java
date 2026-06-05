@@ -1,15 +1,13 @@
 package game;
 
 import entities.Alien;
-import entities.AlienBullet;
 import entities.Asteroid;
-import entities.Bullet;
 import entities.GameObject;
 import entities.Player;
-import entities.Position;
+import entities.motion.Position;
 import entities.SelfDefendable;
 import entities.Updatable;
-import entities.Velocity;
+import entities.motion.Velocity;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +16,7 @@ import java.util.stream.IntStream;
 import leaderboard.LeaderBoard;
 import lombok.Getter;
 import utils.Constants;
+import utils.GameLevel;
 
 public class WorldState {
 
@@ -53,11 +52,11 @@ public class WorldState {
     }
 
     private void handleShooting() {
-        if (shootCooldown > 0) {
+        if (!inputHandler.isSuperShootPressed() && shootCooldown > 0) {
             shootCooldown--;
             return;
         }
-        if (inputHandler.isShootPressed() && player.isAlive()) {
+        if ((inputHandler.isSuperShootPressed() || inputHandler.isShootPressed()) && player.isAlive()) {
             player.shoot().forEach(bullet -> {
                 objects.add(bullet);
                 updatableObjects.add(bullet);
@@ -87,14 +86,15 @@ public class WorldState {
     }
 
     private void handleSpawning() {
-        long currentTime = System.currentTimeMillis();
+        final long currentTime = System.currentTimeMillis();
         if (currentTime - lastSpawnTime >= Constants.SPAWN_DELAY) {
             asteroidGenerator.generate();
             lastSpawnTime = currentTime;
         }
-        long timeSinceStart = currentTime - gameStartTime;
-        if (timeSinceStart >= Constants.ALIEN_SPAWN_INITIAL_DELAY
-            && currentTime - lastAlienSpawnTime >= Constants.ALIEN_SPAWN_DELAY) {
+        final long timeSinceStart = currentTime - gameStartTime;
+        final GameLevel gameLevel = Constants.GAME_LEVELS.get(0);
+        if (timeSinceStart >= gameLevel.ALIEN_SPAWN_INITIAL_DELAY()
+            && currentTime - lastAlienSpawnTime >= gameLevel.ALIEN_SPAWN_DELAY()) {
             alienGenerator.generate();
             lastAlienSpawnTime = currentTime;
         }

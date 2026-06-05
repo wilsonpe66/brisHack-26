@@ -1,6 +1,4 @@
-package entities;
-
-import entities.motion.Velocity;
+package entities.motion;
 
 public record Position(
     double x,

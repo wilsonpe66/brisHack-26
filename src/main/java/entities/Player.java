@@ -2,6 +2,9 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import entities.amo.Bullet;
+import entities.motion.Position;
+import entities.motion.Velocity;
 import game.InputHandler;
 import game.SoundManager;
 import java.awt.Image;
@@ -78,15 +81,9 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     }
 
     @Override
-    public List<PlayerBullet> shoot() {
+    public List<Bullet> shoot() {
         final double angle = getRotationAngle(); // radians
-        return List.of(
-            new PlayerBullet(
-                getPosition().add(Velocity.fromAngleAndSpeed(angle, getRadius())),
-                Velocity.fromAngleAndSpeed(angle, 16),
-                angle, this
-            )
-        );
+        return getSingleShoot(getPosition(),getRadius(), 16, angle);
     }
 
     @Override
@@ -104,8 +101,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         switch (gameObject) {
             case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
             case Asteroid _ -> setHealth(Math.max(health - 10, 0));
-            case PlayerBullet _ -> throw new RuntimeException("PLAYER HIT BULLET?!?!?");
-            case AlienBullet _ -> setHealth(Math.max(health - 2, 0));
+            case Bullet bullet when(bullet.getOwner() instanceof Alien) -> setHealth(Math.max(health - 2, 0));
             case null -> {
             }
             default -> dei();

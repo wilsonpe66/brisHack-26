@@ -3,8 +3,8 @@ package game;
 import entities.Alien;
 import entities.BossAlien;
 import entities.Player;
-import entities.Position;
-import entities.Velocity;
+import entities.motion.Position;
+import entities.motion.Velocity;
 import java.util.Random;
 import utils.Constants;
 
@@ -26,10 +26,11 @@ public class AlienGenerator {
 
     private static Alien fromPosition(final Position position, final Player player) {
         final double angle = player.getPosition().minus(position).getRotation();
+        final double alienSpeed = Constants.GAME_LEVELS.get(0).ALIEN_SPEED();
         if (random.nextBoolean()) {
-            return new Alien(position, Velocity.fromAngleAndSpeed(angle, Constants.ALIEN_SPEED), player);
+            return new Alien(position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
         }
-        return new BossAlien(position, Velocity.fromAngleAndSpeed(angle, Constants.ALIEN_SPEED), player);
+        return new BossAlien(position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
     }
 
     // spawn an alien at a random side of the screen
