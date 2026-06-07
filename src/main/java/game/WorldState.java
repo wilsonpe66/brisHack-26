@@ -4,9 +4,9 @@ import entities.Alien;
 import entities.Asteroid;
 import entities.GameObject;
 import entities.Player;
-import entities.motion.Position;
 import entities.SelfDefendable;
 import entities.Updatable;
+import entities.motion.Position;
 import entities.motion.Velocity;
 import java.util.HashSet;
 import java.util.List;
@@ -34,9 +34,11 @@ public class WorldState {
     private long lastAlienSpawnTime = 0;
     private long gameStartTime;
 
+    private int level;
+
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
-        player = new Player(new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y), inputHandler);
+        player = new Player(this, new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y), inputHandler);
         objects = new HashSet<>();
         objects.add(player);
         updatableObjects = new HashSet<>();
@@ -49,6 +51,10 @@ public class WorldState {
 
     private static String aaa(final GameObject a) {
         return "%s@%s: %d".formatted(a.getClass().getCanonicalName(), System.identityHashCode(a), a.getHealth());
+    }
+
+    public GameLevel gameLevel() {
+        return Constants.GAME_LEVELS.get(Math.clamp(level, 0, Constants.GAME_LEVELS.size()));
     }
 
     private void handleShooting() {
@@ -92,7 +98,7 @@ public class WorldState {
             lastSpawnTime = currentTime;
         }
         final long timeSinceStart = currentTime - gameStartTime;
-        final GameLevel gameLevel = Constants.GAME_LEVELS.get(0);
+        final GameLevel gameLevel = Constants.GAME_LEVELS.get(level);
         if (timeSinceStart >= gameLevel.ALIEN_SPAWN_INITIAL_DELAY()
             && currentTime - lastAlienSpawnTime >= gameLevel.ALIEN_SPAWN_DELAY()) {
             alienGenerator.generate();
@@ -161,6 +167,14 @@ public class WorldState {
         updateAll();
         handleCollisions();
         removeDeadObjects();
+        if (player.isAlive()) {
+            final int score = player.getScore();
+            if (score > 300) {
+                level = 2;
+            } else if (score > 100) {
+                level = 1;
+            }
+        }
     }
 
     /**
@@ -168,6 +182,7 @@ public class WorldState {
      */
     public void reset() {
         objects.clear();
+        level = 0;
         updatableObjects.clear();
         player.setPosition(new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y));
         player.setVelocity(Velocity.ZERO);

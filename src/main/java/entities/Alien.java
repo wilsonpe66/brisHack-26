@@ -6,6 +6,7 @@ import entities.amo.Bullet;
 import entities.motion.Position;
 import entities.motion.Velocity;
 import game.SoundManager;
+import game.WorldState;
 import java.awt.Image;
 import java.util.List;
 import utils.Constants;
@@ -14,6 +15,9 @@ import utils.GameLevel;
 public class Alien extends GameObject implements Wrappable, SelfDefendable {
 
     private final static Image sprite = getImage("shipGreen_manned.png").get();
+
+    protected final WorldState worldState;
+
     protected final Player player;
     /**
      * Frames until the alien can shoot again (slower than player).
@@ -31,8 +35,9 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
     /**
      * Spawn from side of screen with given position and initial velocity.
      */
-    public Alien(final Position position, final Velocity velocity, final Player player) {
+    public Alien(final WorldState worldState, final Position position, final Velocity velocity, final Player player) {
         super();
+        this.worldState = worldState;
         this.player = player;
         setPosition(position);
         setVelocity(velocity);
@@ -41,7 +46,7 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
         setHealth(100);
         setScale(0.5);
         shootCooldown = 0;
-        noShootTimer = Constants.GAME_LEVELS.get(0).ALIEN_SPAWN_NO_SHOOT_FRAMES();
+        noShootTimer = worldState.gameLevel().ALIEN_SPAWN_NO_SHOOT_FRAMES();
         targetUpdateTimer = 0;
     }
 
@@ -54,7 +59,7 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
             return List.of();
         }
 
-        final GameLevel gameLevel = Constants.GAME_LEVELS.get(0);
+        final GameLevel gameLevel = worldState.gameLevel();
         shootCooldown = gameLevel.ALIEN_SHOOT_COOLDOWN_FRAMES();
 
         // atan2(dy, dx) calculates the angle from this alien to the player
@@ -77,7 +82,7 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
         targetUpdateTimer--;
         if (targetUpdateTimer <= 0 && player.isAlive()) {
             final double angle = player.getPosition().minus(getPosition()).getRotation();
-            final GameLevel gameLevel = Constants.GAME_LEVELS.get(0);
+            final GameLevel gameLevel = worldState.gameLevel();
             setVelocity(Velocity.fromAngleAndSpeed(angle, gameLevel.ALIEN_SPEED()));
             setRotationAngle(angle);
             targetUpdateTimer = gameLevel.ALIEN_TARGET_UPDATE_INTERVAL();

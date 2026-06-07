@@ -4,6 +4,8 @@ import lombok.Builder;
 
 @Builder(toBuilder = true)
 public record GameLevel(
+    int LEVEL_NUMBER,
+    int PLAYER_BULLET_SPEED,
     double ALIEN_SPEED,
     int ALIEN_SHOOT_COOLDOWN_FRAMES,
     int ALIEN_SPAWN_DELAY,

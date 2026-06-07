@@ -7,6 +7,7 @@ import entities.motion.Position;
 import entities.motion.Velocity;
 import game.InputHandler;
 import game.SoundManager;
+import game.WorldState;
 import java.awt.Image;
 import java.util.List;
 import lombok.Getter;
@@ -16,6 +17,9 @@ import utils.Constants;
 public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     private final static Image sprite = getImage("spaceship.png").get();
+
+    private final WorldState worldState;
+
     @Getter
     private final InputHandler inputHandler;
     @Getter
@@ -23,7 +27,8 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     private int score;
 
     // CONSTRUCTOR:
-    public Player(final Position position, final InputHandler inputHandler) {
+    public Player(final WorldState worldState, final Position position, final InputHandler inputHandler) {
+        this.worldState = worldState;
         this.inputHandler = inputHandler;
         setPosition(position);
         setVelocity(Velocity.ZERO);
@@ -83,7 +88,11 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     @Override
     public List<Bullet> shoot() {
         final double angle = getRotationAngle(); // radians
-        return getSingleShoot(getPosition(),getRadius(), 16, angle);
+        final int speed = worldState.gameLevel().PLAYER_BULLET_SPEED();
+        return switch (worldState.gameLevel().LEVEL_NUMBER()) {
+            case 0 -> getSingleShoot(getPosition(), getRadius(), speed, angle);
+            default -> getSupperShoot(getPosition(), getRadius(), speed, angle);
+        };
     }
 
     @Override
@@ -101,7 +110,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         switch (gameObject) {
             case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
             case Asteroid _ -> setHealth(Math.max(health - 10, 0));
-            case Bullet bullet when(bullet.getOwner() instanceof Alien) -> setHealth(Math.max(health - 2, 0));
+            case Bullet bullet when (bullet.getOwner() instanceof Alien) -> setHealth(Math.max(health - 2, 0));
             case null -> {
             }
             default -> dei();
