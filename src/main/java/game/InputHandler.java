@@ -34,7 +34,8 @@ public class InputHandler implements KeyListener {
         put(KeyEvent.VK_D, v -> rightPressed = v);
         put(KeyEvent.VK_RIGHT, v -> rightPressed = v);
         put(KeyEvent.VK_SPACE, v -> shootPressed = v);
-        put(KeyEvent.VK_END, v -> superShootPressed = v);
+        put(KeyEvent.VK_Z, v -> shootPressed = v);
+        put(KeyEvent.VK_X, v -> superShootPressed = v);
     }};
 
     // keyTyped is for character input (e.g. typing text). Not used here — we only care about
