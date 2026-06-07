@@ -23,7 +23,7 @@ public interface SelfDefendable {
         return List.of(
             new Bullet(
                 playerPosition.add(Velocity.fromAngleAndSpeed(angle - .1, radius)),
-                Velocity.fromAngleAndSpeed(angle - .1, speed),
+                Velocity.fromAngleAndSpeed(angle - .1, 1.5 * speed),
                 angle, this
             ),
             new Bullet(
@@ -33,7 +33,7 @@ public interface SelfDefendable {
             ),
             new Bullet(
                 playerPosition.add(Velocity.fromAngleAndSpeed(angle + .1, radius)),
-                Velocity.fromAngleAndSpeed(angle + .1, speed),
+                Velocity.fromAngleAndSpeed(angle + .1, 1.5 * speed),
                 angle, this
             )
         );
