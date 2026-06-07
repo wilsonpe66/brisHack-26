@@ -4,6 +4,7 @@ import entities.amo.Bullet;
 import entities.motion.Position;
 import entities.motion.Velocity;
 import game.SoundManager;
+import game.WorldState;
 import java.util.List;
 import utils.Constants;
 import utils.GameLevel;
@@ -13,8 +14,8 @@ public class BossAlien extends Alien {
     /**
      * Spawn from side of screen with given position and initial velocity.
      */
-    public BossAlien(final Position position, final Velocity velocity, final Player player) {
-        super(position, velocity, player);
+    public BossAlien(final WorldState worldState, final Position position, final Velocity velocity, final Player player) {
+        super(worldState, position, velocity, player);
         setRadius(40);
         setHealth(200);
         setScale(1);
@@ -28,7 +29,7 @@ public class BossAlien extends Alien {
             return List.of();
         }
 
-        final GameLevel gameLevel = Constants.GAME_LEVELS.get(0);
+        final GameLevel gameLevel = worldState.gameLevel();
         shootCooldown = gameLevel.ALIEN_SHOOT_COOLDOWN_FRAMES();
 
         // atan2(dy, dx) calculates the angle from this alien to the player

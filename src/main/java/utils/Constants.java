@@ -30,6 +30,8 @@ public final class Constants {
     public static final List<GameLevel> GAME_LEVELS = List.of(
         GameLevel
             .builder()
+            .LEVEL_NUMBER(0)
+            .PLAYER_BULLET_SPEED(16)
             .ALIEN_SPEED(1.0)
             .ALIEN_SHOOT_COOLDOWN_FRAMES(150)
             .ALIEN_SPAWN_DELAY(15000)
@@ -40,6 +42,20 @@ public final class Constants {
             .build(),
         GameLevel
             .builder()
+            .LEVEL_NUMBER(1)
+            .PLAYER_BULLET_SPEED(16)
+            .ALIEN_SPEED(1.0)
+            .ALIEN_SHOOT_COOLDOWN_FRAMES(150)
+            .ALIEN_SPAWN_DELAY(7500)
+            .ALIEN_SPAWN_INITIAL_DELAY(2500)
+            .ALIEN_SPAWN_NO_SHOOT_FRAMES(45)
+            .ALIEN_BULLET_SPEED(4)
+            .ALIEN_TARGET_UPDATE_INTERVAL(45)
+            .build(),
+        GameLevel
+            .builder()
+            .LEVEL_NUMBER(2)
+            .PLAYER_BULLET_SPEED(20)
             .ALIEN_SPEED(1.0)
             .ALIEN_SHOOT_COOLDOWN_FRAMES(150)
             .ALIEN_SPAWN_DELAY(1000)

@@ -12,7 +12,7 @@ public class AlienGenerator {
 
     private static final Random random = new Random();
     // spawns an alien at an offset from one of the sides of the screen, with velocity towards the player position
-    private static final SideSpawner[] SIDES = {
+    private final SideSpawner[] SIDES = {
         player -> fromPosition(new Position(random.nextDouble() * Constants.WIDTH, -Constants.ASTEROID_OFFSET), player), // top
         player -> fromPosition(new Position(random.nextDouble() * Constants.WIDTH, Constants.HEIGHT + Constants.ASTEROID_OFFSET), player), // bottom
         player -> fromPosition(new Position(-Constants.ASTEROID_OFFSET, random.nextDouble() * Constants.HEIGHT), player), // left
@@ -24,13 +24,13 @@ public class AlienGenerator {
         this.worldState = worldState;
     }
 
-    private static Alien fromPosition(final Position position, final Player player) {
+    private Alien fromPosition(final Position position, final Player player) {
         final double angle = player.getPosition().minus(position).getRotation();
-        final double alienSpeed = Constants.GAME_LEVELS.get(0).ALIEN_SPEED();
+        final double alienSpeed = worldState.gameLevel().ALIEN_SPEED();
         if (random.nextBoolean()) {
-            return new Alien(position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
+            return new Alien(worldState, position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
         }
-        return new BossAlien(position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
+        return new BossAlien(worldState, position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
     }
 
     // spawn an alien at a random side of the screen
