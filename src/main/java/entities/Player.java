@@ -13,6 +13,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import utils.Constants;
+import utils.GameLevel;
 
 public class Player extends GameObject implements Wrappable, SelfDefendable {
 
@@ -88,10 +89,14 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     @Override
     public List<Bullet> shoot() {
         final double angle = getRotationAngle(); // radians
-        final int speed = worldState.gameLevel().PLAYER_BULLET_SPEED();
-        return switch (worldState.gameLevel().LEVEL_NUMBER()) {
-            case 0 -> getSingleShoot(getPosition(), getRadius(), speed, angle);
-            default -> getSupperShoot(getPosition(), getRadius(), speed, angle);
+        final GameLevel gameLevel = worldState.gameLevel();
+        final int speed = gameLevel.PLAYER_BULLET_SPEED();
+        return switch (gameLevel.LEVEL_NUMBER()) {
+            case 0, 1 -> getSingleShoot(getPosition(), getRadius(), speed, angle);
+            case 2 -> getSupperShoot(getPosition(), getRadius(), speed, angle);
+            case 3, 4, 5, 6 -> getSupperDuperShoot(getPosition(), getRadius(), speed, angle);
+            case 7, 8 -> getSupperDuper2Shoot(getPosition(), getRadius(), speed, angle);
+            default -> getSupperDuper3Shoot(getPosition(), getRadius(), speed, angle);
         };
     }
 

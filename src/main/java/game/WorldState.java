@@ -69,7 +69,7 @@ public class WorldState {
             });
 
             SoundManager.playSound("shoot.wav");
-            shootCooldown = Constants.SHOOT_COOLDOWN_FRAMES;
+            shootCooldown = gameLevel().PLAYER_SHOOT_COOLDOWN_FRAMES();
         }
     }
 
@@ -169,7 +169,28 @@ public class WorldState {
         removeDeadObjects();
         if (player.isAlive()) {
             final int score = player.getScore();
-            if (score > 300) {
+            if (score > 21000) {
+                level = 9;
+            }
+            if (score > 15000) {
+                level = 8;
+            }
+            else if (score > 8000) {
+                level = 7;
+            }
+            else if (score > 4000) {
+                level = 6;
+            }
+            else if (score > 1400) {
+                level = 5;
+            }
+            else if (score > 1000) {
+                level = 4;
+            }
+            else if (score > 500) {
+                level = 3;
+            }
+            else if (score > 300) {
                 level = 2;
             } else if (score > 100) {
                 level = 1;

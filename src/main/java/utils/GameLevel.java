@@ -6,6 +6,7 @@ import lombok.Builder;
 public record GameLevel(
     int LEVEL_NUMBER,
     int PLAYER_BULLET_SPEED,
+    int PLAYER_SHOOT_COOLDOWN_FRAMES,
     double ALIEN_SPEED,
     int ALIEN_SHOOT_COOLDOWN_FRAMES,
     int ALIEN_SPAWN_DELAY,
