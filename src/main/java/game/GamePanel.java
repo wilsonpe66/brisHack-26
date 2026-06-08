@@ -113,8 +113,13 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.setColor(Color.WHITE);
         graphics.setFont(CustomFonts.PLAIN_24);
         final Player player = worldState.getPlayer();
-        graphics.drawString("Score: " + player.getScore(), 20, 40);
+        final int levelNumber = worldState.gameLevel().LEVEL_NUMBER() + 1;
+        graphics.drawString("Level: %s Score: %d".formatted(levelNumber, player.getScore()), 20, 40);
         graphics.drawString("Health: " + player.getHealth(), 20, 80);
+        graphics.setColor(Color.RED);
+        graphics.fillRect(20, 100, 100 + 20, 10);
+        graphics.setColor(Color.GREEN);
+        graphics.fillRect(20, 100, player.getHealth() + 20, 10);
     }
 
     private void drawObjects(final Graphics graphics) {
