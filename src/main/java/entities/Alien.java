@@ -3,13 +3,13 @@ package entities;
 import static assets.AssetManager.getImage;
 
 import entities.amo.Bullet;
+import entities.amo.BulletLevel2;
 import entities.motion.Position;
 import entities.motion.Velocity;
 import game.SoundManager;
 import game.WorldState;
 import java.awt.Image;
 import java.util.List;
-import utils.Constants;
 import utils.GameLevel;
 
 public class Alien extends GameObject implements Wrappable, SelfDefendable {

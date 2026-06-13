@@ -122,7 +122,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         }
 
         if (isDead()) {
-            SoundManager.playSound("explosion.wav");
+            SoundManager.playSound("game-over.wav");
         }
     }
 }

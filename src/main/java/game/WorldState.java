@@ -64,7 +64,7 @@ public class WorldState {
         }
         if ((inputHandler.isSuperShootPressed() || inputHandler.isShootPressed()) && player.isAlive()) {
             player.shoot().forEach(bullet -> {
-                objects.add(bullet);
+                objects.add((GameObject) bullet);
                 updatableObjects.add(bullet);
             });
 
@@ -86,7 +86,7 @@ public class WorldState {
             .flatMap(List::stream)
             .toList()
             .forEach(bullet -> {
-                objects.add(bullet);
+                objects.add((GameObject) bullet);
                 updatableObjects.add(bullet);
             });
     }
@@ -171,26 +171,19 @@ public class WorldState {
             final int score = player.getScore();
             if (score > 21000) {
                 level = 9;
-            }
-            if (score > 15000) {
+            } else if (score > 15000) {
                 level = 8;
-            }
-            else if (score > 8000) {
+            } else if (score > 8000) {
                 level = 7;
-            }
-            else if (score > 4000) {
+            } else if (score > 4000) {
                 level = 6;
-            }
-            else if (score > 1400) {
+            } else if (score > 1400) {
                 level = 5;
-            }
-            else if (score > 1000) {
+            } else if (score > 1000) {
                 level = 4;
-            }
-            else if (score > 500) {
+            } else if (score > 500) {
                 level = 3;
-            }
-            else if (score > 300) {
+            } else if (score > 300) {
                 level = 2;
             } else if (score > 100) {
                 level = 1;
