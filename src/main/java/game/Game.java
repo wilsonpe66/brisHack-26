@@ -86,6 +86,7 @@ public class Game extends JFrame {
         gameOverPanel.setScore(score, gamepanel.worldState.getLeaderBoard());
         SoundManager.stopLooping("background");
         SoundManager.playSound("win.wav");
+        SoundManager.playLooping("menu_music", "mixkit-fright-night-871.wav");
         cardLayout.show(mainContainer, "GAME OVER");
 
     }

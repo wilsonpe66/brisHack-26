@@ -1,47 +1,30 @@
 package entities.amo;
 
-import static assets.AssetManager.getImage;
-
 import entities.Alien;
 import entities.Asteroid;
 import entities.BossAlien;
 import entities.GameObject;
 import entities.Player;
 import entities.SelfDefendable;
+import entities.Updatable;
 import entities.motion.Position;
 import entities.motion.Velocity;
-import java.awt.Image;
-import lombok.Getter;
 import utils.Constants;
 
-public class Bullet extends GameObject {
+public interface Bullet  extends Updatable {
 
-    private final static Image sprite = getImage("missile.png").get();
+    Position getPosition();
 
-    @Getter
-    private final SelfDefendable owner;
+    void setPosition(final Position position);
 
-    // CONSTRUCTOR:
-    public Bullet(final Position position) {
-        this(position, new Velocity(10, 10), Math.PI / 4, null);
-    }
+    Velocity getVelocity();
 
-    public Bullet(final Position position, final Velocity velocity, final double rotationAngle, final SelfDefendable owner) {
-        setPosition(position);
-        setVelocity(velocity);
-        setRotationAngle(rotationAngle);
-        setRadius(5);
-        setHealth(1);
-        this.owner = owner;
-    }
+    void dei();
+
+    SelfDefendable getOwner();
 
     @Override
-    public Image getSprite() {
-        return sprite;
-    }
-
-    @Override
-    public void update() {
+    default void update() {
         // update position according to velocity:
         setPosition(getPosition().add(getVelocity()));
 
@@ -53,8 +36,7 @@ public class Bullet extends GameObject {
         }
     }
 
-    @Override
-    public void collide(final GameObject gameObject) {
+    default void collide(final GameObject gameObject) {
         switch (gameObject) {
             case SelfDefendable selfDefendable when (getOwner() == selfDefendable) -> {
 
@@ -72,15 +54,13 @@ public class Bullet extends GameObject {
                 dei();
             }
 
-            case Bullet otherBullet when (owner == otherBullet.owner) -> {
+            case Bullet otherBullet when (getOwner() == otherBullet.getOwner()) -> {
             }
 
             case null -> {
 
             }
-            default -> {
-                dei();
-            }
+            default -> dei();
         }
     }
 }

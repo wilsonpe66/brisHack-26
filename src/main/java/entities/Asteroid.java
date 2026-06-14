@@ -3,6 +3,7 @@ package entities;
 import static assets.AssetManager.getImage;
 
 import entities.amo.Bullet;
+import entities.amo.BulletLevel2;
 import entities.motion.Position;
 import entities.motion.Velocity;
 import java.awt.Image;
@@ -10,6 +11,7 @@ import java.util.Random;
 import utils.Constants;
 
 public class Asteroid extends GameObject {
+    private static final double PI2 = Math.PI * 2;
 
     private static final Random random = new Random();
     private static final Image[] sprites = {
@@ -29,7 +31,7 @@ public class Asteroid extends GameObject {
         sprite = sprites[random.nextInt(sprites.length)];
         setPosition(position);
         setVelocity(velocity);
-        setRotationAngle(Math.random() * Math.PI * 2);
+        setRotationAngle(Math.random() * PI2);
         setRadius(30);
         setHealth(1);
         setScale(0.3);
@@ -43,6 +45,7 @@ public class Asteroid extends GameObject {
     @Override
     public void update() {
         // update position according to velocity:
+        setRotationAngle(getNextAngle());
         setPosition(getPosition().add(getVelocity()));
 
         // remove asteroid if it goes too far off-screen (with buffer for spawning)
@@ -55,6 +58,14 @@ public class Asteroid extends GameObject {
                 dei();
             }
         }
+    }
+
+    private double getNextAngle() {
+        final double nextAngle = getRotationAngle() + .05;
+        if (nextAngle > PI2) {
+            return nextAngle - PI2;
+        }
+        return nextAngle;
     }
 
     @Override

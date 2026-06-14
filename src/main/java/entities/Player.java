@@ -105,10 +105,6 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         return sprite;
     }
 
-    public void rotateBy(double deltaAngle) {
-        setRotationAngle(getRotationAngle() + deltaAngle);
-    }
-
     @Override
     public void collide(final GameObject gameObject) {
         final int health = getHealth();
@@ -122,7 +118,8 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         }
 
         if (isDead()) {
-            SoundManager.playSound("explosion.wav");
+            SoundManager.stopLooping("thruster");
+            SoundManager.playSound("game-over.wav");
         }
     }
 }
