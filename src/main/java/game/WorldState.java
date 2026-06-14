@@ -29,11 +29,12 @@ public class WorldState {
     private final LeaderBoard leaderBoard = LeaderBoard.builder().build();
     public Set<Updatable> updatableObjects;
     public Set<GameObject> objects;
+    boolean lastIsPressedState = false;
+    boolean isPaused = false;
     private int shootCooldown;
     private long lastSpawnTime = 0;
     private long lastAlienSpawnTime = 0;
     private long gameStartTime;
-
     private int level;
 
     public WorldState(InputHandler inputHandler) {
@@ -105,8 +106,21 @@ public class WorldState {
             lastAlienSpawnTime = currentTime;
         }
     }
+    //pausedPressed
 
     private void updateAll() {
+        final boolean pausedPressed = inputHandler.isPausedPressed();
+        if (pausedPressed != lastIsPressedState) {
+            lastIsPressedState = pausedPressed;
+            if (pausedPressed) {
+                isPaused = !isPaused;
+            }
+        }
+
+        if (isPaused) {
+            return;
+        }
+
         for (Updatable obj : updatableObjects) {
             obj.update();
         }
@@ -167,6 +181,10 @@ public class WorldState {
         updateAll();
         handleCollisions();
         removeDeadObjects();
+        levelUpdate();
+    }
+
+    private void levelUpdate() {
         if (player.isAlive()) {
             final int score = player.getScore();
             if (score > 21000) {
@@ -209,5 +227,8 @@ public class WorldState {
         lastSpawnTime = 0;
         gameStartTime = System.currentTimeMillis();
         lastAlienSpawnTime = gameStartTime;
+
+        lastIsPressedState = false;
+        isPaused = false;
     }
 }

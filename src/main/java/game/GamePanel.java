@@ -63,11 +63,9 @@ public class GamePanel extends JPanel implements ActionListener {
         return transform;
     }
 
-    private static void drawHealthBar(final Graphics graphics, final String levelAsLabel, final Player player) {
-        graphics.drawString(levelAsLabel, (Constants.WIDTH / 2) - levelAsLabel.length() * 5, 40);
+    private static void drawHealthBar(final Graphics graphics, final Player player) {
         graphics.setColor(Color.RED);
-        int X_RIGHT_MARGIN = 10;
-
+        final int X_RIGHT_MARGIN = 10;
         final int MAX_HEALTH = 100;
         final int startX = Constants.WIDTH - 2 * MAX_HEALTH - X_RIGHT_MARGIN;
 
@@ -131,8 +129,10 @@ public class GamePanel extends JPanel implements ActionListener {
         final int levelNumber = worldState.gameLevel().LEVEL_NUMBER() + 1;
         graphics.drawString("Score: %,d".formatted(player.getScore()), 20, 40);
         graphics.setColor(Color.YELLOW);
+        graphics.setFont(CustomFonts.HUD_TITLE);
         final String levelAsLabel = "Level: %s".formatted(levelNumber);
-        drawHealthBar(graphics, levelAsLabel, player);
+        graphics.drawString(levelAsLabel, (Constants.WIDTH / 2) - levelAsLabel.length() * 5, 40);
+        drawHealthBar(graphics, player);
     }
 
     private void drawObjects(final Graphics graphics) {

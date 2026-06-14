@@ -1,11 +1,23 @@
 package game;
 
+import assets.AssetManager;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import utils.Constants;
 
-import javax.swing.*;
-import java.awt.*;
-
 public class MenuPanel extends JPanel {
+
+    private static final Image SPACE_BACKGROUND = AssetManager.getImage("spacebackground.png").get();
+
     public MenuPanel(Game game) {
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         setBackground(new Color(30, 30, 40));
@@ -18,9 +30,9 @@ public class MenuPanel extends JPanel {
         // Insets(top, left, bottom, right) — adds spacing around each component
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        final JLabel titleLabel = new JLabel("(git) Push To Orbit");
+        final JLabel titleLabel = new JLabel("Astroids");
         titleLabel.setFont(CustomFonts.TITLE);
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(Color.YELLOW);
         gbc.gridy = 0; // row 0 of the grid
         add(titleLabel, gbc);
 
@@ -52,6 +64,12 @@ public class MenuPanel extends JPanel {
         add(buttonPanel, gbc);
 
         // Start menu music immediately when the menu panel is constructed
-        SoundManager.playLooping("menu_music", "space_oddity.wav");
+        SoundManager.playLooping("menu_music", "mixkit-fright-night-871.wav");
+    }
+
+    @Override
+    protected void paintComponent(final Graphics graphics) {
+        super.paintComponent(graphics);
+        graphics.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
     }
 }
