@@ -2,6 +2,7 @@ package game;
 
 import static assets.AssetManager.getImage;
 
+import assets.SoundManager;
 import entities.GameObject;
 import entities.Player;
 import java.awt.Color;
@@ -15,6 +16,7 @@ import java.awt.geom.AffineTransform;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import utils.Constants;
+import utils.CustomFonts;
 
 public class GamePanel extends JPanel implements ActionListener {
 

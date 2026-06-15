@@ -3,7 +3,6 @@ package entities;
 import static assets.AssetManager.getImage;
 
 import entities.amo.Bullet;
-import entities.amo.BulletLevel2;
 import entities.motion.Position;
 import entities.motion.Velocity;
 import java.awt.Image;
@@ -11,6 +10,7 @@ import java.util.Random;
 import utils.Constants;
 
 public class Asteroid extends GameObject {
+
     private static final double PI2 = Math.PI * 2;
 
     private static final Random random = new Random();
@@ -69,8 +69,8 @@ public class Asteroid extends GameObject {
     }
 
     @Override
-    public void collide(final GameObject gameObject) {
-        switch (gameObject) {
+    public void collide(final Colidable colidable) {
+        switch (colidable) {
             case Asteroid _, Bullet _, Player _, Alien _ -> dei();
             case null, default -> {
             }

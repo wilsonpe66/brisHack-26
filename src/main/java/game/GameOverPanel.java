@@ -1,12 +1,21 @@
 package game;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import leaderboard.LeaderBoard;
 import utils.Constants;
-
-import javax.swing.*;
-import java.awt.*;
+import utils.CustomFonts;
 
 public class GameOverPanel extends JPanel {
+
     private final JLabel scoreLabel;
     private final JTextArea highScoreLabel;
     private final Game game;
@@ -49,7 +58,7 @@ public class GameOverPanel extends JPanel {
 
         final Dimension preferredSize = new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
 
-        final  JButton newGameButton = new JButton("NEW GAME");
+        final JButton newGameButton = new JButton("NEW GAME");
         newGameButton.setPreferredSize(preferredSize);
         newGameButton.addActionListener(_ -> game.restartGame());
 

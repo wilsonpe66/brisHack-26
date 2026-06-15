@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import lombok.Getter;
 
 public class InputHandler implements KeyListener {
+
     @Getter
     private boolean leftPressed;
     @Getter
@@ -36,7 +37,7 @@ public class InputHandler implements KeyListener {
         put(KeyEvent.VK_D, v -> rightPressed = v);
         put(KeyEvent.VK_RIGHT, v -> rightPressed = v);
         put(KeyEvent.VK_SPACE, v -> shootPressed = v);
-        put(KeyEvent.VK_ENTER, v -> pausedPressed = v );
+        put(KeyEvent.VK_ENTER, v -> pausedPressed = v);
         put(KeyEvent.VK_Z, v -> shootPressed = v);
         put(KeyEvent.VK_X, v -> superShootPressed = v);
     }};
@@ -50,13 +51,17 @@ public class InputHandler implements KeyListener {
     @Override
     public void keyPressed(final KeyEvent event) {
         final Consumer<Boolean> action = keyMap.get(event.getKeyCode());
-        if (action != null) action.accept(true);
+        if (action != null) {
+            action.accept(true);
+        }
     }
 
     @Override
     public void keyReleased(final KeyEvent event) {
         final Consumer<Boolean> action = keyMap.get(event.getKeyCode());
-        if (action != null) action.accept(false);
+        if (action != null) {
+            action.accept(false);
+        }
     }
 
     /**

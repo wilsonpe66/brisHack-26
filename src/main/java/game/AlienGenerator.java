@@ -11,6 +11,7 @@ import utils.Constants;
 public class AlienGenerator {
 
     private static final Random random = new Random();
+    private final WorldState worldState;
     // spawns an alien at an offset from one of the sides of the screen, with velocity towards the player position
     private final SideSpawner[] SIDES = {
         player -> fromPosition(new Position(random.nextDouble() * Constants.WIDTH, -Constants.ASTEROID_OFFSET), player), // top
@@ -18,7 +19,6 @@ public class AlienGenerator {
         player -> fromPosition(new Position(-Constants.ASTEROID_OFFSET, random.nextDouble() * Constants.HEIGHT), player), // left
         player -> fromPosition(new Position(Constants.WIDTH + Constants.ASTEROID_OFFSET, random.nextDouble() * Constants.HEIGHT), player)  // right
     };
-    private final WorldState worldState;
 
     public AlienGenerator(WorldState worldState) {
         this.worldState = worldState;

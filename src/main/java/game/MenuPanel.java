@@ -1,6 +1,7 @@
 package game;
 
 import assets.AssetManager;
+import assets.SoundManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -13,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import utils.Constants;
+import utils.CustomFonts;
 
 public class MenuPanel extends JPanel {
 

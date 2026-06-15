@@ -2,14 +2,13 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import assets.SoundManager;
 import entities.amo.Bullet;
-import entities.amo.BulletLevel2;
 import entities.motion.Position;
 import entities.motion.Velocity;
-import game.SoundManager;
 import game.WorldState;
 import java.awt.Image;
-import java.util.List;
+import java.util.stream.Stream;
 import utils.GameLevel;
 
 public class Alien extends GameObject implements Wrappable, SelfDefendable {
@@ -54,9 +53,9 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
      * Returns an AlienBullet aimed at the player, or null if on cooldown.
      */
     @Override
-    public List<? extends Bullet> shoot() {
+    public Stream<? extends Bullet> shoot() {
         if (shootCooldown > 0 || noShootTimer > 0 || player.isDead()) {
-            return List.of();
+            return Stream.of();
         }
 
         final GameLevel gameLevel = worldState.gameLevel();
@@ -98,9 +97,9 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
     }
 
     @Override
-    public void collide(final GameObject gameObject) {
-        switch (gameObject) {
-            case Bullet bullet when(bullet.getOwner() == this) -> {
+    public void collide(final Colidable colidable) {
+        switch (colidable) {
+            case Bullet bullet when (bullet.getOwner() == this) -> {
             }
             case null -> {
             }

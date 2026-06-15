@@ -2,14 +2,14 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import assets.SoundManager;
 import entities.amo.Bullet;
 import entities.motion.Position;
 import entities.motion.Velocity;
 import game.InputHandler;
-import game.SoundManager;
 import game.WorldState;
 import java.awt.Image;
-import java.util.List;
+import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.Setter;
 import utils.Constants;
@@ -87,7 +87,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     }
 
     @Override
-    public List<Bullet> shoot() {
+    public Stream<Bullet> shoot() {
         final double angle = getRotationAngle(); // radians
         final GameLevel gameLevel = worldState.gameLevel();
         final int speed = gameLevel.PLAYER_BULLET_SPEED();
@@ -106,9 +106,9 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     }
 
     @Override
-    public void collide(final GameObject gameObject) {
+    public void collide(final Colidable colidable) {
         final int health = getHealth();
-        switch (gameObject) {
+        switch (colidable) {
             case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
             case Asteroid _ -> setHealth(Math.max(health - 10, 0));
             case Bullet bullet when (bullet.getOwner() instanceof Alien) -> setHealth(Math.max(health - 2, 0));

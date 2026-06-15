@@ -1,5 +1,6 @@
 package game;
 
+import assets.SoundManager;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;

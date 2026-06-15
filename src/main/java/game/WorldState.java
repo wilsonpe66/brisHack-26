@@ -1,8 +1,11 @@
 package game;
 
+import assets.AssetManager;
+import assets.SoundManager;
 import entities.Alien;
 import entities.Asteroid;
 import entities.GameObject;
+import entities.HealthBar;
 import entities.Player;
 import entities.SelfDefendable;
 import entities.Updatable;
@@ -12,7 +15,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import javax.sound.sampled.Clip;
 import leaderboard.LeaderBoard;
 import lombok.Getter;
 import utils.Constants;
@@ -27,10 +33,11 @@ public class WorldState {
     private final InputHandler inputHandler;
     @Getter
     private final LeaderBoard leaderBoard = LeaderBoard.builder().build();
+    private final HealthBar healthBar;
     public Set<Updatable> updatableObjects;
     public Set<GameObject> objects;
-    boolean lastIsPressedState = false;
-    boolean isPaused = false;
+    private boolean lastIsPressedState = false;
+    private boolean isPaused = false;
     private int shootCooldown;
     private long lastSpawnTime = 0;
     private long lastAlienSpawnTime = 0;
@@ -44,6 +51,8 @@ public class WorldState {
         objects.add(player);
         updatableObjects = new HashSet<>();
         updatableObjects.add(player);
+        healthBar = new HealthBar(player);
+        updatableObjects.add(healthBar);
         asteroidGenerator = new AsteroidGenerator(this);
         alienGenerator = new AlienGenerator(this);
         gameStartTime = System.currentTimeMillis();
@@ -59,19 +68,36 @@ public class WorldState {
     }
 
     private void handleShooting() {
-        if (!inputHandler.isSuperShootPressed() && shootCooldown > 0) {
-            shootCooldown--;
+        if (player.isDead()) {
             return;
         }
-        if ((inputHandler.isSuperShootPressed() || inputHandler.isShootPressed()) && player.isAlive()) {
-            player.shoot().forEach(bullet -> {
+
+        final boolean superShootPressed = inputHandler.isSuperShootPressed();
+        final boolean shootPressed = inputHandler.isShootPressed();
+        if (!superShootPressed && !shootPressed) {
+            return;
+        }
+
+        if (shootPressed) {
+            if (shootCooldown > 0) {
+                shootCooldown--;
+                return;
+            }
+            shootCooldown = gameLevel().PLAYER_SHOOT_COOLDOWN_FRAMES();
+            SoundManager.playSound("shoot.wav");
+        } else {
+            shootCooldown = 0;
+            AssetManager.getClip("shoot.wav")
+                .filter(Predicate.not(Clip::isRunning))
+                .ifPresent(_ -> SoundManager.playSound("shoot.wav"));
+        }
+
+        player.shoot()
+            .filter(GameObject.class::isInstance)
+            .forEach(bullet -> {
                 objects.add((GameObject) bullet);
                 updatableObjects.add(bullet);
             });
-
-            SoundManager.playSound("shoot.wav");
-            shootCooldown = gameLevel().PLAYER_SHOOT_COOLDOWN_FRAMES();
-        }
     }
 
     private void handleAlienShooting() {
@@ -83,9 +109,9 @@ public class WorldState {
             .filter(GameObject::isAlive)
             .filter(Alien.class::isInstance)
             .map(SelfDefendable.class::cast)
-            .map(SelfDefendable::shoot)
-            .flatMap(List::stream)
-            .toList()
+            .flatMap(SelfDefendable::shoot)
+            .filter(GameObject.class::isInstance)
+            .collect(Collectors.toSet())
             .forEach(bullet -> {
                 objects.add((GameObject) bullet);
                 updatableObjects.add(bullet);
@@ -109,18 +135,6 @@ public class WorldState {
     //pausedPressed
 
     private void updateAll() {
-        final boolean pausedPressed = inputHandler.isPausedPressed();
-        if (pausedPressed != lastIsPressedState) {
-            lastIsPressedState = pausedPressed;
-            if (pausedPressed) {
-                isPaused = !isPaused;
-            }
-        }
-
-        if (isPaused) {
-            return;
-        }
-
         for (Updatable obj : updatableObjects) {
             obj.update();
         }
@@ -150,7 +164,6 @@ public class WorldState {
                         final GameObject a = livingObjects.get(outerIndex);
                         final GameObject b = livingObjects.get(innerIndex);
                         if (checkCollision(a, b)) {
-                            //System.out.printf("a=%s, b=%s%n", aaa(a), aaa(b));
                             a.collide(b);
                             b.collide(a);
                         }
@@ -165,7 +178,7 @@ public class WorldState {
         // those that flew off-screen or were destroyed by other asteroids don't count.
         int shotAsteroids = (int) objects.stream()
             .filter(GameObject::isDead)
-            .filter(obj -> obj instanceof Asteroid && ((Asteroid) obj).wasKilledByBullet())
+            .filter(obj -> obj instanceof Asteroid asteroid && asteroid.wasKilledByBullet())
             .count();
         player.incrementScore(shotAsteroids);
 
@@ -175,6 +188,18 @@ public class WorldState {
     }
 
     public void updateState() {
+        final boolean pausedPressed = inputHandler.isPausedPressed();
+        if (pausedPressed != lastIsPressedState) {
+            lastIsPressedState = pausedPressed;
+            if (pausedPressed) {
+                isPaused = !isPaused;
+            }
+        }
+
+        if (isPaused) {
+            return;
+        }
+
         handleShooting();
         handleAlienShooting();
         handleSpawning();
@@ -223,6 +248,7 @@ public class WorldState {
         player.setRotationAngle(-Math.PI / 2);
         objects.add(player);
         updatableObjects.add(player);
+        updatableObjects.add(healthBar);
         shootCooldown = 0;
         lastSpawnTime = 0;
         gameStartTime = System.currentTimeMillis();
