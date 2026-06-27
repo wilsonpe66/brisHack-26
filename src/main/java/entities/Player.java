@@ -2,14 +2,14 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import assets.SoundManager;
 import entities.amo.Bullet;
 import entities.motion.Position;
 import entities.motion.Velocity;
 import game.InputHandler;
-import game.SoundManager;
 import game.WorldState;
 import java.awt.Image;
-import java.util.List;
+import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.Setter;
 import utils.Constants;
@@ -18,6 +18,7 @@ import utils.GameLevel;
 public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     private final static Image sprite = getImage("spaceship.png").get();
+    private final static Image sprite2 = getImage("spaceship2-1.png").get();
 
     private final WorldState worldState;
 
@@ -87,7 +88,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     }
 
     @Override
-    public List<Bullet> shoot() {
+    public Stream<Bullet> shoot() {
         final double angle = getRotationAngle(); // radians
         final GameLevel gameLevel = worldState.gameLevel();
         final int speed = gameLevel.PLAYER_BULLET_SPEED();
@@ -96,19 +97,23 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
             case 2 -> getSupperShoot(getPosition(), getRadius(), speed, angle);
             case 3, 4, 5, 6 -> getSupperDuperShoot(getPosition(), getRadius(), speed, angle);
             case 7, 8 -> getSupperDuper2Shoot(getPosition(), getRadius(), speed, angle);
-            default -> getSupperDuper3Shoot(getPosition(), getRadius(), speed, angle);
+            case 9 -> getSupperDuper3Shoot(getPosition(), getRadius(), speed, angle);
+            default -> getSupperDuper4Shoot(getPosition(), getRadius(), speed, angle);
         };
     }
 
     @Override
     public Image getSprite() {
+        if (worldState.gameLevel().LEVEL_NUMBER() > 4) {
+            return sprite2;
+        }
         return sprite;
     }
 
     @Override
-    public void collide(final GameObject gameObject) {
+    public void collide(final Colidable colidable) {
         final int health = getHealth();
-        switch (gameObject) {
+        switch (colidable) {
             case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
             case Asteroid _ -> setHealth(Math.max(health - 10, 0));
             case Bullet bullet when (bullet.getOwner() instanceof Alien) -> setHealth(Math.max(health - 2, 0));

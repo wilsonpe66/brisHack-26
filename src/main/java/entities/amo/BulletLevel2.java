@@ -11,7 +11,6 @@ import lombok.Getter;
 
 /// {@inheritDoc}
 public class BulletLevel2 extends GameObject implements Bullet {
-    private static final double PI2 = Math.PI * 2;
 
     private final static Image sprite = getImage("missile2.png").get();
 
@@ -31,10 +30,5 @@ public class BulletLevel2 extends GameObject implements Bullet {
     @Override
     public Image getSprite() {
         return sprite;
-    }
-
-    @Override
-    public void collide(final GameObject gameObject) {
-        Bullet.super.collide(gameObject);
     }
 }

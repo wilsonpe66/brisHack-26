@@ -1,12 +1,21 @@
 package game;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import leaderboard.LeaderBoard;
 import utils.Constants;
-
-import javax.swing.*;
-import java.awt.*;
+import utils.CustomFonts;
 
 public class GameOverPanel extends JPanel {
+
     private final JLabel scoreLabel;
     private final JTextArea highScoreLabel;
     private final Game game;
@@ -39,8 +48,8 @@ public class GameOverPanel extends JPanel {
         highScoreLabel.setPreferredSize(new Dimension(400, 400));
         highScoreLabel.setFont(CustomFonts.PLAIN_22);
         highScoreLabel.setForeground(new Color(255, 215, 0)); // gold colour
-        gbc.gridy = 2; // row 2
-        add(highScoreLabel, gbc);
+//        gbc.gridy = 2; // row 2
+//        add(highScoreLabel, gbc);
 
         // FlowLayout(CENTER, hgap, vgap) places buttons side-by-side, centred
         final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
@@ -49,7 +58,7 @@ public class GameOverPanel extends JPanel {
 
         final Dimension preferredSize = new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
 
-        final  JButton newGameButton = new JButton("NEW GAME");
+        final JButton newGameButton = new JButton("NEW GAME");
         newGameButton.setPreferredSize(preferredSize);
         newGameButton.addActionListener(_ -> game.restartGame());
 
@@ -60,12 +69,12 @@ public class GameOverPanel extends JPanel {
         buttonPanel.add(newGameButton);
         buttonPanel.add(quitButton);
 
-        gbc.gridy = 3; // row 3
+        gbc.gridy = 2; // row 3
         add(buttonPanel, gbc);
     }
 
     public void setScore(int score, final LeaderBoard leaderBoard) {
         scoreLabel.setText("Score: " + score);
-        highScoreLabel.setText("High Score: " + leaderBoard);
+//        highScoreLabel.setText("High Score: " + leaderBoard);
     }
 }

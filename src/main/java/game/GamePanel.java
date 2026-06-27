@@ -2,8 +2,11 @@ package game;
 
 import static assets.AssetManager.getImage;
 
+import assets.SoundManager;
+import entities.BackgroundStar;
 import entities.GameObject;
 import entities.Player;
+import entities.motion.Position;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,9 +15,11 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
+import java.util.Objects;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import utils.Constants;
+import utils.CustomFonts;
 
 public class GamePanel extends JPanel implements ActionListener {
 
@@ -23,6 +28,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private final Timer gameTimer;
     private final InputHandler inputHandler;
     private final Game game;
+
 
     public GamePanel(Game game) {
         this.game = game;
@@ -40,7 +46,6 @@ public class GamePanel extends JPanel implements ActionListener {
         // This is the game loop driver — each tick updates state and repaints.
         gameTimer = new Timer(Constants.FRAME_DELAY, this);
         // Timer started in startGame() when user presses Play
-
     }
 
     /// Builds an AffineTransform to position, rotate, and scale a sprite. Transforms are applied in reverse order (last added = first applied):
@@ -117,9 +122,13 @@ public class GamePanel extends JPanel implements ActionListener {
     protected void paintComponent(final Graphics game) {
         super.paintComponent(game);
 
-        game.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
+        drawBackground(game);
         drawObjects(game);
         drawHud(game);
+    }
+
+    private void drawBackground(Graphics game) {
+        game.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
     }
 
     private void drawHud(final Graphics graphics) {
@@ -138,21 +147,33 @@ public class GamePanel extends JPanel implements ActionListener {
     private void drawObjects(final Graphics graphics) {
         final Graphics2D g2d = (Graphics2D) graphics;
 
-        // iterate over worldState
-        for (final GameObject object : worldState.objects) {
-            final Image sprite = object.getSprite();
-            if (sprite == null) {
-                continue;
+        worldState.backgroundObjects.forEach(gameObject -> {
+            switch (gameObject) {
+                case BackgroundStar backgroundStar -> {
+                    g2d.setColor(backgroundStar.getColor());
+                    final Position position = gameObject.getPosition();
+                    g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
+                        (int) gameObject.getRadius());
+                }
+                default -> {}
             }
-            final int w = sprite.getWidth(null);
-            final int h = sprite.getHeight(null);
-            if (w <= 0 || h <= 0) {
-                continue; // image not yet loaded
-            }
-            AffineTransform transform = getAffineTransform(object, w, h);
+        });
 
-            g2d.drawImage(sprite, transform, null);
-        }
+        // iterate over worldState
+        worldState.objects
+            .stream()
+            .filter(gameObject -> Objects.nonNull(gameObject.getSprite()))
+            .forEach(object -> {
+                final Image sprite = object.getSprite();
+                final int w = sprite.getWidth(null);
+                final int h = sprite.getHeight(null);
+                if (w <= 0 || h <= 0) {
+                    return;
+                }
+                final AffineTransform transform = getAffineTransform(object, w, h);
+
+                g2d.drawImage(sprite, transform, null);
+            });
     }
 
 }

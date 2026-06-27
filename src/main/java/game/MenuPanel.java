@@ -1,6 +1,7 @@
 package game;
 
 import assets.AssetManager;
+import assets.SoundManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -13,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import utils.Constants;
+import utils.CustomFonts;
 
 public class MenuPanel extends JPanel {
 
@@ -30,7 +32,7 @@ public class MenuPanel extends JPanel {
         // Insets(top, left, bottom, right) — adds spacing around each component
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        final JLabel titleLabel = new JLabel("Astroids");
+        final JLabel titleLabel = new JLabel("Asteroids");
         titleLabel.setFont(CustomFonts.TITLE);
         titleLabel.setForeground(Color.YELLOW);
         gbc.gridy = 0; // row 0 of the grid

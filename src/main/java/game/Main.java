@@ -1,9 +1,10 @@
 package game;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 public class Main {
-    public static void main(final String[] args) {
+
+    static void main(final String[] args) {
         SwingUtilities.invokeLater(Game::new);
     }
 }

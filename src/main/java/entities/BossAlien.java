@@ -1,32 +1,41 @@
 package entities;
 
+import static assets.AssetManager.getImage;
+
+import assets.SoundManager;
 import entities.amo.Bullet;
-import entities.amo.BulletLevel2;
 import entities.motion.Position;
 import entities.motion.Velocity;
-import game.SoundManager;
 import game.WorldState;
-import java.util.List;
+import java.awt.Image;
+import java.util.stream.Stream;
 import utils.GameLevel;
 
 public class BossAlien extends Alien {
+
+    private final static Image sprite = getImage("boss-alien.png").get();
 
     /**
      * Spawn from side of screen with given position and initial velocity.
      */
     public BossAlien(final WorldState worldState, final Position position, final Velocity velocity, final Player player) {
         super(worldState, position, velocity, player);
-        setRadius(40);
+        setRadius(60);
         setHealth(200);
-        setScale(1);
+        setScale(.2);
+    }
+
+    @Override
+    public Image getSprite() {
+        return sprite;
     }
 
     /**
      * Returns an AlienBullet aimed at the player, or null if on cooldown.
      */
-    public List<? extends Bullet> shoot() {
+    public Stream<? extends Bullet> shoot() {
         if (shootCooldown > 0 || noShootTimer > 0 || player.isDead()) {
-            return List.of();
+            return Stream.of();
         }
 
         final GameLevel gameLevel = worldState.gameLevel();
@@ -41,10 +50,10 @@ public class BossAlien extends Alien {
     }
 
     @Override
-    public void collide(final GameObject gameObject) {
+    public void collide(final Colidable colidable) {
         final int health = getHealth();
-        switch (gameObject) {
-            case Bullet bullet when(bullet.getOwner() == this) -> {
+        switch (colidable) {
+            case Bullet bullet when (bullet.getOwner() == this) -> {
             }
             case Bullet bullet when (bullet.getOwner() instanceof Player) -> setHealth(health - 20);
             case Bullet bullet when (bullet.getOwner() instanceof Alien) -> setHealth(health - 2);

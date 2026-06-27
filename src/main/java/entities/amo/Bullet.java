@@ -3,7 +3,7 @@ package entities.amo;
 import entities.Alien;
 import entities.Asteroid;
 import entities.BossAlien;
-import entities.GameObject;
+import entities.Colidable;
 import entities.Player;
 import entities.SelfDefendable;
 import entities.Updatable;
@@ -11,7 +11,7 @@ import entities.motion.Position;
 import entities.motion.Velocity;
 import utils.Constants;
 
-public interface Bullet  extends Updatable {
+public interface Bullet extends Updatable, Colidable {
 
     Position getPosition();
 
@@ -36,8 +36,9 @@ public interface Bullet  extends Updatable {
         }
     }
 
-    default void collide(final GameObject gameObject) {
-        switch (gameObject) {
+    @Override
+    default void collide(final Colidable colidable) {
+        switch (colidable) {
             case SelfDefendable selfDefendable when (getOwner() == selfDefendable) -> {
 
             }
