@@ -18,6 +18,7 @@ import utils.GameLevel;
 public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     private final static Image sprite = getImage("spaceship.png").get();
+    private final static Image sprite2 = getImage("spaceship2-1.png").get();
 
     private final WorldState worldState;
 
@@ -96,12 +97,16 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
             case 2 -> getSupperShoot(getPosition(), getRadius(), speed, angle);
             case 3, 4, 5, 6 -> getSupperDuperShoot(getPosition(), getRadius(), speed, angle);
             case 7, 8 -> getSupperDuper2Shoot(getPosition(), getRadius(), speed, angle);
-            default -> getSupperDuper3Shoot(getPosition(), getRadius(), speed, angle);
+            case 9 -> getSupperDuper3Shoot(getPosition(), getRadius(), speed, angle);
+            default -> getSupperDuper4Shoot(getPosition(), getRadius(), speed, angle);
         };
     }
 
     @Override
     public Image getSprite() {
+        if (worldState.gameLevel().LEVEL_NUMBER() > 4) {
+            return sprite2;
+        }
         return sprite;
     }
 

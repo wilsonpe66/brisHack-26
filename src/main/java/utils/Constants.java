@@ -150,6 +150,19 @@ public final class Constants {
             .ALIEN_SPAWN_NO_SHOOT_FRAMES(45)
             .ALIEN_BULLET_SPEED(7)
             .ALIEN_TARGET_UPDATE_INTERVAL(45)
+            .build(),
+        GameLevel
+            .builder()
+            .LEVEL_NUMBER(10)
+            .PLAYER_BULLET_SPEED(80)
+            .PLAYER_SHOOT_COOLDOWN_FRAMES(4)
+            .ALIEN_SPEED(2.2)
+            .ALIEN_SHOOT_COOLDOWN_FRAMES(65)
+            .ALIEN_SPAWN_DELAY(325)
+            .ALIEN_SPAWN_INITIAL_DELAY(325)
+            .ALIEN_SPAWN_NO_SHOOT_FRAMES(45)
+            .ALIEN_BULLET_SPEED(7)
+            .ALIEN_TARGET_UPDATE_INTERVAL(45)
             .build()
     );
     public static final int ALIEN_KILL_SCORE = 5;

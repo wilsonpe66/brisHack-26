@@ -4,6 +4,7 @@ import assets.AssetManager;
 import assets.SoundManager;
 import entities.Alien;
 import entities.Asteroid;
+import entities.BackgroundStar;
 import entities.GameObject;
 import entities.HealthBar;
 import entities.Player;
@@ -11,6 +12,7 @@ import entities.SelfDefendable;
 import entities.Updatable;
 import entities.motion.Position;
 import entities.motion.Velocity;
+import java.awt.Color;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -18,6 +20,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import javax.sound.sampled.Clip;
 import leaderboard.LeaderBoard;
 import lombok.Getter;
@@ -34,6 +37,8 @@ public class WorldState {
     @Getter
     private final LeaderBoard leaderBoard = LeaderBoard.builder().build();
     private final HealthBar healthBar;
+    public Set<Updatable> backgroundUpdatableObjects;
+    public Set<GameObject> backgroundObjects;
     public Set<Updatable> updatableObjects;
     public Set<GameObject> objects;
     private boolean lastIsPressedState = false;
@@ -43,12 +48,16 @@ public class WorldState {
     private long lastAlienSpawnTime = 0;
     private long gameStartTime;
     private int level;
+    private int lastLevel = 0;
 
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
         player = new Player(this, new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y), inputHandler);
         objects = new HashSet<>();
         objects.add(player);
+
+        creatBackGroundStars();
+
         updatableObjects = new HashSet<>();
         updatableObjects.add(player);
         healthBar = new HealthBar(player);
@@ -61,6 +70,23 @@ public class WorldState {
 
     private static String aaa(final GameObject a) {
         return "%s@%s: %d".formatted(a.getClass().getCanonicalName(), System.identityHashCode(a), a.getHealth());
+    }
+
+    private void creatBackGroundStars() {
+        backgroundObjects = new HashSet<>();
+        backgroundUpdatableObjects = new HashSet<>();
+
+        Stream
+            .of(Color.CYAN, Color.RED, Color.GREEN)
+            .forEach(color -> {
+                final BackgroundStar backgroundStar = new BackgroundStar(
+                    new Position(Math.random() * Constants.WIDTH, Math.random() * Constants.HEIGHT),
+                    Velocity.ZERO,
+                    color
+                );
+                backgroundObjects.add(backgroundStar);
+                backgroundUpdatableObjects.add(backgroundStar);
+            });
     }
 
     public GameLevel gameLevel() {
@@ -78,18 +104,19 @@ public class WorldState {
             return;
         }
 
+        final String SHOOT_WAV = "shoot.wav";
         if (shootPressed) {
             if (shootCooldown > 0) {
                 shootCooldown--;
                 return;
             }
             shootCooldown = gameLevel().PLAYER_SHOOT_COOLDOWN_FRAMES();
-            SoundManager.playSound("shoot.wav");
+            SoundManager.playSound(SHOOT_WAV);
         } else {
             shootCooldown = 0;
-            AssetManager.getClip("shoot.wav")
+            AssetManager.getClip(SHOOT_WAV)
                 .filter(Predicate.not(Clip::isRunning))
-                .ifPresent(_ -> SoundManager.playSound("shoot.wav"));
+                .ifPresent(_ -> SoundManager.playSound(SHOOT_WAV));
         }
 
         player.shoot()
@@ -117,6 +144,7 @@ public class WorldState {
                 updatableObjects.add(bullet);
             });
     }
+    //pausedPressed
 
     private void handleSpawning() {
         final long currentTime = System.currentTimeMillis();
@@ -132,12 +160,10 @@ public class WorldState {
             lastAlienSpawnTime = currentTime;
         }
     }
-    //pausedPressed
 
     private void updateAll() {
-        for (Updatable obj : updatableObjects) {
-            obj.update();
-        }
+        backgroundUpdatableObjects.forEach(Updatable::update);
+        updatableObjects.forEach(Updatable::update);
     }
 
     private boolean checkCollision(final GameObject a, final GameObject b) {
@@ -212,25 +238,32 @@ public class WorldState {
     private void levelUpdate() {
         if (player.isAlive()) {
             final int score = player.getScore();
-            if (score > 21000) {
+            if (score > 26_000) {
+                level = 10;
+            } else if (score > 21_000) {
                 level = 9;
-            } else if (score > 15000) {
+            } else if (score > 15_000) {
                 level = 8;
-            } else if (score > 8000) {
+            } else if (score > 10_000) {
                 level = 7;
-            } else if (score > 4000) {
+            } else if (score > 6000) {
                 level = 6;
-            } else if (score > 1400) {
+            } else if (score > 2500) {
                 level = 5;
-            } else if (score > 1000) {
+            } else if (score > 1500) {
                 level = 4;
-            } else if (score > 500) {
+            } else if (score > 800) {
                 level = 3;
             } else if (score > 300) {
                 level = 2;
             } else if (score > 100) {
                 level = 1;
             }
+        }
+
+        if (lastLevel != level) {
+            lastLevel = level;
+            SoundManager.playSound("win.wav");
         }
     }
 
@@ -240,6 +273,7 @@ public class WorldState {
     public void reset() {
         objects.clear();
         level = 0;
+        lastLevel = 0;
         updatableObjects.clear();
         player.setPosition(new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y));
         player.setVelocity(Velocity.ZERO);

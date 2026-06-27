@@ -32,7 +32,7 @@ public class MenuPanel extends JPanel {
         // Insets(top, left, bottom, right) — adds spacing around each component
         gbc.insets = new Insets(10, 0, 10, 0);
 
-        final JLabel titleLabel = new JLabel("Astroids");
+        final JLabel titleLabel = new JLabel("Asteroids");
         titleLabel.setFont(CustomFonts.TITLE);
         titleLabel.setForeground(Color.YELLOW);
         gbc.gridy = 0; // row 0 of the grid
