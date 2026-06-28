@@ -42,6 +42,7 @@ public class WorldState {
     public Set<Updatable> updatableObjects;
     public Set<GameObject> objects;
     private boolean lastIsPressedState = false;
+    @Getter
     private boolean isPaused = false;
     private int shootCooldown;
     private long lastSpawnTime = 0;
@@ -222,6 +223,7 @@ public class WorldState {
             }
         }
 
+        SoundManager.togglePauseLooping(isPaused);
         if (isPaused) {
             return;
         }
