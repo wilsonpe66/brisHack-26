@@ -155,7 +155,8 @@ public class GamePanel extends JPanel implements ActionListener {
                     g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
                         (int) gameObject.getRadius());
                 }
-                default -> {}
+                default -> {
+                }
             }
         });
 
@@ -174,6 +175,12 @@ public class GamePanel extends JPanel implements ActionListener {
 
                 g2d.drawImage(sprite, transform, null);
             });
+
+        if (worldState.isPaused()) {
+            graphics.setFont(CustomFonts.TITLE);
+            graphics.setColor(Color.YELLOW);
+            graphics.drawString("PAUSED", Constants.WIDTH / 2 - 400, (Constants.HEIGHT + CustomFonts.TITLE.getSize()) / 2);
+        }
     }
 
 }

@@ -34,7 +34,7 @@ public class SoundManager {
     /**
      * Start a looping sound under the given id. No-op if that id is already playing.
      */
-    public static void playLooping(String id, String path) {
+    public static void playLooping(final String id, final String path) {
         // Always remember the path so we can resume after unmute
         if (Settings.muted) {
             return;
@@ -49,6 +49,19 @@ public class SoundManager {
                 clip.setFramePosition(0);
                 clip.start();
             });
+    }
+
+    public static void togglePauseLooping(final boolean isPaused) {
+        loopingClips.forEach((id, clip) -> {
+            if (isPaused) {
+                clip.stop();
+                return;
+            }
+
+            if (!clip.isRunning() && clip.isOpen()) {
+                clip.start();
+            }
+        });
     }
 
     /**
