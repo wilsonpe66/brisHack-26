@@ -2,6 +2,7 @@ package game;
 
 import assets.AssetManager;
 import assets.SoundManager;
+import assets.SuperClip;
 import entities.Alien;
 import entities.Asteroid;
 import entities.BackgroundStar;
@@ -116,7 +117,7 @@ public class WorldState {
         } else {
             shootCooldown = 0;
             AssetManager.getClip(SHOOT_WAV)
-                .filter(Predicate.not(Clip::isRunning))
+                .filter(Predicate.not(SuperClip::isRunning))
                 .ifPresent(_ -> SoundManager.playSound(SHOOT_WAV));
         }
 

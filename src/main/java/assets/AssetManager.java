@@ -15,7 +15,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class AssetManager {
 
-    private static final Map<String, Clip> clips = new ConcurrentHashMap<>();
+    private static final Map<String, SuperClip> clips = new ConcurrentHashMap<>();
 
     public static Optional<URL> getResource(final String path) {
         return Optional.of(path).map(AssetManager.class::getResource);
@@ -27,7 +27,7 @@ public class AssetManager {
     }
 
 
-    private static Optional<Clip> getClipNoCache(final String path) {
+    private static Optional<SuperClip> getClipNoCache(final String path) {
         System.out.printf("Loading %s%n", path);
         return getAudioInputStream(path)
             .map(audioInputStream -> {
@@ -35,7 +35,7 @@ public class AssetManager {
                     // Clip is a pre-loaded audio buffer that can be started/stopped
                     final Clip aClip = AudioSystem.getClip();
                     aClip.open(audioInputStream);
-                    return aClip;
+                    return new SuperClip(path, aClip);
                 } catch (final Exception exception) {
                     System.err.println(exception);
                 }
@@ -43,7 +43,7 @@ public class AssetManager {
             });
     }
 
-    public static Optional<Clip> getClip(final String path) {
+    public static Optional<SuperClip> getClip(final String path) {
         final var aClip = new AtomicReference<>(clips.get(path));
         if (aClip.get() == null) {
             getClipNoCache(path)
