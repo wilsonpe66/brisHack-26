@@ -1,34 +1,32 @@
 package game;
 
-import static assets.AssetManager.getImage;
-
+import assets.AssetManager;
 import assets.SoundManager;
+import assets.SuperClip;
 import entities.BackgroundStar;
 import entities.GameObject;
 import entities.Player;
 import entities.motion.Position;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
+import utils.Constants;
+import utils.CustomFonts;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.util.Objects;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-import utils.Constants;
-import utils.CustomFonts;
+
+import static assets.AssetManager.getImage;
 
 public class GamePanel extends JPanel implements ActionListener {
 
     private static final Image SPACE_BACKGROUND = getImage("spacebackground.png").get();
+    private static double pauseTime = 0;
     final WorldState worldState;
     private final Timer gameTimer;
     private final InputHandler inputHandler;
     private final Game game;
-
 
     public GamePanel(Game game) {
         this.game = game;
@@ -77,6 +75,41 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.fillRect(startX, 20, 2 * MAX_HEALTH, 10);
         graphics.setColor(Color.GREEN);
         graphics.fillRect(startX, 20, 2 * player.getHealth(), 10);
+    }
+
+    private static double getColor(final double scale, double startColor, double endColor) {
+        return (endColor - startColor) * scale + startColor;
+    }
+
+    private static Color getColor(final double scale, Color startColor, Color endColor) {
+        return new Color(
+                (int) getColor(scale, startColor.getRed(), endColor.getRed()),
+                (int) getColor(scale, startColor.getGreen(), endColor.getGreen()),
+                (int) getColor(scale, startColor.getBlue(), endColor.getBlue())
+        );
+    }
+
+    private static Color getColorLoop(final double scale) {
+        if (scale < 1) {
+            return getColor(scale, Color.YELLOW, Color.CYAN);
+        } else if (scale < 2) {
+            return getColor(scale - 1, Color.CYAN, Color.RED);
+        } else {
+            return getColor(scale - 2, Color.RED, Color.YELLOW);
+        }
+    }
+
+    private static void showPauseAction(final Graphics graphics) {
+        graphics.setFont(CustomFonts.TITLE);
+        pauseTime += .02;
+        if (pauseTime > 3) {
+            pauseTime -= 3;
+        }
+        graphics.setColor(Color.BLACK);
+        graphics.drawString("PAUSED", Constants.WIDTH / 2 - 400+2, (Constants.HEIGHT + CustomFonts.TITLE.getSize()) / 2 + 2);
+
+        graphics.setColor(getColorLoop(pauseTime));
+        graphics.drawString("PAUSED", Constants.WIDTH / 2 - 400, (Constants.HEIGHT + CustomFonts.TITLE.getSize()) / 2);
     }
 
     /**
@@ -153,7 +186,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     g2d.setColor(backgroundStar.getColor());
                     final Position position = gameObject.getPosition();
                     g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
-                        (int) gameObject.getRadius());
+                            (int) gameObject.getRadius());
                 }
                 default -> {
                 }
@@ -162,24 +195,22 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // iterate over worldState
         worldState.objects
-            .stream()
-            .filter(gameObject -> Objects.nonNull(gameObject.getSprite()))
-            .forEach(object -> {
-                final Image sprite = object.getSprite();
-                final int w = sprite.getWidth(null);
-                final int h = sprite.getHeight(null);
-                if (w <= 0 || h <= 0) {
-                    return;
-                }
-                final AffineTransform transform = getAffineTransform(object, w, h);
+                .stream()
+                .filter(gameObject -> Objects.nonNull(gameObject.getSprite()))
+                .forEach(object -> {
+                    final Image sprite = object.getSprite();
+                    final int w = sprite.getWidth(null);
+                    final int h = sprite.getHeight(null);
+                    if (w <= 0 || h <= 0) {
+                        return;
+                    }
+                    final AffineTransform transform = getAffineTransform(object, w, h);
 
-                g2d.drawImage(sprite, transform, null);
-            });
+                    g2d.drawImage(sprite, transform, null);
+                });
 
         if (worldState.isPaused()) {
-            graphics.setFont(CustomFonts.TITLE);
-            graphics.setColor(Color.YELLOW);
-            graphics.drawString("PAUSED", Constants.WIDTH / 2 - 400, (Constants.HEIGHT + CustomFonts.TITLE.getSize()) / 2);
+            showPauseAction(graphics);
         }
     }
 

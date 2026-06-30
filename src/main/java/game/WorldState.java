@@ -3,17 +3,15 @@ package game;
 import assets.AssetManager;
 import assets.SoundManager;
 import assets.SuperClip;
-import entities.Alien;
-import entities.Asteroid;
-import entities.BackgroundStar;
-import entities.GameObject;
-import entities.HealthBar;
-import entities.Player;
-import entities.SelfDefendable;
-import entities.Updatable;
+import entities.*;
 import entities.motion.Position;
 import entities.motion.Velocity;
-import java.awt.Color;
+import leaderboard.LeaderBoard;
+import lombok.Getter;
+import utils.Constants;
+import utils.GameLevel;
+
+import java.awt.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -22,11 +20,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import javax.sound.sampled.Clip;
-import leaderboard.LeaderBoard;
-import lombok.Getter;
-import utils.Constants;
-import utils.GameLevel;
 
 public class WorldState {
 
@@ -79,16 +72,16 @@ public class WorldState {
         backgroundUpdatableObjects = new HashSet<>();
 
         Stream
-            .of(Color.CYAN, Color.RED, Color.GREEN)
-            .forEach(color -> {
-                final BackgroundStar backgroundStar = new BackgroundStar(
-                    new Position(Math.random() * Constants.WIDTH, Math.random() * Constants.HEIGHT),
-                    Velocity.ZERO,
-                    color
-                );
-                backgroundObjects.add(backgroundStar);
-                backgroundUpdatableObjects.add(backgroundStar);
-            });
+                .of(Color.CYAN, Color.RED, Color.GREEN)
+                .forEach(color -> {
+                    final BackgroundStar backgroundStar = new BackgroundStar(
+                            new Position(Math.random() * Constants.WIDTH, Math.random() * Constants.HEIGHT),
+                            Velocity.ZERO,
+                            color
+                    );
+                    backgroundObjects.add(backgroundStar);
+                    backgroundUpdatableObjects.add(backgroundStar);
+                });
     }
 
     public GameLevel gameLevel() {
@@ -117,34 +110,34 @@ public class WorldState {
         } else {
             shootCooldown = 0;
             AssetManager.getClip(SHOOT_WAV)
-                .filter(Predicate.not(SuperClip::isRunning))
-                .ifPresent(_ -> SoundManager.playSound(SHOOT_WAV));
+                    .filter(Predicate.not(SuperClip::isRunning))
+                    .ifPresent(_ -> SoundManager.playSound(SHOOT_WAV));
         }
 
         player.shoot()
-            .filter(GameObject.class::isInstance)
-            .forEach(bullet -> {
-                objects.add((GameObject) bullet);
-                updatableObjects.add(bullet);
-            });
+                .filter(GameObject.class::isInstance)
+                .forEach(bullet -> {
+                    objects.add((GameObject) bullet);
+                    updatableObjects.add(bullet);
+                });
     }
 
     private void handleAlienShooting() {
         // Collect new bullets into a separate list first to avoid ConcurrentModificationException
         // (we can't add to 'objects' while iterating over it)
         objects
-            .stream()
-            .filter(Objects::nonNull)
-            .filter(GameObject::isAlive)
-            .filter(Alien.class::isInstance)
-            .map(SelfDefendable.class::cast)
-            .flatMap(SelfDefendable::shoot)
-            .filter(GameObject.class::isInstance)
-            .collect(Collectors.toSet())
-            .forEach(bullet -> {
-                objects.add((GameObject) bullet);
-                updatableObjects.add(bullet);
-            });
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(GameObject::isAlive)
+                .filter(Alien.class::isInstance)
+                .map(SelfDefendable.class::cast)
+                .flatMap(SelfDefendable::shoot)
+                .filter(GameObject.class::isInstance)
+                .collect(Collectors.toSet())
+                .forEach(bullet -> {
+                    objects.add((GameObject) bullet);
+                    updatableObjects.add(bullet);
+                });
     }
     //pausedPressed
 
@@ -157,7 +150,7 @@ public class WorldState {
         final long timeSinceStart = currentTime - gameStartTime;
         final GameLevel gameLevel = Constants.GAME_LEVELS.get(level);
         if (timeSinceStart >= gameLevel.ALIEN_SPAWN_INITIAL_DELAY()
-            && currentTime - lastAlienSpawnTime >= gameLevel.ALIEN_SPAWN_DELAY()) {
+                && currentTime - lastAlienSpawnTime >= gameLevel.ALIEN_SPAWN_DELAY()) {
             alienGenerator.generate();
             lastAlienSpawnTime = currentTime;
         }
@@ -179,25 +172,25 @@ public class WorldState {
 
     private void handleCollisions() {
         final List<GameObject> livingObjects = objects
-            .stream()
-            .filter(GameObject::isAlive)
-            .toList();
+                .stream()
+                .filter(GameObject::isAlive)
+                .toList();
 
         IntStream
-            .range(0, livingObjects.size())
-            .forEach(outerIndex -> {
-                IntStream
-                    .range(outerIndex + 1, livingObjects.size())
-                    .forEach(innerIndex -> {
-                        final GameObject a = livingObjects.get(outerIndex);
-                        final GameObject b = livingObjects.get(innerIndex);
-                        if (checkCollision(a, b)) {
-                            a.collide(b);
-                            b.collide(a);
-                        }
+                .range(0, livingObjects.size())
+                .forEach(outerIndex -> {
+                    IntStream
+                            .range(outerIndex + 1, livingObjects.size())
+                            .forEach(innerIndex -> {
+                                final GameObject a = livingObjects.get(outerIndex);
+                                final GameObject b = livingObjects.get(innerIndex);
+                                if (checkCollision(a, b)) {
+                                    a.collide(b);
+                                    b.collide(a);
+                                }
 
-                    });
-            });
+                            });
+                });
     }
 
     private void removeDeadObjects() {
@@ -205,9 +198,9 @@ public class WorldState {
         // Only asteroids with killedByBullet=true contribute to score —
         // those that flew off-screen or were destroyed by other asteroids don't count.
         int shotAsteroids = (int) objects.stream()
-            .filter(GameObject::isDead)
-            .filter(obj -> obj instanceof Asteroid asteroid && asteroid.wasKilledByBullet())
-            .count();
+                .filter(GameObject::isDead)
+                .filter(obj -> obj instanceof Asteroid asteroid && asteroid.wasKilledByBullet())
+                .count();
         player.incrementScore(shotAsteroids);
 
         // removeIf modifies the list in-place, removing all dead objects
@@ -267,6 +260,7 @@ public class WorldState {
         if (lastLevel != level) {
             lastLevel = level;
             SoundManager.playSound("win.wav");
+            SoundManager.playLooping("background", "background.wav");
         }
     }
 
