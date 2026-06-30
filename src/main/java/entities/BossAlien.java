@@ -2,6 +2,7 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import assets.SoundEffectKey;
 import assets.SoundManager;
 import entities.amo.Bullet;
 import entities.motion.Position;
@@ -65,7 +66,7 @@ public class BossAlien extends Alien {
         }
 
         if (isDead()) {
-            SoundManager.playSound("explosion.wav");
+            SoundManager.play(SoundEffectKey.EXPLOSION);
         }
     }
 }

@@ -1,8 +1,7 @@
 package game;
 
-import assets.AssetManager;
+import assets.SoundEffectKey;
 import assets.SoundManager;
-import assets.SuperClip;
 import entities.BackgroundStar;
 import entities.GameObject;
 import entities.Player;
@@ -133,7 +132,7 @@ public class GamePanel extends JPanel implements ActionListener {
      */
     public void reset() {
         inputHandler.clearAllKeys(); // keys held during game over never got keyReleased (panel lost focus)
-        SoundManager.stopLooping("thruster");
+        SoundManager.stop(SoundEffectKey.THRUSTER);
         worldState.reset();
     }
 

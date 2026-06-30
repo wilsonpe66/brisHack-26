@@ -1,6 +1,7 @@
 package game;
 
 import assets.AssetManager;
+import assets.SoundLoopKey;
 import assets.SoundManager;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -66,7 +67,7 @@ public class MenuPanel extends JPanel {
         add(buttonPanel, gbc);
 
         // Start menu music immediately when the menu panel is constructed
-        SoundManager.playLooping("menu_music", "mixkit-fright-night-871.wav");
+        SoundManager.play(SoundLoopKey.MENU_MUSIC);
     }
 
     @Override

@@ -1,19 +1,21 @@
 package entities;
 
-import static assets.AssetManager.getImage;
-
+import assets.SoundEffectKey;
 import assets.SoundManager;
 import entities.amo.Bullet;
 import entities.motion.Position;
 import entities.motion.Velocity;
 import game.InputHandler;
 import game.WorldState;
-import java.awt.Image;
-import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.Setter;
 import utils.Constants;
 import utils.GameLevel;
+
+import java.awt.*;
+import java.util.stream.Stream;
+
+import static assets.AssetManager.getImage;
 
 public class Player extends GameObject implements Wrappable, SelfDefendable {
 
@@ -50,7 +52,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         // respond to input: thrust (W/Up) and rotation (A/D)
         final Velocity velocity = getVelocity();
         if (inputHandler.isUpPressed()) {
-            SoundManager.playLooping("thruster", "thruster.wav");
+            SoundManager.play(SoundEffectKey.THRUSTER);
             Velocity v = velocity.add(Velocity.fromAngleAndSpeed(getRotationAngle(), Constants.PLAYER_ACCELERATION));
             final double speed = v.getSpeed();
             // Cap speed: scale the velocity vector down to MAX_PLAYER_SPEED
@@ -60,7 +62,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
             }
             setVelocity(v);
         } else {
-            SoundManager.stopLooping("thruster");
+            SoundManager.stop(SoundEffectKey.THRUSTER);
             // decay velocity when thrust is not pressed
             Velocity v = velocity.scale(Constants.PLAYER_VELOCITY_DECAY);
             if (v.getSpeed() < .01) {
@@ -123,8 +125,8 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         }
 
         if (isDead()) {
-            SoundManager.stopLooping("thruster");
-            SoundManager.playSound("game-over.wav");
+            SoundManager.stop(SoundEffectKey.THRUSTER);
+            SoundManager.play(SoundEffectKey.GAME_OVER);
         }
     }
 }

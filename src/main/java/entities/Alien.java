@@ -2,6 +2,7 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import assets.SoundEffectKey;
 import assets.SoundManager;
 import entities.amo.Bullet;
 import entities.motion.Position;
@@ -107,7 +108,7 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
         }
 
         if (isDead()) {
-            SoundManager.playSound("explosion.wav");
+            SoundManager.play(SoundEffectKey.EXPLOSION);
         }
     }
 }

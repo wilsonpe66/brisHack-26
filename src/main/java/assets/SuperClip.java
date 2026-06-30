@@ -5,16 +5,11 @@ import javax.sound.sampled.Clip;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public record SuperClip(String id, String path, Clip clip) {
+public record SuperClip(SoundKey soundKey, Clip clip) {
 
     public SuperClip {
-        Objects.requireNonNull(id);
-        Objects.requireNonNull(path);
+        Objects.requireNonNull(soundKey);
         Objects.requireNonNull(clip);
-    }
-
-    public SuperClip(final String path, final Clip clip) {
-        this(path, path, clip);
     }
 
     public boolean isRunning() {
@@ -23,6 +18,10 @@ public record SuperClip(String id, String path, Clip clip) {
 
     public void setFramePosition(final int frames) {
         clip.setFramePosition(frames);
+    }
+
+    public boolean isLoopable() {
+        return soundKey instanceof SoundLoopKey;
     }
 
     public void loop(final int count) {
