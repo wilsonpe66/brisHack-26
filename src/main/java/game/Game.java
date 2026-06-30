@@ -34,7 +34,7 @@ public class Game extends JFrame {
         mainContainer.add(gameOverPanel, "GAME OVER");
         this.add(mainContainer);
 
-        this.setTitle("Asteroids");
+        this.setTitle("Alien Force");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false); // Prevents layout glitches during gameplay
 
