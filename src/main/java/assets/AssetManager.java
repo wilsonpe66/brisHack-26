@@ -21,8 +21,8 @@ public class AssetManager {
         return Optional.of(path).map(AssetManager.class::getResource);
     }
 
-    public static Optional<Image> getImage(final String path) {
-        return getResource("images/" + path)
+    public static Optional<Image> getImage(final ImageKey imageKey) {
+        return getResource("images/" + imageKey.resourceId())
             .map(Toolkit.getDefaultToolkit()::getImage);
     }
 

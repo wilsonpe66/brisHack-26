@@ -1,4 +1,5 @@
 package assets;
 
-public enum AssetKey {
+public interface AssetKey {
+    String resourceId();
 }

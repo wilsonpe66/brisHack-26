@@ -1,5 +1,4 @@
 package assets;
 
-public interface SoundKey {
-    String resourceId();
+public interface SoundKey extends AssetKey {
 }

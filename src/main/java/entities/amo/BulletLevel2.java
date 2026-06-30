@@ -2,6 +2,7 @@ package entities.amo;
 
 import static assets.AssetManager.getImage;
 
+import assets.ImageKey;
 import entities.GameObject;
 import entities.SelfDefendable;
 import entities.motion.Position;
@@ -12,7 +13,7 @@ import lombok.Getter;
 /// {@inheritDoc}
 public class BulletLevel2 extends GameObject implements Bullet {
 
-    private final static Image sprite = getImage("missile2.png").get();
+    private final static Image sprite = getImage(ImageKey.BULLET_2).get();
 
     @Getter
     private final SelfDefendable owner;

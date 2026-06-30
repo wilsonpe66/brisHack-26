@@ -1,25 +1,18 @@
 package game;
 
 import assets.AssetManager;
+import assets.ImageKey;
 import assets.SoundLoopKey;
 import assets.SoundManager;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import utils.Constants;
 import utils.CustomFonts;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class MenuPanel extends JPanel {
 
-    private static final Image SPACE_BACKGROUND = AssetManager.getImage("spacebackground.png").get();
+    private static final Image SPACE_BACKGROUND = AssetManager.getImage(ImageKey.SPACE_BACKGROUND).get();
 
     public MenuPanel(Game game) {
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));

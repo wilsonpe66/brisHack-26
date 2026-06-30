@@ -2,6 +2,7 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import assets.ImageKey;
 import assets.SoundEffectKey;
 import assets.SoundManager;
 import entities.amo.Bullet;
@@ -14,7 +15,7 @@ import utils.GameLevel;
 
 public class Alien extends GameObject implements Wrappable, SelfDefendable {
 
-    private final static Image sprite = getImage("shipGreen_manned.png").get();
+    private final static Image sprite = getImage(ImageKey.ALIEN).get();
 
     protected final WorldState worldState;
 

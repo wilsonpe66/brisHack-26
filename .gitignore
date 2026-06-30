@@ -14,3 +14,4 @@ Thumbs.db
 # VS Code
 .vscode
 /target/
+/dependency-reduced-pom.xml
