@@ -26,15 +26,17 @@ public class Asteroid extends GameObject {
      * True only when this asteroid was destroyed by a bullet (used for scoring).
      */
     private boolean killedByBullet;
+    private final int spriteIndex;
 
     // CONSTRUCTOR:
     public Asteroid(final Position position, final Velocity velocity) {
-        sprite = sprites[random.nextInt(sprites.length)];
+        spriteIndex = random.nextInt(sprites.length);
+        sprite = sprites[spriteIndex];
         setPosition(position);
         setVelocity(velocity);
         setRotationAngle(Math.random() * PI2);
         setRadius(30);
-        setHealth(1);
+        setHealth(1 + spriteIndex);
         setScale(0.3);
     }
 
@@ -53,7 +55,7 @@ public class Asteroid extends GameObject {
         // only setAlive(false) so we don't award score for flying off - score is only for shot asteroids
         final double buffer = 100;
 
-        if (getPosition() instanceof Position(double x, double y)) {
+        if (getPosition() instanceof Position(final var x, final var y)) {
             if (x < -buffer || x > Constants.WIDTH + buffer
                 || y < -buffer || y > Constants.HEIGHT + buffer) {
                 dei();
@@ -72,7 +74,8 @@ public class Asteroid extends GameObject {
     @Override
     public void collide(final Colidable colidable) {
         switch (colidable) {
-            case Asteroid _, Bullet _, Player _, Alien _ -> dei();
+            case Asteroid _ -> dei();
+            case Bullet _, Player _, Alien _ -> setHealth(getHealth() - 1);
             case null, default -> {
             }
         }
