@@ -2,6 +2,8 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import assets.ImageKey;
+import assets.SoundEffectKey;
 import assets.SoundManager;
 import entities.amo.Bullet;
 import entities.motion.Position;
@@ -13,7 +15,7 @@ import utils.GameLevel;
 
 public class Alien extends GameObject implements Wrappable, SelfDefendable {
 
-    private final static Image sprite = getImage("shipGreen_manned.png").get();
+    private final static Image sprite = getImage(ImageKey.ALIEN).get();
 
     protected final WorldState worldState;
 
@@ -107,7 +109,7 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
         }
 
         if (isDead()) {
-            SoundManager.playSound("explosion.wav");
+            SoundManager.play(SoundEffectKey.EXPLOSION);
         }
     }
 }

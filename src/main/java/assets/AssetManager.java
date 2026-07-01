@@ -21,21 +21,21 @@ public class AssetManager {
         return Optional.of(path).map(AssetManager.class::getResource);
     }
 
-    public static Optional<Image> getImage(final String path) {
-        return getResource("images/" + path)
+    public static Optional<Image> getImage(final ImageKey imageKey) {
+        return getResource("images/" + imageKey.resourceId())
             .map(Toolkit.getDefaultToolkit()::getImage);
     }
 
 
-    private static Optional<SuperClip> getClipNoCache(final String path) {
-        System.out.printf("Loading %s%n", path);
-        return getAudioInputStream(path)
+    private static Optional<SuperClip> getClipNoCache(final SoundKey soundKey) {
+        System.out.printf("Loading %s%n", soundKey);
+        return getAudioInputStream(soundKey.resourceId())
             .map(audioInputStream -> {
                 try {
                     // Clip is a pre-loaded audio buffer that can be started/stopped
                     final Clip aClip = AudioSystem.getClip();
                     aClip.open(audioInputStream);
-                    return new SuperClip(path, aClip);
+                    return new SuperClip(soundKey, aClip);
                 } catch (final Exception exception) {
                     System.err.println(exception);
                 }
@@ -43,12 +43,12 @@ public class AssetManager {
             });
     }
 
-    public static Optional<SuperClip> getClip(final String path) {
-        final var aClip = new AtomicReference<>(clips.get(path));
+    public static Optional<SuperClip> getClip(final SoundKey soundKey) {
+        final var aClip = new AtomicReference<>(clips.get(soundKey.resourceId()));
         if (aClip.get() == null) {
-            getClipNoCache(path)
+            getClipNoCache(soundKey)
                 .ifPresent(localClip -> {
-                    clips.put(path, localClip);
+                    clips.put(soundKey.resourceId(), localClip);
                     aClip.set(localClip);
                 });
         }

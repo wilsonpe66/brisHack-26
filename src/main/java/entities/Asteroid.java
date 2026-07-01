@@ -2,6 +2,7 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import assets.ImageKey;
 import entities.amo.Bullet;
 import entities.motion.Position;
 import entities.motion.Velocity;
@@ -15,10 +16,10 @@ public class Asteroid extends GameObject {
 
     private static final Random random = new Random();
     private static final Image[] sprites = {
-        getImage("asteroid1.png").get(),
-        getImage("asteroid2.png").get(),
-        getImage("asteroid3.png").get(),
-        getImage("asteroid4.png").get()
+        getImage(ImageKey.ASTEROID_1).get(),
+        getImage(ImageKey.ASTEROID_2).get(),
+        getImage(ImageKey.ASTEROID_3).get(),
+        getImage(ImageKey.ASTEROID_4).get()
     };
     private final Image sprite;
     /**

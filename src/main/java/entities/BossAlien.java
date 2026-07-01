@@ -2,6 +2,8 @@ package entities;
 
 import static assets.AssetManager.getImage;
 
+import assets.ImageKey;
+import assets.SoundEffectKey;
 import assets.SoundManager;
 import entities.amo.Bullet;
 import entities.motion.Position;
@@ -13,7 +15,7 @@ import utils.GameLevel;
 
 public class BossAlien extends Alien {
 
-    private final static Image sprite = getImage("boss-alien.png").get();
+    private final static Image sprite = getImage(ImageKey.ALIEN_BOSS).get();
 
     /**
      * Spawn from side of screen with given position and initial velocity.
@@ -65,7 +67,7 @@ public class BossAlien extends Alien {
         }
 
         if (isDead()) {
-            SoundManager.playSound("explosion.wav");
+            SoundManager.play(SoundEffectKey.EXPLOSION);
         }
     }
 }

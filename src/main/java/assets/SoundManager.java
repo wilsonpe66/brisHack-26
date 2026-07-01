@@ -1,58 +1,52 @@
 package assets;
 
+import utils.Settings;
+
+import javax.sound.sampled.Clip;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
-import javax.sound.sampled.Clip;
-import utils.Settings;
 
 public class SoundManager {
 
     /**
-     * Looping clips by id – can be stopped later with stopLooping(id).
+     * Looping clips by soundKey – can be stopped later with stop(soundKey).
      */
-    private static final Map<String, SuperClip> loopingClips = new HashMap<>();
+    private static final Map<SoundLoopKey, SuperClip> loopingClips = new HashMap<>();
     private static boolean isPreviousePausedState = false;
 
     /// Play a one-shot sound (e.g. shoot). Creates a new Clip each time so overlapping sounds (e.g. rapid shooting) play simultaneously.
     ///
-    /// @param path the path of the resource to be looped.
-    public static void playSound(final String path) {
+    /// @param soundKey the soundKey of the resource to be looped.
+    public static void play(final SoundKey soundKey) {
         if (Settings.muted) {
             return;
         }
 
-        AssetManager.getClip(path)
-            .ifPresent(clip -> {
-                clip.setFramePosition(0);
-                clip.start();
-            });
+        AssetManager.getClip(soundKey)
+                .ifPresent(clip -> {
+                    clip.setFramePosition(0);
+                    clip.start();
+                });
     }
 
-    /// Start a looping sound under the given id. No-op if that id is already playing.
+    /// Start a looping sound under the given soundLoopKey. No-op if that soundLoopKey is already playing.
     ///
-    /// @param id   the id of the looping clip
-    /// @param path the path of the resource to be looped.
-    public static void playLooping(final String id, final String path) {
+    /// @param soundLoopKey the soundLoopKey of the looping clip
+    public static void play(final SoundLoopKey soundLoopKey) {
         // Always remember the path so we can resume after unmute
         if (Settings.muted) {
             return;
         }
 
-        AssetManager.getClip(path)
-            .filter(Predicate.not(SuperClip::isRunning))
-            .ifPresent(clip -> {
-                loopingClips.put(
-                    id,
-                    clip
-                        .toBuilder()
-                        .id(id)
-                        .build()
-                );
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-                clip.setFramePosition(0);
-                clip.start();
-            });
+        AssetManager.getClip(soundLoopKey)
+                .filter(Predicate.not(SuperClip::isRunning))
+                .ifPresent(clip -> {
+                    loopingClips.put(soundLoopKey, clip);
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
+                    clip.setFramePosition(0);
+                    clip.start();
+                });
     }
 
     public static void togglePauseLooping(final boolean isPaused) {
@@ -68,12 +62,17 @@ public class SoundManager {
         isPreviousePausedState = isPaused;
     }
 
-    /// Stop a looping sound by id. Safe to call if not playing.
-    public static void stopLooping(final String id) {
-        final SuperClip clip = loopingClips.remove(id);
+    /// Stop a looping sound by soundLoopKey. Safe to call if not playing.
+    public static void stop(final SoundLoopKey soundLoopKey) {
+        final SuperClip clip = loopingClips.remove(soundLoopKey);
         if (clip != null) {
             clip.stop();
         }
+    }
+
+    public static void stop(final SoundEffectKey soundLoopKey) {
+        AssetManager.getClip(soundLoopKey)
+                .ifPresent(SuperClip::stop);
     }
 
     /// Stop all currently looping sounds.
@@ -83,7 +82,7 @@ public class SoundManager {
     }
 
     /// Set the muted state. When muting, all currently looping sounds are stopped but remembered. When unmuting, remembered loops are restarted.
-    public static void setMuted(boolean muted) {
+    public static void setMuted(final boolean muted) {
         Settings.muted = muted;
         if (muted) {
             stopAllLooping();
@@ -91,7 +90,11 @@ public class SoundManager {
         }
 
         // Restart all loops that were registered while muted
-        loopingClips.values().forEach(clip -> SoundManager.playLooping(clip.id(), clip.path()));
+        loopingClips.values()
+                .stream()
+                .map(SuperClip::soundKey)
+                .map(SoundLoopKey.class::cast)
+                .forEach(SoundManager::play);
     }
 
 }

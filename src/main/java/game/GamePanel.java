@@ -1,8 +1,9 @@
 package game;
 
-import assets.AssetManager;
+import assets.ImageKey;
+import assets.SoundEffectKey;
+import assets.SoundLoopKey;
 import assets.SoundManager;
-import assets.SuperClip;
 import entities.BackgroundStar;
 import entities.GameObject;
 import entities.Player;
@@ -21,7 +22,7 @@ import static assets.AssetManager.getImage;
 
 public class GamePanel extends JPanel implements ActionListener {
 
-    private static final Image SPACE_BACKGROUND = getImage("spacebackground.png").get();
+    private static final Image SPACE_BACKGROUND = getImage(ImageKey.SPACE_BACKGROUND).get();
     private static double pauseTime = 0;
     final WorldState worldState;
     private final Timer gameTimer;
@@ -106,7 +107,7 @@ public class GamePanel extends JPanel implements ActionListener {
             pauseTime -= 3;
         }
         graphics.setColor(Color.BLACK);
-        graphics.drawString("PAUSED", Constants.WIDTH / 2 - 400+2, (Constants.HEIGHT + CustomFonts.TITLE.getSize()) / 2 + 2);
+        graphics.drawString("PAUSED", Constants.WIDTH / 2 - 400 + 2, (Constants.HEIGHT + CustomFonts.TITLE.getSize()) / 2 + 2);
 
         graphics.setColor(getColorLoop(pauseTime));
         graphics.drawString("PAUSED", Constants.WIDTH / 2 - 400, (Constants.HEIGHT + CustomFonts.TITLE.getSize()) / 2);
@@ -133,7 +134,7 @@ public class GamePanel extends JPanel implements ActionListener {
      */
     public void reset() {
         inputHandler.clearAllKeys(); // keys held during game over never got keyReleased (panel lost focus)
-        SoundManager.stopLooping("thruster");
+        SoundManager.stop(SoundLoopKey.THRUSTER);
         worldState.reset();
     }
 

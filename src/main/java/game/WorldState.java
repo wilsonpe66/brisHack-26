@@ -1,8 +1,6 @@
 package game;
 
-import assets.AssetManager;
-import assets.SoundManager;
-import assets.SuperClip;
+import assets.*;
 import entities.*;
 import entities.motion.Position;
 import entities.motion.Velocity;
@@ -106,12 +104,12 @@ public class WorldState {
                 return;
             }
             shootCooldown = gameLevel().PLAYER_SHOOT_COOLDOWN_FRAMES();
-            SoundManager.playSound(SHOOT_WAV);
+            SoundManager.play(SoundEffectKey.SHOOT);
         } else {
             shootCooldown = 0;
-            AssetManager.getClip(SHOOT_WAV)
+            AssetManager.getClip(SoundEffectKey.SHOOT)
                     .filter(Predicate.not(SuperClip::isRunning))
-                    .ifPresent(_ -> SoundManager.playSound(SHOOT_WAV));
+                    .ifPresent(_ -> SoundManager.play(SoundEffectKey.SHOOT));
         }
 
         player.shoot()
@@ -259,8 +257,8 @@ public class WorldState {
 
         if (lastLevel != level) {
             lastLevel = level;
-            SoundManager.playSound("win.wav");
-            SoundManager.playLooping("background", "background.wav");
+            SoundManager.play(SoundEffectKey.LEVEL_UP);
+            SoundManager.play(SoundLoopKey.BACK_GROUND);
         }
     }
 
