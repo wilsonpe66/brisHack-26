@@ -52,9 +52,9 @@ public class BossAlien extends Alien {
     }
 
     @Override
-    public void collide(final Colidable colidable) {
+    public void collide(final Collidable collidable) {
         final int health = getHealth();
-        switch (colidable) {
+        switch (collidable) {
             case Bullet bullet when (bullet.getOwner() == this) -> {
             }
             case Bullet bullet when (bullet.getOwner() instanceof Player) -> setHealth(health - 20);

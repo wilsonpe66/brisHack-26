@@ -115,12 +115,14 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     }
 
     @Override
-    public void collide(final Colidable colidable) {
+    public void collide(final Collidable collidable) {
         final int health = getHealth();
-        switch (colidable) {
+        switch (collidable) {
             case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");
             case Asteroid _ -> setHealth(Math.max(health - 10, 0));
+            case Alien _ -> setHealth(Math.max(health - 40, 0));
             case Bullet bullet when (bullet.getOwner() instanceof Alien) -> setHealth(Math.max(health - 2, 0));
+            case Bullet _ -> {}
             case null -> {
             }
             default -> dei();

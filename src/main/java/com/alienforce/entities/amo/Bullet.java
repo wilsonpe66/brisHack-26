@@ -3,7 +3,7 @@ package com.alienforce.entities.amo;
 import com.alienforce.entities.Alien;
 import com.alienforce.entities.Asteroid;
 import com.alienforce.entities.BossAlien;
-import com.alienforce.entities.Colidable;
+import com.alienforce.entities.Collidable;
 import com.alienforce.entities.Player;
 import com.alienforce.entities.SelfDefendable;
 import com.alienforce.entities.Updatable;
@@ -11,7 +11,7 @@ import com.alienforce.entities.motion.Position;
 import com.alienforce.entities.motion.Velocity;
 import com.alienforce.utils.Constants;
 
-public interface Bullet extends Updatable, Colidable {
+public interface Bullet extends Updatable, Collidable {
 
     Position getPosition();
 
@@ -37,8 +37,8 @@ public interface Bullet extends Updatable, Colidable {
     }
 
     @Override
-    default void collide(final Colidable colidable) {
-        switch (colidable) {
+    default void collide(final Collidable collidable) {
+        switch (collidable) {
             case SelfDefendable selfDefendable when (getOwner() == selfDefendable) -> {
 
             }

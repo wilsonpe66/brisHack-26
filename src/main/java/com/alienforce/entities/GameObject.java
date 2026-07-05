@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public abstract class GameObject implements Updatable, Colidable {
+public abstract class GameObject implements Updatable, Collidable {
 
     private static Image sprite;
     private Velocity velocity;

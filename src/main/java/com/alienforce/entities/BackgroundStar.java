@@ -35,7 +35,7 @@ public class BackgroundStar extends GameObject {
     }
 
     @Override
-    public void collide(final Colidable colidable) {
+    public void collide(final Collidable collidable) {
 
     }
 

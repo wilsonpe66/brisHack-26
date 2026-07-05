@@ -72,8 +72,8 @@ public class Asteroid extends GameObject {
     }
 
     @Override
-    public void collide(final Colidable colidable) {
-        switch (colidable) {
+    public void collide(final Collidable collidable) {
+        switch (collidable) {
             case Asteroid _ -> dei();
             case Bullet _, Player _, Alien _ -> setHealth(getHealth() - 1);
             case null, default -> {

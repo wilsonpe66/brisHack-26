@@ -99,8 +99,8 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
     }
 
     @Override
-    public void collide(final Colidable colidable) {
-        switch (colidable) {
+    public void collide(final Collidable collidable) {
+        switch (collidable) {
             case Bullet bullet when (bullet.getOwner() == this) -> {
             }
             case null -> {
