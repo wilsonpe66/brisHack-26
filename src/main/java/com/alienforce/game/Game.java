@@ -2,8 +2,11 @@ package com.alienforce.game;
 
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
+import com.alienforce.leaderboard.PlayerScore;
+import com.alienforce.utils.Settings;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -12,8 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
-import com.alienforce.leaderboard.PlayerScore;
-import com.alienforce.utils.Settings;
+import net.java.games.input.Event;
 
 public class Game extends JFrame {
 
@@ -23,11 +25,14 @@ public class Game extends JFrame {
     private final JPanel mainContainer = new JPanel(cardLayout);
     private final GamePanel gamepanel;
     private final GameOverPanel gameOverPanel;
+    private AtomicBoolean useMenuInputs;
+    private final GamePadManager gamePadManager = new GamePadManager(this::gamePadEventHandler);
 
     public Game() {
         final MenuPanel menupanel = new MenuPanel(this);
         gamepanel = new GamePanel(this);
         gameOverPanel = new GameOverPanel(this);
+        useMenuInputs = new AtomicBoolean(true);
 
         // Each panel is registered under a string key used by cardLayout.show()
         mainContainer.add(menupanel, "MENU");
@@ -46,6 +51,27 @@ public class Game extends JFrame {
         this.setVisible(true);
 
         registerGlobalKeyBindings();
+
+        Thread.ofPlatform().start(() -> {
+            while (true) {
+                if (useMenuInputs.get()) {
+                    gamePadManager.update();
+                }
+            }
+
+        });
+    }
+
+    private void gamePadEventHandler(final Event event) {
+        switch (event.getComponent().getName()) {
+            case "A", "X", "rz", "Right Thumb", "Start" -> {
+                if (event.getValue() > 0) {
+                    restartGame();
+                }
+            }
+            default -> {
+            }
+        }
     }
 
     /**
@@ -66,6 +92,7 @@ public class Game extends JFrame {
     }
 
     public void showGame() {
+        useMenuInputs.set(false);
         cardLayout.show(mainContainer, "GAME");
         SoundManager.stop(SoundLoopKey.MENU_MUSIC);
         SoundManager.play(SoundLoopKey.BACK_GROUND);
@@ -77,6 +104,7 @@ public class Game extends JFrame {
     }
 
     public void showGameOver(int score) {
+        useMenuInputs.set(true);
         gamepanel.worldState.getLeaderBoard().scores().add(
             PlayerScore
                 .builder()
@@ -98,6 +126,7 @@ public class Game extends JFrame {
     }
 
     public void quit() {
+        useMenuInputs.set(false);
         dispose();
         System.exit(0);
     }

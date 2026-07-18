@@ -63,7 +63,7 @@ public class BossAlien extends Alien {
             case Alien _ -> setHealth(health - 10);
             case null -> {
             }
-            default -> dei();
+            default -> die();
         }
 
         if (isDead()) {

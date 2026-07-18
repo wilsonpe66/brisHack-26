@@ -254,6 +254,18 @@ public class WorldState {
     private void levelUpdate() {
         if (player.isAlive()) {
             final int score = player.getScore();
+            if (score > 40_000) {
+                if ((score - 40_000) % 5000 < 10) {
+                    SoundManager.play(SoundLoopKey.BACK_GROUND);
+                    player.setHealth(Math.clamp((int) (player.getHealth() * 1.2), 10, 100));
+                }
+            }
+            else if (score > 31_000) {
+                if ((score - 31_000) % 5000 < 10) {
+                    SoundManager.play(SoundLoopKey.BACK_GROUND);
+                    player.setHealth(Math.clamp((int) (player.getHealth() * 1.2), 10, 100));
+                }
+            }
             if (score > 26_000) {
                 level = 10;
             } else if (score > 21_000) {
@@ -281,7 +293,7 @@ public class WorldState {
             lastLevel = level;
             SoundManager.play(SoundEffectKey.LEVEL_UP);
             SoundManager.play(SoundLoopKey.BACK_GROUND);
-            player.setHealth(Math.min((int) (player.getHealth() * 1.1), 100));
+            player.setHealth(Math.clamp((int) (player.getHealth() * 1.1), 10, 100));
         }
     }
 

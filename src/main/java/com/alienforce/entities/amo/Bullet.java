@@ -10,16 +10,18 @@ import com.alienforce.entities.Updatable;
 import com.alienforce.entities.motion.Position;
 import com.alienforce.entities.motion.Velocity;
 import com.alienforce.utils.Constants;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 public interface Bullet extends Updatable, Collidable {
-
     Position getPosition();
 
     void setPosition(final Position position);
 
     Velocity getVelocity();
 
-    void dei();
+    void die();
 
     SelfDefendable getOwner();
 
@@ -31,7 +33,7 @@ public interface Bullet extends Updatable, Collidable {
         if (getPosition() instanceof Position(var x, var y)) {
             if (x < 0 || x > Constants.WIDTH
                 || y < 0 || y > Constants.HEIGHT) {
-                dei();
+                die();
             }
         }
     }
@@ -44,15 +46,15 @@ public interface Bullet extends Updatable, Collidable {
             }
             case BossAlien _ when (getOwner() instanceof Player player) -> {
                 player.incrementScore(7);
-                dei();
+                die();
             }
             case Alien _ when (getOwner() instanceof Player player) -> {
                 player.incrementScore(5);
-                dei();
+                die();
             }
             case Asteroid _ when (getOwner() instanceof Player player) -> {
                 player.incrementScore(2);
-                dei();
+                die();
             }
 
             case Bullet otherBullet when (getOwner() == otherBullet.getOwner()) -> {
@@ -61,7 +63,7 @@ public interface Bullet extends Updatable, Collidable {
             case null -> {
 
             }
-            default -> dei();
+            default -> die();
         }
     }
 }
