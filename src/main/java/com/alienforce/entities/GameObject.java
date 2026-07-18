@@ -29,7 +29,7 @@ public abstract class GameObject implements Updatable, Collidable {
         return !isAlive();
     }
 
-    public void dei() {
+    public void die() {
         health = 0;
     }
 

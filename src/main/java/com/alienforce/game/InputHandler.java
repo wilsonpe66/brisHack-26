@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import lombok.Getter;
+import net.java.games.input.Event;
 
 public class InputHandler implements KeyListener {
 
@@ -43,13 +44,15 @@ public class InputHandler implements KeyListener {
         put(KeyEvent.VK_Z, v -> shootPressed = v);
         put(KeyEvent.VK_X, v -> superShootPressed = v);
     }};
+    private final GamePadManager gamePadManager = new GamePadManager(this::gamePadEventHandler);
 
-    private final GamePadManager gamePadManager = new GamePadManager(event -> {
+    private void gamePadEventHandler(final Event event) {
         final float value = event.getValue();
+//        System.out.println(event);
         switch (event.getComponent().getName()) {
             case "Start" -> pausedPressed = value > 0;
-            case "X" -> superShootPressed = value > 0;
-            case "A" -> shootPressed = value > 0;
+            case "X", "rz" -> superShootPressed = value > 0;
+            case "A", "Right Thumb" -> shootPressed = value > 0;
             case "pov" -> {
                 switch ((int) (value * 8)) {
                     case 1 -> {
@@ -109,7 +112,7 @@ public class InputHandler implements KeyListener {
                 }
             }
         }
-    });
+    }
 
     public void updateGamePad() {
         gamePadManager.update();

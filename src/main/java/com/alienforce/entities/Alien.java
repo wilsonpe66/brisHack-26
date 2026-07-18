@@ -105,7 +105,7 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
             }
             case null -> {
             }
-            default -> dei();
+            default -> die();
         }
 
         if (isDead()) {

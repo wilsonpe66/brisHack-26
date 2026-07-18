@@ -125,7 +125,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
             case Bullet _ -> {}
             case null -> {
             }
-            default -> dei();
+            default -> die();
         }
 
         if (isDead()) {

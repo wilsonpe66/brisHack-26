@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.FloatControl.Type;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class AssetManager {
@@ -35,6 +37,10 @@ public class AssetManager {
                     // Clip is a pre-loaded audio buffer that can be started/stopped
                     final Clip aClip = AudioSystem.getClip();
                     aClip.open(audioInputStream);
+                    soundKey.soundVolume().ifPresent(volume -> {
+                        final FloatControl control = (FloatControl) aClip.getControl(Type.MASTER_GAIN);
+                        control.setValue(volume);
+                    });
                     return new SuperClip(soundKey, aClip);
                 } catch (final Exception exception) {
                     System.err.println(exception);

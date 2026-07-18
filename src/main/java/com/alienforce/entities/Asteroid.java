@@ -58,7 +58,7 @@ public class Asteroid extends GameObject {
         if (getPosition() instanceof Position(final var x, final var y)) {
             if (x < -buffer || x > Constants.WIDTH + buffer
                 || y < -buffer || y > Constants.HEIGHT + buffer) {
-                dei();
+                die();
             }
         }
     }
@@ -74,7 +74,7 @@ public class Asteroid extends GameObject {
     @Override
     public void collide(final Collidable collidable) {
         switch (collidable) {
-            case Asteroid _ -> dei();
+            case Asteroid _ -> die();
             case Bullet _, Player _, Alien _ -> setHealth(getHealth() - 1);
             case null, default -> {
             }
