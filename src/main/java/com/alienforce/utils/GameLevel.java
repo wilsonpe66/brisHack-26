@@ -15,8 +15,4 @@ public record GameLevel(
     int ALIEN_BULLET_SPEED,
     int ALIEN_TARGET_UPDATE_INTERVAL
 ) {
-
-    public GameLevel {
-
-    }
 }
