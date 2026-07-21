@@ -101,7 +101,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
             case 2 -> getSupperShoot(getPosition(), getRadius(), speed, angle);
             case 3, 4, 5, 6 -> getSupperDuperShoot(getPosition(), getRadius(), speed, angle);
             case 7, 8 -> getSupperDuper2Shoot(getPosition(), getRadius(), speed, angle);
-            case 9 -> getSupperDuper3Shoot(getPosition(), getRadius(), speed, angle);
+            case 9, 10 -> getSupperDuper3Shoot(getPosition(), getRadius(), speed, angle);
             default -> getSupperDuper4Shoot(getPosition(), getRadius(), speed, angle);
         };
     }

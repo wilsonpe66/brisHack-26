@@ -27,7 +27,15 @@ public class AlienGenerator {
     private Alien fromPosition(final Position position, final Player player) {
         final double angle = player.getPosition().minus(position).getRotation();
         final double alienSpeed = worldState.gameLevel().ALIEN_SPEED();
-        if (random.nextBoolean()) {
+
+        if (worldState.gameLevel().LEVEL_NUMBER() < 9) {
+            if (random.nextBoolean()) {
+                return new Alien(worldState, position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
+            }
+        return new BossAlien(worldState, position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
+    }
+
+        if (random.nextInt(0, 100) < 14) {
             return new Alien(worldState, position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
         }
         return new BossAlien(worldState, position, Velocity.fromAngleAndSpeed(angle, alienSpeed), player);
@@ -37,6 +45,7 @@ public class AlienGenerator {
     public void generate() {
         final Player player = worldState.getPlayer();
         final Alien alien = SIDES[random.nextInt(SIDES.length)].spawn(player);
+
         worldState.objects.add(alien);
         worldState.updatableObjects.add(alien);
     }

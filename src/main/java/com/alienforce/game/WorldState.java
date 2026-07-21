@@ -252,41 +252,43 @@ public class WorldState {
     }
 
     private void levelUpdate() {
-        if (player.isAlive()) {
-            final int score = player.getScore();
-            if (score > 40_000) {
-                if ((score - 40_000) % 5000 < 10) {
-                    SoundManager.play(SoundLoopKey.BACK_GROUND);
-                    player.setHealth(Math.clamp((int) (player.getHealth() * 1.2), 10, 100));
-                }
+        if (player.isDead()) {
+            return;
+        }
+
+        final int score = player.getScore();
+        if (score > 60_000) {
+            if ((score - 60_000) % 5000 < 10) {
+                SoundManager.play(SoundLoopKey.BACK_GROUND);
+                player.setHealth(Math.clamp((int) (player.getHealth() * 1.2), 10, 100));
             }
-            else if (score > 31_000) {
-                if ((score - 31_000) % 5000 < 10) {
-                    SoundManager.play(SoundLoopKey.BACK_GROUND);
-                    player.setHealth(Math.clamp((int) (player.getHealth() * 1.2), 10, 100));
-                }
-            }
-            if (score > 26_000) {
-                level = 10;
-            } else if (score > 21_000) {
-                level = 9;
-            } else if (score > 15_000) {
-                level = 8;
-            } else if (score > 10_000) {
-                level = 7;
-            } else if (score > 6000) {
-                level = 6;
-            } else if (score > 2500) {
-                level = 5;
-            } else if (score > 1500) {
-                level = 4;
-            } else if (score > 800) {
-                level = 3;
-            } else if (score > 300) {
-                level = 2;
-            } else if (score > 100) {
-                level = 1;
-            }
+            level = 13;
+        } else if (score > 50_000) {
+            level = 13;
+        } else if (score > 40_000) {
+            level = 12;
+        } else if (score > 31_000) {
+            level = 11;
+        } else if (score > 26_000) {
+            level = 10;
+        } else if (score > 21_000) {
+            level = 9;
+        } else if (score > 15_000) {
+            level = 8;
+        } else if (score > 10_000) {
+            level = 7;
+        } else if (score > 6000) {
+            level = 6;
+        } else if (score > 2500) {
+            level = 5;
+        } else if (score > 1500) {
+            level = 4;
+        } else if (score > 800) {
+            level = 3;
+        } else if (score > 300) {
+            level = 2;
+        } else if (score > 100) {
+            level = 1;
         }
 
         if (lastLevel != level) {
