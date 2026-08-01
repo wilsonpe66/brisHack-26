@@ -3,16 +3,17 @@
 ## Project Layout
 
 ```
-brisHack-26/
+brisHack-26/com/alienforce
 ├── src/
-│   ├── entities/       # Game objects (Player, Asteroid, Bullet, Alien, AlienBullet, …)
-│   ├── game/           # Game loop, screens, input, audio, generators
-│   └── utils/          # Shared constants
+│   ├── entities/          # Game objects (Player, Asteroid, Bullet, Alien, AlienBullet, …)
+│   ├── game/              # Game loop, screens, input, audio, generators
+│   └── utils/             # Shared constants
 ├── assets/
-│   ├── images/         # Sprites, backgrounds, and logo
-│   └── sounds/         # WAV audio files
-├── build.sh            # Compile + JAR packaging script
-└── brisHack-26.jar     # Pre-built executable JAR
+│   ├── images/            # Sprites, backgrounds, and logo
+│   └── sounds/            # WAV audio files
+├── build.sh               # Compile + JAR packaging script
+├── dev/                   # The folder use for making a deb linux package.
+└── target/alien-force.jar # Pre-built executable JAR
 ```
 
 ## Package Responsibilities
@@ -31,8 +32,8 @@ Owns the application lifecycle:
 | `MenuPanel`         | Main menu shown at startup                                              |
 | `GameOverPanel`     | End-of-game screen with score / high-score display                      |
 | `WorldState`        | Core simulation — updates entities, detects collisions, manages scoring |
-| `AsteroidGenerator` | Spawns asteroids from random screen edges aimed at the player           |
-| `AlienGenerator`    | Spawns aliens from random screen edges aimed at the player              |
+| `AsteroidSpawner` | Spawns asteroids from random screen edges aimed at the player           |
+| `AlienSpawner`    | Spawns aliens from random screen edges aimed at the player              |
 | `InputHandler`      | Translates keyboard events into boolean flags read by `Player`          |
 | `SoundManager`      | Static utility for one-shot and looping audio playback                  |
 

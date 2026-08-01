@@ -51,11 +51,15 @@ handleShooting()  →  handleAlienShooting()  →  handleSpawning()  →  update
 
 ## Asteroid Spawning Details
 
-`AsteroidGenerator` picks one of four screen edges at random (top, bottom, left, right) and places the asteroid just outside the visible area (offset by `ASTEROID_OFFSET` = 50 px). The asteroid's velocity vector points **towards the player's current position**, with a base speed of `ASTEROID_SPEED` (3) and a random multiplier between **0.7×** and **1.3×** for variety.
+`AsteroidSpawner` picks one of four screen edges at random (top, bottom, left, right) and places the asteroid just outside the visible area (offset by `ASTEROID_OFFSET` = 50 px). The asteroid's velocity vector points **towards the player's current position**, with a base speed of `ASTEROID_SPEED` (3) and a random multiplier between **0.7×** and **1.3×** for variety.
 
 ## Alien Spawning Details
 
+<<<<<<< Updated upstream
 `AlienGenerator` works similarly to `AsteroidGenerator` — it picks a random screen edge and places the alien just outside the visible area. The alien's initial velocity points towards the player at `ALIEN_SPEED` (1.0 px/frame). Unlike asteroids, aliens continuously track the player and wrap around the screen.
+=======
+`AlienSpawner` works similarly to `AsteroidSpawner` — it picks a random screen edge and places the alien just outside the visible area. The alien's initial velocity points towards the player at `speed` (1.0 px/frame). Unlike asteroids, aliens continuously track the player and wrap around the screen.
+>>>>>>> Stashed changes
 
 ## Scoring
 

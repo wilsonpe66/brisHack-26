@@ -1,4 +1,6 @@
-package com.alienforce.game;
+package com.alienforce;
+
+import com.alienforce.game.Game;
 
 import javax.swing.SwingUtilities;
 

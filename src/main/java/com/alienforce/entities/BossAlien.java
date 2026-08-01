@@ -6,12 +6,13 @@ import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundEffectKey;
 import com.alienforce.assets.SoundManager;
 import com.alienforce.entities.amo.Bullet;
-import com.alienforce.entities.motion.Position;
-import com.alienforce.entities.motion.Velocity;
+import com.alienforce.motion.Position;
+import com.alienforce.motion.Velocity;
 import com.alienforce.game.WorldState;
 import java.awt.Image;
 import java.util.stream.Stream;
 import com.alienforce.utils.GameLevel;
+import com.alienforce.utils.ShootConstants;
 
 public class BossAlien extends Alien {
 
@@ -41,19 +42,21 @@ public class BossAlien extends Alien {
         }
 
         final GameLevel gameLevel = worldState.gameLevel();
-        shootCooldown = gameLevel.ALIEN_SHOOT_COOLDOWN_FRAMES();
+        final ShootConstants shootConstants = gameLevel.bossAlien().shootConstants();
+        shootCooldown = shootConstants.shootCooldownFrames();
 
         // atan2(dy, dx) calculates the angle from this alien to the player
         final Position playerPosition = getPosition();
         final Velocity bulletVelocityInit = player.getPosition().minus(playerPosition);
         final double angle = bulletVelocityInit.getRotation();
         setRotationAngle(angle); // face the player when shooting
-        return switch (gameLevel.LEVEL_NUMBER()) {
-            case 0,1,2,3,4,5 -> getSupperShoot(playerPosition, getRadius(), gameLevel.ALIEN_BULLET_SPEED(), angle);
-            case 6,7,8 -> getSupperDuperShoot(playerPosition, getRadius(), gameLevel.ALIEN_BULLET_SPEED(), angle);
-            case 9,10,11 ->getSupperDuper2Shoot(playerPosition, getRadius(), gameLevel.ALIEN_BULLET_SPEED(), angle);
-            case 12, 13, 14 -> getSupperDuper3Shoot(playerPosition, getRadius(), gameLevel.ALIEN_BULLET_SPEED(), angle);
-            default -> getSupperDuper4Shoot(playerPosition, getRadius(), gameLevel.ALIEN_BULLET_SPEED(), angle);
+        final double bulletSpeed = shootConstants.bulletSpeed();
+        return switch (gameLevel.levelNumber()) {
+            case 0,1,2,3,4,5 -> getSupperShoot(playerPosition, getRadius(), bulletSpeed, angle);
+            case 6,7,8 -> getSupperDuperShoot(playerPosition, getRadius(), bulletSpeed, angle);
+            case 9,10,11 ->getSupperDuper2Shoot(playerPosition, getRadius(), bulletSpeed, angle);
+            case 12, 13, 14 -> getSupperDuper3Shoot(playerPosition, getRadius(), bulletSpeed, angle);
+            default -> getSupperDuper4Shoot(playerPosition, getRadius(), bulletSpeed, angle);
         };
     }
 

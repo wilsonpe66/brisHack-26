@@ -4,8 +4,8 @@ import static com.alienforce.assets.AssetManager.getImage;
 
 import com.alienforce.assets.ImageKey;
 import com.alienforce.entities.amo.Bullet;
-import com.alienforce.entities.motion.Position;
-import com.alienforce.entities.motion.Velocity;
+import com.alienforce.motion.Position;
+import com.alienforce.motion.Velocity;
 import java.awt.Image;
 import java.util.Random;
 import com.alienforce.utils.Constants;

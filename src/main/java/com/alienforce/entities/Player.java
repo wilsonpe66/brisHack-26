@@ -5,9 +5,9 @@ import com.alienforce.assets.SoundEffectKey;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
 import com.alienforce.entities.amo.Bullet;
-import com.alienforce.entities.motion.Position;
-import com.alienforce.entities.motion.Velocity;
-import com.alienforce.game.InputHandler;
+import com.alienforce.motion.Position;
+import com.alienforce.motion.Velocity;
+import com.alienforce.input.InputHandler;
 import com.alienforce.game.WorldState;
 import lombok.Getter;
 import lombok.Setter;
@@ -95,8 +95,8 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     public Stream<Bullet> shoot() {
         final double angle = getRotationAngle(); // radians
         final GameLevel gameLevel = worldState.gameLevel();
-        final int speed = gameLevel.PLAYER_BULLET_SPEED();
-        return switch (gameLevel.LEVEL_NUMBER()) {
+        final int speed = gameLevel.playerShootConstants().bulletSpeed();
+        return switch (gameLevel.levelNumber()) {
             case 0, 1 -> getSingleShoot(getPosition(), getRadius(), speed, angle);
             case 2 -> getSupperShoot(getPosition(), getRadius(), speed, angle);
             case 3, 4, 5, 6 -> getSupperDuperShoot(getPosition(), getRadius(), speed, angle);
@@ -108,7 +108,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     @Override
     public Image getSprite() {
-        if (worldState.gameLevel().LEVEL_NUMBER() > 4) {
+        if (worldState.gameLevel().levelNumber() > 4) {
             return sprite2;
         }
         return sprite;

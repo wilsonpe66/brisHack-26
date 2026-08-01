@@ -4,14 +4,15 @@ All audio is managed through the static `SoundManager` class.
 
 ## Sound Files
 
-| File                 | Used for                           | Type     |
-|----------------------|------------------------------------|----------|
-| `space_oddity.wav`   |  Menu background music             | Looping  |
-| `background.wav`     | Gameplay background music          | Looping  |
-| `thruster.wav`       | Ship thrust (while W/↑ held)       | Looping  |
-| `shoot.wav`          | Bullet fired                       | One-shot |
-| `explosion.wav`      | (Available but not currently used) | —        |
-| `win.wav`            | Game Over screen                   | One-shot |
+| File                          | Used for                     | Type     |
+|-------------------------------|------------------------------|----------|
+| `mixkit-fright-night-871.wav` | Menu background music        | Looping  |
+| `background.wav`              | Gameplay background music    | Looping  |
+| `thruster.wav`                | Ship thrust (while W/↑ held) | Looping  |
+| `shoot.wav`                   | Bullet fired                 | One-shot |
+| `explosion.wav`               | Aliens Blow up               | One-shot |
+| `level-up.wav`                | Leveling Up                  | One-shot |
+| `game-over.wav`               | Game Over screen             | One-shot |
 
 ## `SoundManager` API
 

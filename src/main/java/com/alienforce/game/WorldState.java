@@ -1,25 +1,22 @@
 package com.alienforce.game;
 
-import com.alienforce.assets.AssetManager;
-import com.alienforce.assets.SoundEffectKey;
-import com.alienforce.assets.SoundLoopKey;
-import com.alienforce.assets.SoundManager;
-import com.alienforce.assets.SuperClip;
-import com.alienforce.entities.Alien;
-import com.alienforce.entities.Asteroid;
-import com.alienforce.entities.BackgroundStar;
-import com.alienforce.entities.GameObject;
-import com.alienforce.entities.HealthBar;
-import com.alienforce.entities.Player;
-import com.alienforce.entities.SelfDefendable;
-import com.alienforce.entities.Updatable;
-import com.alienforce.entities.motion.Position;
-import com.alienforce.entities.motion.Velocity;
+import com.alienforce.assets.*;
+import com.alienforce.entities.*;
+import com.alienforce.game.spawner.AlienSpawner;
+import com.alienforce.game.spawner.AsteroidSpawner;
+import com.alienforce.game.spawner.BossAlienSpawner;
+import com.alienforce.game.spawner.Spawner;
+import com.alienforce.input.InputHandler;
 import com.alienforce.leaderboard.LeaderBoard;
+import com.alienforce.motion.Position;
+import com.alienforce.motion.Velocity;
+import com.alienforce.utils.AlienConstants;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.GameLevel;
 import com.alienforce.utils.Settings;
-import java.awt.Color;
+import lombok.Getter;
+
+import java.awt.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -28,18 +25,17 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import lombok.Getter;
 
 public class WorldState {
 
     @Getter
     private final Player player;
-    private final AsteroidGenerator asteroidGenerator;
-    private final AlienGenerator alienGenerator;
+    private final Generate<Asteroid> asteroidGenerator;
+    private final Generate<Alien> alienGenerator;
+    private final Generate<Alien> bossAlienGenerator;
     private final InputHandler inputHandler;
     @Getter
     private final LeaderBoard leaderBoard = LeaderBoard.builder().build();
-    private final HealthBar healthBar;
     public Set<Updatable> backgroundUpdatableObjects;
     public Set<GameObject> backgroundObjects;
     public Set<Updatable> updatableObjects;
@@ -48,8 +44,6 @@ public class WorldState {
     @Getter
     private boolean isPaused = false;
     private int shootCooldown;
-    private long lastSpawnTime = 0;
-    private long lastAlienSpawnTime = 0;
     private long gameStartTime;
     private int level;
     private int lastLevel = 0;
@@ -65,12 +59,10 @@ public class WorldState {
 
         updatableObjects = new HashSet<>();
         updatableObjects.add(player);
-        healthBar = new HealthBar(player);
-        updatableObjects.add(healthBar);
-        asteroidGenerator = new AsteroidGenerator(this);
-        alienGenerator = new AlienGenerator(this);
+        asteroidGenerator = new Generate<>(new AsteroidSpawner());
+        alienGenerator = new Generate<>(new AlienSpawner(this));
+        bossAlienGenerator = new Generate<>(new BossAlienSpawner(this));
         gameStartTime = System.currentTimeMillis();
-        lastAlienSpawnTime = gameStartTime;
     }
 
     private static String aaa(final GameObject a) {
@@ -82,16 +74,16 @@ public class WorldState {
         backgroundUpdatableObjects = new HashSet<>();
 
         Stream
-            .of(Color.CYAN, Color.RED, Color.GREEN)
-            .forEach(color -> {
-                final BackgroundStar backgroundStar = new BackgroundStar(
-                    new Position(Math.random() * Constants.WIDTH, Math.random() * Constants.HEIGHT),
-                    Velocity.ZERO,
-                    color
-                );
-                backgroundObjects.add(backgroundStar);
-                backgroundUpdatableObjects.add(backgroundStar);
-            });
+                .of(Color.CYAN, Color.RED, Color.GREEN)
+                .forEach(color -> {
+                    final BackgroundStar backgroundStar = new BackgroundStar(
+                            new Position(Math.random() * Constants.WIDTH, Math.random() * Constants.HEIGHT),
+                            Velocity.ZERO,
+                            color
+                    );
+                    backgroundObjects.add(backgroundStar);
+                    backgroundUpdatableObjects.add(backgroundStar);
+                });
     }
 
     public GameLevel gameLevel() {
@@ -115,54 +107,57 @@ public class WorldState {
                 shootCooldown--;
                 return;
             }
-            shootCooldown = gameLevel().PLAYER_SHOOT_COOLDOWN_FRAMES();
+            shootCooldown = gameLevel().playerShootConstants().shootCooldownFrames();
             SoundManager.play(SoundEffectKey.SHOOT);
         } else {
             shootCooldown = 0;
             AssetManager.getClip(SoundEffectKey.SHOOT)
-                .filter(Predicate.not(SuperClip::isRunning))
-                .ifPresent(_ -> SoundManager.play(SoundEffectKey.SHOOT));
+                    .filter(Predicate.not(SuperClip::isRunning))
+                    .ifPresent(_ -> SoundManager.play(SoundEffectKey.SHOOT));
         }
 
         player.shoot()
-            .filter(GameObject.class::isInstance)
-            .forEach(bullet -> {
-                objects.add((GameObject) bullet);
-                updatableObjects.add(bullet);
-            });
+                .filter(GameObject.class::isInstance)
+                .forEach(bullet -> {
+                    objects.add((GameObject) bullet);
+                    updatableObjects.add(bullet);
+                });
     }
-    //pausedPressed
 
     private void handleAlienShooting() {
         // Collect new bullets into a separate list first to avoid ConcurrentModificationException
         // (we can't add to 'objects' while iterating over it)
         objects
-            .stream()
-            .filter(Objects::nonNull)
-            .filter(GameObject::isAlive)
-            .filter(Alien.class::isInstance)
-            .map(SelfDefendable.class::cast)
-            .flatMap(SelfDefendable::shoot)
-            .filter(GameObject.class::isInstance)
-            .collect(Collectors.toSet())
-            .forEach(bullet -> {
-                objects.add((GameObject) bullet);
-                updatableObjects.add(bullet);
-            });
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(GameObject::isAlive)
+                .filter(Alien.class::isInstance)
+                .map(SelfDefendable.class::cast)
+                .flatMap(SelfDefendable::shoot)
+                .filter(GameObject.class::isInstance)
+                .collect(Collectors.toSet())
+                .forEach(bullet -> {
+                    objects.add((GameObject) bullet);
+                    updatableObjects.add(bullet);
+                });
     }
+    //pausedPressed
 
     private void handleSpawning() {
         final long currentTime = System.currentTimeMillis();
-        if (currentTime - lastSpawnTime >= Constants.SPAWN_DELAY) {
-            asteroidGenerator.generate();
-            lastSpawnTime = currentTime;
-        }
         final long timeSinceStart = currentTime - gameStartTime;
         final GameLevel gameLevel = Constants.GAME_LEVELS.get(level);
-        if (timeSinceStart >= gameLevel.ALIEN_SPAWN_INITIAL_DELAY()
-            && currentTime - lastAlienSpawnTime >= gameLevel.ALIEN_SPAWN_DELAY()) {
-            alienGenerator.generate();
-            lastAlienSpawnTime = currentTime;
+
+        asteroidGenerator.generate(Constants.SPAWN_DELAY);
+
+        final AlienConstants alienConstants = gameLevel.alien();
+        if (timeSinceStart >= alienConstants.spawnInitialDelay()) {
+            alienGenerator.generate(alienConstants.spawnDelay());
+        }
+
+        final AlienConstants bossAlienConstants = gameLevel.bossAlien();
+        if (timeSinceStart >= bossAlienConstants.spawnInitialDelay()) {
+            bossAlienGenerator.generate(bossAlienConstants.spawnDelay());
         }
     }
 
@@ -182,25 +177,25 @@ public class WorldState {
 
     private void handleCollisions() {
         final List<GameObject> livingObjects = objects
-            .stream()
-            .filter(GameObject::isAlive)
-            .toList();
+                .stream()
+                .filter(GameObject::isAlive)
+                .toList();
 
         IntStream
-            .range(0, livingObjects.size())
-            .forEach(outerIndex -> {
-                IntStream
-                    .range(outerIndex + 1, livingObjects.size())
-                    .forEach(innerIndex -> {
-                        final GameObject a = livingObjects.get(outerIndex);
-                        final GameObject b = livingObjects.get(innerIndex);
-                        if (checkCollision(a, b)) {
-                            a.collide(b);
-                            b.collide(a);
-                        }
+                .range(0, livingObjects.size())
+                .forEach(outerIndex -> {
+                    IntStream
+                            .range(outerIndex + 1, livingObjects.size())
+                            .forEach(innerIndex -> {
+                                final GameObject a = livingObjects.get(outerIndex);
+                                final GameObject b = livingObjects.get(innerIndex);
+                                if (checkCollision(a, b)) {
+                                    a.collide(b);
+                                    b.collide(a);
+                                }
 
-                    });
-            });
+                            });
+                });
     }
 
     private void removeDeadObjects() {
@@ -208,9 +203,9 @@ public class WorldState {
         // Only asteroids with killedByBullet=true contribute to score —
         // those that flew off-screen or were destroyed by other asteroids don't count.
         int shotAsteroids = (int) objects.stream()
-            .filter(GameObject::isDead)
-            .filter(obj -> obj instanceof Asteroid asteroid && asteroid.wasKilledByBullet())
-            .count();
+                .filter(GameObject::isDead)
+                .filter(obj -> obj instanceof Asteroid asteroid && asteroid.wasKilledByBullet())
+                .count();
         player.incrementScore(shotAsteroids);
 
         // removeIf modifies the list in-place, removing all dead objects
@@ -257,12 +252,14 @@ public class WorldState {
         }
 
         final int score = player.getScore();
-        if (score > 60_000) {
-            if ((score - 60_000) % 5000 < 10) {
+        if (score > 70_000) {
+            if ((score - 70_000) % 5000 < 10) {
                 SoundManager.play(SoundLoopKey.BACK_GROUND);
                 player.setHealth(Math.clamp((int) (player.getHealth() * 1.2), 10, 100));
             }
-            level = 13;
+            level = 14;
+        } else if (score > 60_000) {
+            level = 14;
         } else if (score > 50_000) {
             level = 13;
         } else if (score > 40_000) {
@@ -314,14 +311,30 @@ public class WorldState {
         player.setRotationAngle(-Math.PI / 2);
         objects.add(player);
         updatableObjects.add(player);
-        updatableObjects.add(healthBar);
         shootCooldown = 0;
-        lastSpawnTime = 0;
         gameStartTime = System.currentTimeMillis();
-        lastAlienSpawnTime = gameStartTime;
 
         lastIsPressedState = false;
         isPaused = false;
         Settings.muted = false;
+    }
+
+    private class Generate<EntityType extends GameObject> {
+        private final Spawner<EntityType> spawner;
+        long lastSpawnTime = 0;
+
+        private Generate(Spawner<EntityType> spawner) {
+            this.spawner = spawner;
+        }
+
+        void generate(final long spawnDelay) {
+            final long currentTime = System.currentTimeMillis();
+            if (currentTime - lastSpawnTime >= spawnDelay) {
+                final var entity = spawner.spawn(player);
+                objects.add(entity);
+                updatableObjects.add(entity);
+                lastSpawnTime = currentTime;
+            }
+        }
     }
 }

@@ -4,12 +4,21 @@ The game uses **three screens** managed by a `CardLayout` inside the `Game` JFra
 
 ## Screen Flow
 
-```
-╔══════════╗        PLAY         ╔══════════╗       player dies      ╔══════════════╗
-║   Menu   ║ ──────────────────→ ║   Game   ║ ────────────────────→ ║  Game Over   ║
-╚══════════╝                     ╚══════════╝                       ╚══════════════╝
-                                      ↑                                    │
-                                      └────────── NEW GAME ────────────────┘
+```mermaid
+graph TD
+
+menu["Menu"]
+game["Game"]
+gameOver["Game Over"]
+
+menu e1@--Play--> game
+game e2@-- "Player Dies" --> gameOver
+gameOver e3@-- "New Game" --> game
+
+e1@{ animation: fast }
+e2@{ animation: fast }
+e3@{ animation: fast }
+
 ```
 
 Both the Menu and Game Over screens have a **QUIT** button that exits the application.
@@ -20,10 +29,10 @@ Both the Menu and Game Over screens have a **QUIT** button that exits the applic
 
 The first screen the player sees.
 
-- **Title**: "(git) Push To Orbit"
+- **Title**: "Alien Force"
 - **Subtitle**: "Press PLAY to start"
 - **Buttons**: PLAY GAME, QUIT
-- **Music**: Starts looping `space_oddity.wav` as menu background music.
+- **Music**: Starts looping background music.
 - When the user clicks PLAY, `Game.showGame()` is called which:
   - Stops the menu music.
   - Starts the gameplay background music (`background.wav`).
@@ -61,7 +70,7 @@ Shown when the player dies.
 - **Score**: The score from the just-ended round.
 - **High Score**: The best score across all rounds in the current session (gold text).
 - **Buttons**: NEW GAME (restarts), QUIT (exits).
-- **Sound**: A one-shot `win.wav` plays when this screen appears.
+- **Sound**: A one-shot `level-up.wav` plays when this screen appears.
 - The background music is stopped when transitioning here.
 
 ---
