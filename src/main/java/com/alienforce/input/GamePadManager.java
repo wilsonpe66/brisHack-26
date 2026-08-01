@@ -1,4 +1,4 @@
-package com.alienforce.game;
+package com.alienforce.input;
 
 import java.util.function.Consumer;
 import java.util.stream.Stream;

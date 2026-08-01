@@ -1,6 +1,6 @@
 package com.alienforce.entities;
 
-import com.alienforce.entities.motion.Position;
+import com.alienforce.motion.Position;
 import com.alienforce.utils.Constants;
 
 public interface Wrappable {

@@ -1,4 +1,4 @@
-package com.alienforce.entities.motion;
+package com.alienforce.motion;
 
 public record Velocity(
     double dx,

@@ -6,7 +6,8 @@ import com.alienforce.assets.SoundManager;
 import com.alienforce.entities.BackgroundStar;
 import com.alienforce.entities.GameObject;
 import com.alienforce.entities.Player;
-import com.alienforce.entities.motion.Position;
+import com.alienforce.input.InputHandler;
+import com.alienforce.motion.Position;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.CustomFonts;
 

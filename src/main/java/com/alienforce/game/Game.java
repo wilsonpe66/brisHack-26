@@ -2,6 +2,7 @@ package com.alienforce.game;
 
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
+import com.alienforce.input.GamePadManager;
 import com.alienforce.leaderboard.PlayerScore;
 import com.alienforce.utils.Settings;
 import java.awt.CardLayout;

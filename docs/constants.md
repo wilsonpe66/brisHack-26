@@ -36,6 +36,7 @@ All tunable values live in `src/utils/Constants.java`. This makes it easy to twe
 | `ASTEROID_SPEED`   | 3.0   | Base asteroid speed (px/frame)                   |
 | `ASTEROID_OFFSET`  | 50.0  | How far outside the screen edges asteroids spawn |
 
+<<<<<<< Updated upstream
 > Actual asteroid speed varies between **0.7×** and **1.3×** the base speed thanks to a random multiplier in `AsteroidGenerator`.
 
 ## Aliens
@@ -50,6 +51,9 @@ All tunable values live in `src/utils/Constants.java`. This makes it easy to twe
 | `ALIEN_SPAWN_NO_SHOOT_FRAMES`  | 120       | Grace period after spawn before alien fires (≈ 2 s)   |
 | `ALIEN_KILL_SCORE`             | 5         | Points awarded for destroying an alien with a bullet  |
 | `ALIEN_TARGET_UPDATE_INTERVAL` | 45        | Frames between alien velocity re-aims towards player  |
+=======
+> Actual asteroid speed varies between **0.7×** and **1.3×** the base speed thanks to a random multiplier in `AsteroidSpawner`.
+>>>>>>> Stashed changes
 
 ## Derived Values
 

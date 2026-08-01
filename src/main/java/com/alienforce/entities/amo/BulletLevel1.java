@@ -5,8 +5,8 @@ import static com.alienforce.assets.AssetManager.getImage;
 import com.alienforce.assets.ImageKey;
 import com.alienforce.entities.GameObject;
 import com.alienforce.entities.SelfDefendable;
-import com.alienforce.entities.motion.Position;
-import com.alienforce.entities.motion.Velocity;
+import com.alienforce.motion.Position;
+import com.alienforce.motion.Velocity;
 import java.awt.Image;
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package com.alienforce.entities;
 
-import com.alienforce.entities.motion.Position;
-import com.alienforce.entities.motion.Velocity;
+import com.alienforce.motion.Position;
+import com.alienforce.motion.Velocity;
 import java.awt.Image;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,6 @@ public abstract class GameObject implements Updatable, Collidable {
     private Velocity velocity;
     private double rotationAngle; // radians
     private Position position;
-    // TODO: fix arbitrary magic numbers for radius in all gameobjects
     private double radius;
     private int health;
     private double scale = 1.0;

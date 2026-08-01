@@ -7,12 +7,9 @@ import com.alienforce.entities.Collidable;
 import com.alienforce.entities.Player;
 import com.alienforce.entities.SelfDefendable;
 import com.alienforce.entities.Updatable;
-import com.alienforce.entities.motion.Position;
-import com.alienforce.entities.motion.Velocity;
+import com.alienforce.motion.Position;
+import com.alienforce.motion.Velocity;
 import com.alienforce.utils.Constants;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 public interface Bullet extends Updatable, Collidable {
     Position getPosition();

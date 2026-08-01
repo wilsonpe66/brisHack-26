@@ -1,7 +1,7 @@
 package com.alienforce.entities;
 
-import com.alienforce.entities.motion.Position;
-import com.alienforce.entities.motion.Velocity;
+import com.alienforce.motion.Position;
+import com.alienforce.motion.Velocity;
 import java.awt.Color;
 import java.awt.Image;
 import lombok.Getter;

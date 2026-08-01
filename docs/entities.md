@@ -4,17 +4,25 @@ All objects in the game world share a common base class and interface.
 
 ## Class Hierarchy
 
-```
-Updatable (interface)
-    │
-    └── GameObject (abstract class)
-            ├── Player
-            ├── Asteroid
-            ├── Bullet
-            ├── Alien
-            └── AlienBullet
+```mermaid
+graph BT
 
-HealthBar (implements Updatable — not a GameObject)
+    updatable("Updatable\n(interface)")
+    collidable("Collidable\n(interface)")
+    selfDefendable("Self Defendable\n(interface)")
+    wrappable("Wrappable\n(interface)")
+    bullet("Bullet\n(interface)")
+    GameObject -.-> updatable & collidable
+    bullet -.-> updatable & collidable
+    BulletLevel1 -.-> bullet
+    BulletLevel2 -.-> bullet
+    BulletLevel3 -.-> bullet
+    Asteroid --> GameObject
+    Alien --> GameObject
+    Alien -.-> selfDefendable & wrappable
+    BossAlien --> Alien
+    Player --> GameObject
+    Player -.-> GameObject & selfDefendable & wrappable
 ```
 
 ---
@@ -142,8 +150,13 @@ An enemy spaceship that chases and shoots at the player.
 
 ### Spawning
 
+<<<<<<< Updated upstream
 - Spawned by `AlienGenerator` from a random screen edge, similar to asteroids.
 - First alien appears after `ALIEN_SPAWN_INITIAL_DELAY` (5 s), then another every `ALIEN_SPAWN_DELAY` (15 s).
+=======
+- Spawned by `AlienSpawner` from a random screen edge, similar to asteroids.
+- First alien appears after `spawnInitialDelay` (5 s), then another every `spawnDelay` (15 s).
+>>>>>>> Stashed changes
 
 ### Behaviour
 

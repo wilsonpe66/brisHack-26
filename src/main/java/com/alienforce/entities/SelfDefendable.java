@@ -4,8 +4,8 @@ import com.alienforce.entities.amo.Bullet;
 import com.alienforce.entities.amo.BulletLevel1;
 import com.alienforce.entities.amo.BulletLevel2;
 import com.alienforce.entities.amo.BulletLevel3;
-import com.alienforce.entities.motion.Position;
-import com.alienforce.entities.motion.Velocity;
+import com.alienforce.motion.Position;
+import com.alienforce.motion.Velocity;
 import java.util.stream.Stream;
 import com.alienforce.utils.PiConstants;
 

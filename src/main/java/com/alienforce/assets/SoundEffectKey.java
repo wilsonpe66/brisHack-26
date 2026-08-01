@@ -5,7 +5,7 @@ import java.util.Optional;
 public enum SoundEffectKey implements SoundKey {
     SHOOT("shoot.wav"),
     EXPLOSION("explosion.wav", -8.0f),
-    LEVEL_UP("win.wav"),
+    LEVEL_UP("level-up.wav"),
     GAME_OVER("game-over.wav");
 
     final String resourceId;
