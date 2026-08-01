@@ -169,7 +169,7 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.setColor(Color.WHITE);
         graphics.setFont(CustomFonts.PLAIN_24);
         final Player player = worldState.getPlayer();
-        final int levelNumber = worldState.gameLevel().LEVEL_NUMBER() + 1;
+        final int levelNumber = worldState.gameLevel().levelNumber() + 1;
         graphics.drawString("Score: %,d".formatted(player.getScore()), 20, 40);
         graphics.setColor(Color.YELLOW);
         graphics.setFont(CustomFonts.HUD_TITLE);

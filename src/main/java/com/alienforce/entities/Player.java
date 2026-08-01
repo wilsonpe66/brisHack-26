@@ -95,13 +95,8 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
     public Stream<Bullet> shoot() {
         final double angle = getRotationAngle(); // radians
         final GameLevel gameLevel = worldState.gameLevel();
-<<<<<<< Updated upstream
-        final int speed = gameLevel.PLAYER_BULLET_SPEED();
-        return switch (gameLevel.LEVEL_NUMBER()) {
-=======
         final int speed = gameLevel.playerShootConstants().bulletSpeed();
         return switch (gameLevel.levelNumber()) {
->>>>>>> Stashed changes
             case 0, 1 -> getSingleShoot(getPosition(), getRadius(), speed, angle);
             case 2 -> getSupperShoot(getPosition(), getRadius(), speed, angle);
             case 3, 4, 5, 6 -> getSupperDuperShoot(getPosition(), getRadius(), speed, angle);
@@ -113,7 +108,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     @Override
     public Image getSprite() {
-        if (worldState.gameLevel().LEVEL_NUMBER() > 4) {
+        if (worldState.gameLevel().levelNumber() > 4) {
             return sprite2;
         }
         return sprite;

@@ -8,12 +8,9 @@ import com.alienforce.game.spawner.BossAlienSpawner;
 import com.alienforce.game.spawner.Spawner;
 import com.alienforce.input.InputHandler;
 import com.alienforce.leaderboard.LeaderBoard;
-<<<<<<< Updated upstream
-=======
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
 import com.alienforce.utils.AlienConstants;
->>>>>>> Stashed changes
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.GameLevel;
 import com.alienforce.utils.Settings;
@@ -51,6 +48,7 @@ public class WorldState {
     private int level;
     private int lastLevel = 0;
     private boolean isMuteTogglePressedState = false;
+
     public WorldState(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
         player = new Player(this, new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y), inputHandler);
@@ -109,11 +107,7 @@ public class WorldState {
                 shootCooldown--;
                 return;
             }
-<<<<<<< Updated upstream
-            shootCooldown = gameLevel().PLAYER_SHOOT_COOLDOWN_FRAMES();
-=======
             shootCooldown = gameLevel().playerShootConstants().shootCooldownFrames();
->>>>>>> Stashed changes
             SoundManager.play(SoundEffectKey.SHOOT);
         } else {
             shootCooldown = 0;
@@ -153,12 +147,6 @@ public class WorldState {
         final long currentTime = System.currentTimeMillis();
         final long timeSinceStart = currentTime - gameStartTime;
         final GameLevel gameLevel = Constants.GAME_LEVELS.get(level);
-<<<<<<< Updated upstream
-        if (timeSinceStart >= gameLevel.ALIEN_SPAWN_INITIAL_DELAY()
-            && currentTime - lastAlienSpawnTime >= gameLevel.ALIEN_SPAWN_DELAY()) {
-            alienGenerator.generate();
-            lastAlienSpawnTime = currentTime;
-=======
 
         asteroidGenerator.generate(Constants.SPAWN_DELAY);
 
@@ -170,7 +158,6 @@ public class WorldState {
         final AlienConstants bossAlienConstants = gameLevel.bossAlien();
         if (timeSinceStart >= bossAlienConstants.spawnInitialDelay()) {
             bossAlienGenerator.generate(bossAlienConstants.spawnDelay());
->>>>>>> Stashed changes
         }
     }
 
