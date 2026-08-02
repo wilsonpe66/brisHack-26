@@ -74,7 +74,7 @@ public class GameOverPanel extends JPanel {
     }
 
     public void setScore(int score, final LeaderBoard leaderBoard) {
-        scoreLabel.setText("Score: " + score);
+        scoreLabel.setText("Score: %,d".formatted(score));
 //        highScoreLabel.setText("High Score: " + leaderBoard);
     }
 }

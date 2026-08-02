@@ -10,10 +10,7 @@ import com.alienforce.input.InputHandler;
 import com.alienforce.leaderboard.LeaderBoard;
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
-import com.alienforce.utils.AlienConstants;
-import com.alienforce.utils.Constants;
-import com.alienforce.utils.GameLevel;
-import com.alienforce.utils.Settings;
+import com.alienforce.utils.*;
 import lombok.Getter;
 
 import java.awt.*;
@@ -21,7 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -43,7 +39,6 @@ public class WorldState {
     private boolean lastIsPressedState = false;
     @Getter
     private boolean isPaused = false;
-    private int shootCooldown;
     private long gameStartTime;
     private int level;
     private int lastLevel = 0;
@@ -101,22 +96,7 @@ public class WorldState {
             return;
         }
 
-        final String SHOOT_WAV = "shoot.wav";
-        if (shootPressed) {
-            if (shootCooldown > 0) {
-                shootCooldown--;
-                return;
-            }
-            shootCooldown = gameLevel().playerShootConstants().shootCooldownFrames();
-            SoundManager.play(SoundEffectKey.SHOOT);
-        } else {
-            shootCooldown = 0;
-            AssetManager.getClip(SoundEffectKey.SHOOT)
-                    .filter(Predicate.not(SuperClip::isRunning))
-                    .ifPresent(_ -> SoundManager.play(SoundEffectKey.SHOOT));
-        }
-
-        player.shoot()
+        (superShootPressed ? player.shootIgnoreCoolDown() : player.shoot())
                 .filter(GameObject.class::isInstance)
                 .forEach(bullet -> {
                     objects.add((GameObject) bullet);
@@ -144,21 +124,15 @@ public class WorldState {
     //pausedPressed
 
     private void handleSpawning() {
-        final long currentTime = System.currentTimeMillis();
-        final long timeSinceStart = currentTime - gameStartTime;
         final GameLevel gameLevel = Constants.GAME_LEVELS.get(level);
 
         asteroidGenerator.generate(Constants.SPAWN_DELAY);
 
         final AlienConstants alienConstants = gameLevel.alien();
-        if (timeSinceStart >= alienConstants.spawnInitialDelay()) {
-            alienGenerator.generate(alienConstants.spawnDelay());
-        }
+        alienGenerator.generate(alienConstants.spawnInitialDelay(), alienConstants.spawnDelay());
 
         final AlienConstants bossAlienConstants = gameLevel.bossAlien();
-        if (timeSinceStart >= bossAlienConstants.spawnInitialDelay()) {
-            bossAlienGenerator.generate(bossAlienConstants.spawnDelay());
-        }
+        bossAlienGenerator.generate(bossAlienConstants.spawnInitialDelay(), bossAlienConstants.spawnDelay());
     }
 
     private void updateAll() {
@@ -308,10 +282,9 @@ public class WorldState {
         player.setVelocity(Velocity.ZERO);
         player.setHealth(100);
         player.setScore(0);
-        player.setRotationAngle(-Math.PI / 2);
+        player.setRotationAngle(-PiConstants.PID2);
         objects.add(player);
         updatableObjects.add(player);
-        shootCooldown = 0;
         gameStartTime = System.currentTimeMillis();
 
         lastIsPressedState = false;
@@ -323,18 +296,26 @@ public class WorldState {
         private final Spawner<EntityType> spawner;
         long lastSpawnTime = 0;
 
-        private Generate(Spawner<EntityType> spawner) {
+        private Generate(final Spawner<EntityType> spawner) {
             this.spawner = spawner;
         }
 
-        void generate(final long spawnDelay) {
+        final void generate(final long spawnDelay) {
+            generate(0, spawnDelay);
+        }
+
+        final void generate(final long spawnInitialDelay, final long spawnDelay) {
             final long currentTime = System.currentTimeMillis();
-            if (currentTime - lastSpawnTime >= spawnDelay) {
-                final var entity = spawner.spawn(player);
-                objects.add(entity);
-                updatableObjects.add(entity);
-                lastSpawnTime = currentTime;
+            final long timeSinceStart = currentTime - gameStartTime;
+
+            if (timeSinceStart < spawnInitialDelay || currentTime - lastSpawnTime < spawnDelay) {
+                return;
             }
+
+            final var entity = spawner.spawn(player);
+            objects.add(entity);
+            updatableObjects.add(entity);
+            lastSpawnTime = currentTime;
         }
     }
 }

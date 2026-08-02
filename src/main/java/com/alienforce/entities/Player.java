@@ -1,20 +1,19 @@
 package com.alienforce.entities;
 
-import com.alienforce.assets.ImageKey;
-import com.alienforce.assets.SoundEffectKey;
-import com.alienforce.assets.SoundLoopKey;
-import com.alienforce.assets.SoundManager;
+import com.alienforce.assets.*;
 import com.alienforce.entities.amo.Bullet;
+import com.alienforce.game.WorldState;
+import com.alienforce.input.InputHandler;
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
-import com.alienforce.input.InputHandler;
-import com.alienforce.game.WorldState;
-import lombok.Getter;
-import lombok.Setter;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.GameLevel;
+import com.alienforce.utils.PiConstants;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.awt.*;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.alienforce.assets.AssetManager.getImage;
@@ -28,6 +27,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     @Getter
     private final InputHandler inputHandler;
+    long lastShotTime = 0;
     @Getter
     @Setter
     private int score;
@@ -38,7 +38,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         this.inputHandler = inputHandler;
         setPosition(position);
         setVelocity(Velocity.ZERO);
-        setRotationAngle(-Math.PI / 2); // straight up in radians
+        setRotationAngle(-PiConstants.PID2); // straight up in radians
         setRadius(25);
         setHealth(100);
         setScale(0.5); // make player sprite smaller
@@ -93,8 +93,25 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     @Override
     public Stream<Bullet> shoot() {
+        final long currentTime = System.currentTimeMillis();
+        final GameLevel gameLevel = worldState.gameLevel();
+
+        if (currentTime - lastShotTime < gameLevel.playerShootConstants().shootCooldownFrames()) {
+            return Stream.empty();
+        }
+
+        lastShotTime = currentTime;
+        return shootIgnoreCoolDown();
+    }
+
+    public Stream<Bullet> shootIgnoreCoolDown() {
         final double angle = getRotationAngle(); // radians
         final GameLevel gameLevel = worldState.gameLevel();
+
+        AssetManager.getClip(SoundEffectKey.SHOOT)
+                .filter(Predicate.not(SuperClip::isRunning))
+                .ifPresent(_ -> SoundManager.play(SoundEffectKey.SHOOT));
+
         final int speed = gameLevel.playerShootConstants().bulletSpeed();
         return switch (gameLevel.levelNumber()) {
             case 0, 1 -> getSingleShoot(getPosition(), getRadius(), speed, angle);
@@ -122,7 +139,8 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
             case Asteroid _ -> setHealth(Math.max(health - 10, 0));
             case Alien _ -> setHealth(Math.max(health - 40, 0));
             case Bullet bullet when (bullet.getOwner() instanceof Alien) -> setHealth(Math.max(health - 2, 0));
-            case Bullet _ -> {}
+            case Bullet _ -> {
+            }
             case null -> {
             }
             default -> die();

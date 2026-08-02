@@ -27,7 +27,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(15)
+                                    .shootCooldownFrames(300)
                                     .bulletSpeed(16)
                                     .build()
                     )
@@ -55,7 +55,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(12)
+                                    .shootCooldownFrames(240)
                                     .bulletSpeed(16)
                                     .build()
                     )
@@ -83,7 +83,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(10)
+                                    .shootCooldownFrames(200)
                                     .bulletSpeed(20)
                                     .build()
                     )
@@ -111,7 +111,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(9)
+                                    .shootCooldownFrames(180)
                                     .bulletSpeed(20)
                                     .build()
                     )
@@ -139,7 +139,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(8)
+                                    .shootCooldownFrames(160)
                                     .bulletSpeed(25)
                                     .build()
                     )
@@ -167,7 +167,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(7)
+                                    .shootCooldownFrames(140)
                                     .bulletSpeed(30)
                                     .build()
                     )
@@ -195,7 +195,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(6)
+                                    .shootCooldownFrames(120)
                                     .bulletSpeed(35)
                                     .build()
                     )
@@ -223,7 +223,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(5)
+                                    .shootCooldownFrames(100)
                                     .bulletSpeed(40)
                                     .build()
                     )
@@ -251,7 +251,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(5)
+                                    .shootCooldownFrames(100)
                                     .bulletSpeed(45)
                                     .build()
                     )
@@ -279,7 +279,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(4)
+                                    .shootCooldownFrames(80)
                                     .bulletSpeed(50)
                                     .build()
                     )
@@ -307,7 +307,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(4)
+                                    .shootCooldownFrames(80)
                                     .bulletSpeed(80)
                                     .build()
                     )
@@ -335,7 +335,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(4)
+                                    .shootCooldownFrames(80)
                                     .bulletSpeed(100)
                                     .build()
                     )
@@ -363,7 +363,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(4)
+                                    .shootCooldownFrames(80)
                                     .bulletSpeed(120)
                                     .build()
                     )
@@ -391,7 +391,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(2)
+                                    .shootCooldownFrames(40)
                                     .bulletSpeed(140)
                                     .build()
                     )
@@ -419,7 +419,7 @@ public final class Constants {
                     .playerShootConstants(
                             ShootConstants
                                     .builder()
-                                    .shootCooldownFrames(1)
+                                    .shootCooldownFrames(20)
                                     .bulletSpeed(60)
                                     .build()
                     )
