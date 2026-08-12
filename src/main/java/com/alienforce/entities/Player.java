@@ -54,7 +54,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         setRadius(25);
         setHealth(100);
         setScale(0.5); // make player sprite smaller
-        score = 1000000;
+        score = 0;
     }
 
     public void incrementScore(final int offset) {
