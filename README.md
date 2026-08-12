@@ -1,5 +1,4 @@
-# (git) Push To Orbit: The Game  (BrisHack-26)
-
+# Alien Force
 ## Build
 
 ```bash
@@ -11,7 +10,7 @@
 From the project root:
 
 ```bash
-java -jar target/brisHack-26.jar
+java -jar target/alien-force.jar
 ```
 
 ## Docs
