@@ -17,6 +17,9 @@ graph BT
     BulletLevel1 -.-> bullet
     BulletLevel2 -.-> bullet
     BulletLevel3 -.-> bullet
+    BulletLevel4 -.-> bullet
+    BulletLevel5 -.-> bullet
+    BulletLevel6 -.-> bullet
     Asteroid --> GameObject
     Alien --> GameObject
     Alien -.-> selfDefendable & wrappable
@@ -95,13 +98,13 @@ The player dies (health set to 0) upon colliding with any asteroid, alien, or al
 
 A randomly-spawned obstacle that drifts across the screen.
 
-| Property  | Value                                                   |
-|-----------|---------------------------------------------------------|
-| Sprites   | `asteroid1.png` – `asteroid4.png` (random per instance) |
-| Rotation  | Random angle on spawn                                   |
-| Radius    | 30 px                                                   |
-| Health    | 1                                                       |
-| Scale     | 0.3                                                     |
+| Property  | Value                                                     |
+|-----------|-----------------------------------------------------------|
+| Sprites   | `asteroid/1.png` – `asteroid/4.png` (random per instance) |
+| Rotation  | Random angle on spawn                                     |
+| Radius    | 30 px                                                     |
+| Health    | 1                                                         |
+| Scale     | 0.3                                                       |
 
 ### Behaviour
 
