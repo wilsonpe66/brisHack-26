@@ -10,13 +10,20 @@ import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
 import com.alienforce.game.WorldState;
 import java.awt.Image;
+import java.util.List;
 import java.util.stream.Stream;
 import com.alienforce.utils.GameLevel;
 import com.alienforce.utils.ShootConstants;
 
 public class BossAlien extends Alien {
 
-    private final static Image sprite = getImage(ImageKey.ALIEN_BOSS).get();
+    private final static List<Image> sprites = List.of(
+            getImage(ImageKey.ALIEN_BOSS_1).get(),
+            getImage(ImageKey.ALIEN_BOSS_2).get(),
+            getImage(ImageKey.ALIEN_BOSS_3).get(),
+            getImage(ImageKey.ALIEN_BOSS_4).get(),
+            getImage(ImageKey.ALIEN_BOSS_5).get()
+    );
 
     /**
      * Spawn from side of screen with given position and initial velocity.
@@ -30,7 +37,7 @@ public class BossAlien extends Alien {
 
     @Override
     public Image getSprite() {
-        return sprite;
+        return sprites.get(Math.clamp((int)(worldState.gameLevel().levelNumber()/3.4), 0, 4));
     }
 
     /**

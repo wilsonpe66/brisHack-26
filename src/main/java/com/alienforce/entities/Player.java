@@ -1,6 +1,11 @@
 package com.alienforce.entities;
 
-import com.alienforce.assets.*;
+import com.alienforce.assets.AssetManager;
+import com.alienforce.assets.ImageKey;
+import com.alienforce.assets.SoundEffectKey;
+import com.alienforce.assets.SoundLoopKey;
+import com.alienforce.assets.SoundManager;
+import com.alienforce.assets.SuperClip;
 import com.alienforce.entities.amo.Bullet;
 import com.alienforce.game.WorldState;
 import com.alienforce.input.InputHandler;
@@ -13,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.awt.*;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -20,8 +26,14 @@ import static com.alienforce.assets.AssetManager.getImage;
 
 public class Player extends GameObject implements Wrappable, SelfDefendable {
 
-    private final static Image sprite = getImage(ImageKey.SPACE_SHIP).get();
-    private final static Image sprite2 = getImage(ImageKey.SPACE_SHIP_2).get();
+    private final static List<Image> sprites = List.of(
+            getImage(ImageKey.SPACE_SHIP_1).get(),
+            getImage(ImageKey.SPACE_SHIP_2).get(),
+            getImage(ImageKey.SPACE_SHIP_3).get(),
+            getImage(ImageKey.SPACE_SHIP_4).get(),
+            getImage(ImageKey.SPACE_SHIP_5).get(),
+            getImage(ImageKey.SPACE_SHIP_6).get()
+    );
 
     private final WorldState worldState;
 
@@ -42,7 +54,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         setRadius(25);
         setHealth(100);
         setScale(0.5); // make player sprite smaller
-        score = 0;
+        score = 1000000;
     }
 
     public void incrementScore(final int offset) {
@@ -125,10 +137,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     @Override
     public Image getSprite() {
-        if (worldState.gameLevel().levelNumber() > 4) {
-            return sprite2;
-        }
-        return sprite;
+        return sprites.get(Math.clamp((int)(worldState.gameLevel().levelNumber()/2.8), 0, 5));
     }
 
     @Override

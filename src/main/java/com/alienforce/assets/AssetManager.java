@@ -25,7 +25,7 @@ public class AssetManager {
 
     public static Optional<Image> getImage(final ImageKey imageKey) {
         return getResource("images/" + imageKey.resourceId())
-            .map(Toolkit.getDefaultToolkit()::getImage);
+                .map(Toolkit.getDefaultToolkit()::getImage);
     }
 
 

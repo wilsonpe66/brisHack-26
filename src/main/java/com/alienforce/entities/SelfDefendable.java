@@ -4,6 +4,9 @@ import com.alienforce.entities.amo.Bullet;
 import com.alienforce.entities.amo.BulletLevel1;
 import com.alienforce.entities.amo.BulletLevel2;
 import com.alienforce.entities.amo.BulletLevel3;
+import com.alienforce.entities.amo.BulletLevel4;
+import com.alienforce.entities.amo.BulletLevel5;
+import com.alienforce.entities.amo.BulletLevel6;
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
 import java.util.stream.Stream;
@@ -29,12 +32,12 @@ public interface SelfDefendable {
         return Stream.concat(
             getSingleShoot(playerPosition, radius, speed, angle),
             Stream.of(
-                new BulletLevel1(
+                new BulletLevel2(
                     playerPosition.add(Velocity.fromAngleAndSpeed(angle - ANGEL_OFFSET_THETA, radius)),
                     Velocity.fromAngleAndSpeed(angle - ANGEL_OFFSET_THETA, 1.5 * speed),
                     angle - ANGEL_OFFSET_THETA, this
                 ),
-                new BulletLevel1(
+                new BulletLevel2(
                     playerPosition.add(Velocity.fromAngleAndSpeed(angle + ANGEL_OFFSET_THETA, radius)),
                     Velocity.fromAngleAndSpeed(angle + ANGEL_OFFSET_THETA, 1.5 * speed),
                     angle + ANGEL_OFFSET_THETA, this
@@ -47,12 +50,12 @@ public interface SelfDefendable {
         return Stream.concat(
             getSupperShoot(playerPosition, radius, speed, angle),
             Stream.of(
-                new BulletLevel2(
+                new BulletLevel3(
                     playerPosition.add(Velocity.fromAngleAndSpeed(angle - PiConstants.PID4, radius)),
                     Velocity.fromAngleAndSpeed(angle - PiConstants.PID4, speed),
                     angle - PiConstants.PID4, this
                 ),
-                new BulletLevel2(
+                new BulletLevel3(
                     playerPosition.add(Velocity.fromAngleAndSpeed(angle + PiConstants.PID4, radius)),
                     Velocity.fromAngleAndSpeed(angle + PiConstants.PID4, speed),
                     angle + PiConstants.PID4, this
@@ -65,12 +68,12 @@ public interface SelfDefendable {
         return Stream.concat(
             getSupperDuperShoot(playerPosition, radius, speed, angle),
             Stream.of(
-                new BulletLevel3(
+                new BulletLevel4(
                     playerPosition.add(Velocity.fromAngleAndSpeed(angle - PiConstants.PID6, radius)),
                     Velocity.fromAngleAndSpeed(angle - PiConstants.PID6, speed),
                     angle - PiConstants.PID6, this
                 ),
-                new BulletLevel3(
+                new BulletLevel4(
                     playerPosition.add(Velocity.fromAngleAndSpeed(angle + PiConstants.PID6, radius)),
                     Velocity.fromAngleAndSpeed(angle + PiConstants.PID6, speed),
                     angle + PiConstants.PID6, this
@@ -83,12 +86,12 @@ public interface SelfDefendable {
         return Stream.concat(
             getSupperDuper2Shoot(playerPosition, radius, speed, angle),
             Stream.of(
-                new BulletLevel3(
+                new BulletLevel5(
                     playerPosition.add(Velocity.fromAngleAndSpeed(angle - PiConstants.PID2, radius)),
                     Velocity.fromAngleAndSpeed(angle - PiConstants.PID2, speed / 2),
                     angle - PiConstants.PID2, this
                 ),
-                new BulletLevel3(
+                new BulletLevel5(
                     playerPosition.add(Velocity.fromAngleAndSpeed(angle + PiConstants.PID2, radius)),
                     Velocity.fromAngleAndSpeed(angle + PiConstants.PID2, speed / 2),
                     angle + PiConstants.PID2, this
@@ -101,7 +104,7 @@ public interface SelfDefendable {
         return Stream.concat(
             getSupperDuper3Shoot(playerPosition, radius, speed, angle),
             Stream.of(
-                new BulletLevel3(
+                new BulletLevel6(
                     playerPosition.add(Velocity.fromAngleAndSpeed(angle - Math.PI, radius)),
                     Velocity.fromAngleAndSpeed(angle -  - Math.PI, speed / 2),
                     angle -  Math.PI, this
