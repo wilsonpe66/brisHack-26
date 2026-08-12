@@ -3,17 +3,22 @@ package com.alienforce.game;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
 import com.alienforce.input.GamePadManager;
-import com.alienforce.leaderboard.PlayerScore;
+import com.alienforce.leaderboard.LeaderboardStore;
 import com.alienforce.utils.Settings;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 import net.java.games.input.Event;
@@ -26,12 +31,16 @@ public class Game extends JFrame {
     private final JPanel mainContainer = new JPanel(cardLayout);
     private final GamePanel gamepanel;
     private final GameOverPanel gameOverPanel;
+    private final LeaderboardStore leaderboardStore;
+    private String playerName;
     private AtomicBoolean useMenuInputs;
     private final GamePadManager gamePadManager = new GamePadManager(this::gamePadEventHandler);
 
     public Game() {
+        leaderboardStore = LeaderboardStore.load();
+        playerName = leaderboardStore.playerName();
         final MenuPanel menupanel = new MenuPanel(this);
-        gamepanel = new GamePanel(this);
+        gamepanel = new GamePanel(this, leaderboardStore.leaderBoard());
         gameOverPanel = new GameOverPanel(this);
         useMenuInputs = new AtomicBoolean(true);
 
@@ -93,6 +102,9 @@ public class Game extends JFrame {
     }
 
     public void showGame() {
+        if (!ensurePlayerName()) {
+            return;
+        }
         useMenuInputs.set(false);
         cardLayout.show(mainContainer, "GAME");
         SoundManager.stop(SoundLoopKey.MENU_MUSIC);
@@ -106,13 +118,7 @@ public class Game extends JFrame {
 
     public void showGameOver(int score) {
         useMenuInputs.set(true);
-        gamepanel.worldState.getLeaderBoard().scores().add(
-            PlayerScore
-                .builder()
-                .name("Pete")
-                .score(score)
-                .build()
-        );
+        leaderboardStore.record(playerName, score);
 
         gameOverPanel.setScore(score, gamepanel.worldState.getLeaderBoard());
         SoundManager.stop(SoundLoopKey.BACK_GROUND);
@@ -130,5 +136,87 @@ public class Game extends JFrame {
         useMenuInputs.set(false);
         dispose();
         System.exit(0);
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    private boolean ensurePlayerName() {
+        final String addNewName = "Add new name...";
+        final List<String> choices = new ArrayList<>(leaderboardStore.playerNames());
+
+        if (choices.isEmpty()) {
+            final String newName = requestNewName(platformUserName());
+            return newName != null && selectPlayerName(newName);
+        }
+
+        choices.add(addNewName);
+        while (true) {
+            final Object selection = javax.swing.JOptionPane.showInputDialog(
+                this,
+                "Select your player name:",
+                "Player name",
+                javax.swing.JOptionPane.QUESTION_MESSAGE,
+                null,
+                choices.toArray(),
+                playerName == null ? choices.get(0) : playerName
+            );
+            if (selection == null) {
+                return false;
+            }
+            if (addNewName.equals(selection)) {
+                final String newName = requestNewName("");
+                if (newName != null) {
+                    return selectPlayerName(newName);
+                }
+                continue;
+            }
+            return selectPlayerName(selection.toString());
+        }
+    }
+
+    private String requestNewName(final String initialName) {
+        while (true) {
+            final JTextField nameField = new JTextField(initialName, 30);
+            final JPanel prompt = new JPanel();
+            prompt.add(new JLabel("Unique player name (1–50 characters):"));
+            prompt.add(nameField);
+            final int result = JOptionPane.showConfirmDialog(
+                this,
+                prompt,
+                "Add player name",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+            );
+            if (result != JOptionPane.OK_OPTION) {
+                return null;
+            }
+
+            final String newName = nameField.getText().trim();
+            if (newName.isBlank() || newName.length() > 50 || !leaderboardStore.addPlayerName(newName)) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Names must be unique and between 1 and 50 characters.",
+                    "Invalid player name",
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+                continue;
+            }
+            return newName;
+        }
+    }
+
+    private static String platformUserName() {
+        final String platformName = System.getProperty("user.name", "").trim();
+        return platformName.length() <= 50 ? platformName : "";
+    }
+
+    private boolean selectPlayerName(final String name) {
+        if (!leaderboardStore.selectPlayerName(name)) {
+            return false;
+        }
+        playerName = leaderboardStore.playerName();
+        return true;
     }
 }

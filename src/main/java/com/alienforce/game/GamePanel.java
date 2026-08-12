@@ -7,6 +7,7 @@ import com.alienforce.entities.BackgroundStar;
 import com.alienforce.entities.GameObject;
 import com.alienforce.entities.Player;
 import com.alienforce.input.InputHandler;
+import com.alienforce.leaderboard.LeaderBoard;
 import com.alienforce.motion.Position;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.CustomFonts;
@@ -29,7 +30,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private final InputHandler inputHandler;
     private final Game game;
 
-    public GamePanel(Game game) {
+    public GamePanel(Game game, final LeaderBoard leaderBoard) {
         this.game = game;
         inputHandler = new InputHandler();
 
@@ -39,7 +40,7 @@ public class GamePanel extends JPanel implements ActionListener {
         setFocusable(true);
         addKeyListener(inputHandler);
 
-        worldState = new WorldState(inputHandler);
+        worldState = new WorldState(inputHandler, leaderBoard);
 
         // Swing Timer fires actionPerformed() every FRAME_DELAY ms (~16 ms = 60 FPS).
         // This is the game loop driver — each tick updates state and repaints.
@@ -171,8 +172,10 @@ public class GamePanel extends JPanel implements ActionListener {
         final Player player = worldState.getPlayer();
         final int levelNumber = worldState.gameLevel().levelNumber() + 1;
         graphics.drawString("Score: %,d".formatted(player.getScore()), 20, 40);
-        graphics.setColor(Color.YELLOW);
+        graphics.setColor(Color.BLUE);
         graphics.setFont(CustomFonts.HUD_TITLE);
+        graphics.drawString(game.getPlayerName(), 20, 78);
+        graphics.setColor(Color.YELLOW);
         final String levelAsLabel = "Level: %s".formatted(levelNumber);
         graphics.drawString(levelAsLabel, (Constants.WIDTH / 2) - levelAsLabel.length() * 5, 40);
         drawHealthBar(graphics, player);

@@ -31,7 +31,7 @@ public class WorldState {
     private final Generate<Alien> bossAlienGenerator;
     private final InputHandler inputHandler;
     @Getter
-    private final LeaderBoard leaderBoard = LeaderBoard.builder().build();
+    private final LeaderBoard leaderBoard;
     public Set<Updatable> backgroundUpdatableObjects;
     public Set<GameObject> backgroundObjects;
     public Set<Updatable> updatableObjects;
@@ -44,7 +44,7 @@ public class WorldState {
     private int lastLevel = 0;
     private boolean isMuteTogglePressedState = false;
 
-    public WorldState(InputHandler inputHandler) {
+    public WorldState(InputHandler inputHandler, final LeaderBoard leaderBoard) {
         this.inputHandler = inputHandler;
         player = new Player(this, new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y), inputHandler);
         objects = new HashSet<>();
@@ -58,6 +58,7 @@ public class WorldState {
         alienGenerator = new Generate<>(new AlienSpawner(this));
         bossAlienGenerator = new Generate<>(new BossAlienSpawner(this));
         gameStartTime = System.currentTimeMillis();
+        this.leaderBoard = leaderBoard;
     }
 
     private static String aaa(final GameObject a) {
