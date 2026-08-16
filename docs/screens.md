@@ -1,85 +1,37 @@
-# Screens & UI
+# Screens and UI
 
-The game uses **three screens** managed by a `CardLayout` inside the `Game` JFrame.
+`Game` presents three panels in a `CardLayout`. The fixed-size window is 1500 × 900 pixels, non-resizable, and centered on screen.
 
-## Screen Flow
+## Menu
 
-```mermaid
-graph TD
+`MenuPanel` draws the space background and displays:
 
-menu["Menu"]
-game["Game"]
-gameOver["Game Over"]
+- the title **Alien Force**
+- the subtitle **Press PLAY to start**
+- PLAY GAME and QUIT buttons
 
-menu e1@--Play--> game
-game e2@-- "Player Dies" --> gameOver
-gameOver e3@-- "New Game" --> game
+Menu music starts when the panel is created. PLAY opens the player-name flow before starting the game. If no names exist, the platform user name is offered; otherwise the user can select an existing name or add a unique 1–50 character name.
 
-e1@{ animation: fast }
-e2@{ animation: fast }
-e3@{ animation: fast }
+## Gameplay
 
-```
+`GamePanel` renders, in order:
 
-Both the Menu and Game Over screens have a **QUIT** button that exits the application.
+1. the stretched space-background image
+2. three colored `BackgroundStar` objects
+3. every live sprite using position, rotation, and scale transforms
+4. the HUD and, when applicable, an animated PAUSED overlay
 
----
+The HUD shows the score and player name on the left, level in the center, and a red/green health bar on the right.
 
-## `MenuPanel`
+## Game over
 
-The first screen the player sees.
+When player health reaches zero, the game timer stops and the score is persisted. `GameOverPanel` displays:
 
-- **Title**: "Alien Force"
-- **Subtitle**: "Press PLAY to start"
-- **Buttons**: PLAY GAME, QUIT
-- **Music**: Starts looping background music.
-- When the user clicks PLAY, `Game.showGame()` is called which:
-  - Stops the menu music.
-  - Starts the gameplay background music (`background.wav`).
-  - Starts the game timer.
-  - Gives keyboard focus to the `GamePanel`.
+- the last score
+- the highest score and player name
+- a non-editable table of up to ten top scores with rank, player, score, and timestamp
+- NEW GAME and QUIT buttons
 
----
+The ranking sorts by score descending, then timestamp descending. Only the ten most recent score records are retained on disk, so the displayed top ten is ranked from that retained set.
 
-## `GamePanel`
-
-The main gameplay screen — a `JPanel` where all the action happens.
-
-### Rendering
-
-1. **Background**: draws `spacebackground.png` stretched to fill the window.
-2. **Sprites**: iterates over every `GameObject` in the world, applies an `AffineTransform` to position, rotate, and scale each sprite, then draws it.
-3. **HUD**: renders the current score in the top-left corner (white, bold, 24 pt Arial).
-
-### Sprite Transform Pipeline
-
-For each game object, the renderer:
-
-1. Translates to the object's world position.
-2. Rotates by `rotationAngle + 270°` (sprites face right by default; this corrects them to face up at angle 0).
-3. Scales by the object's `scale` factor.
-4. Offsets by half the sprite width/height so the image draws centred on the position.
-
----
-
-## `GameOverPanel`
-
-Shown when the player dies.
-
-- **Title**: "GAME OVER" (white, bold, 48 pt)
-- **Score**: The score from the just-ended round.
-- **High Score**: The best score across all rounds in the current session (gold text).
-- **Buttons**: NEW GAME (restarts), QUIT (exits).
-- **Sound**: A one-shot `level-up.wav` plays when this screen appears.
-- The background music is stopped when transitioning here.
-
----
-
-## Window Configuration
-
-| Setting     | Value                                                        |
-|-------------|--------------------------------------------------------------|
-| Size        | 1000 × 1000 px (set via panel preferred sizes)               |
-| Resizable   | No                                                           |
-| Background  | Black (game panel), dark grey-blue `rgb(30, 30, 40)` (menus) |
-| Positioning | Centred on screen                                            |
+When game over opens, gameplay music stops and menu music resumes.

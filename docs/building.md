@@ -1,41 +1,51 @@
-# Building & Running
+# Building and Running
 
-## Prerequisites
+## Requirements
 
-- **Java JDK** (any version that supports `javax.swing` and `javax.sound.sampled` — JDK 8+).
+- JDK 26, matching the Maven compiler source and target
+- Maven 3
+
+The project depends on Lombok, JInput, Jackson Databind, and Jackson's Java Time module. Maven downloads these dependencies during the build.
 
 ## Build
 
-From the project root:
+From the repository root:
 
 ```bash
 ./build.sh
 ```
 
-This script:
+`build.sh` runs Maven's default goal (`clean package`) and copies the shaded executable JAR from `target/alien-force.jar` to `deb/alien-force.jar`.
 
-1. **Cleans** the `out/` directory.
-2. **Compiles** all `.java` files from `src/` into `out/`.
-3. **Packages** them into `brisHack-26.jar` with the entry point set to `Main` (via `jar cfe`).
+To create only the Maven artifacts:
+
+```bash
+mvn clean package
+```
+
+The Maven Shade plugin sets `com.alienforce.Main` as the entry point and bundles runtime dependencies. Images and sounds from `src/resource/com/alienforce/assets` are copied onto the classpath under `com/alienforce/assets`.
 
 ## Run
 
 ```bash
-java -jar brisHack-26.jar
+java -jar target/alien-force.jar
 ```
 
-> **Important:** Run from the **project root** directory. The game loads assets using relative paths (e.g. `assets/images/spaceship.png`), so the working directory must be the repo root.
+Assets are loaded from the JAR classpath, so the game does not rely on a particular working directory.
 
-## Project Structure for Compilation
+## Source layout
 
-There are no external dependencies — the project uses only the Java standard library (`java.awt`, `javax.swing`, `javax.sound.sampled`).
+```text
+src/main/java/com/alienforce/
+├── assets/       # classpath image/audio loading and playback
+├── entities/     # player, enemies, obstacles, bullets, collision contracts
+├── game/         # JFrame, panels, world state, and spawners
+├── input/        # keyboard and JInput gamepad handling
+├── leaderboard/  # score model and JSON persistence
+├── motion/       # position and velocity value types
+└── utils/        # constants, level tuning, settings, and fonts
 
-All source files are in three directories:
-
+src/resource/com/alienforce/assets/
+├── images/
+└── sounds/
 ```
-src/entities/   → 8 files
-src/game/       → 10 files
-src/utils/      → 1 file
-```
-
-The build script finds and compiles them all with a single `javac` invocation.
