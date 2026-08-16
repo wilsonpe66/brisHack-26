@@ -1,68 +1,58 @@
-# Architecture Overview
+# Architecture
 
-## Project Layout
+## Application structure
 
-```
-brisHack-26/com/alienforce
-├── src/
-│   ├── entities/          # Game objects (Player, Asteroid, Bullet, Alien, AlienBullet, …)
-│   ├── game/              # Game loop, screens, input, audio, generators
-│   └── utils/             # Shared constants
-├── assets/
-│   ├── images/            # Sprites, backgrounds, and logo
-│   └── sounds/            # WAV audio files
-├── build.sh               # Compile + JAR packaging script
-├── dev/                   # The folder use for making a deb linux package.
-└── target/alien-force.jar # Pre-built executable JAR
-```
+`Main` schedules construction of `Game` on Swing's Event Dispatch Thread. `Game` is the top-level `JFrame` and uses `CardLayout` to switch among the menu, gameplay, and game-over panels.
 
-## Package Responsibilities
-
-### `entities`
-Contains every object that can exist in the game world. All concrete entities extend the abstract `GameObject` class and implement the `Updatable` interface so the game loop can call `update()` each frame.
-
-### `game`
-Owns the application lifecycle:
-
-| Class               | Role                                                                    |
-|---------------------|-------------------------------------------------------------------------|
-| `Main`              | Entry point — launches the Swing UI on the Event Dispatch Thread        |
-| `Game`              | Top-level `JFrame`; manages screen navigation with a `CardLayout`       |
-| `GamePanel`         | The gameplay screen; runs the game timer and renders sprites            |
-| `MenuPanel`         | Main menu shown at startup                                              |
-| `GameOverPanel`     | End-of-game screen with score / high-score display                      |
-| `WorldState`        | Core simulation — updates entities, detects collisions, manages scoring |
-| `AsteroidSpawner` | Spawns asteroids from random screen edges aimed at the player           |
-| `AlienSpawner`    | Spawns aliens from random screen edges aimed at the player              |
-| `InputHandler`      | Translates keyboard events into boolean flags read by `Player`          |
-| `SoundManager`      | Static utility for one-shot and looping audio playback                  |
-
-### `utils`
-A single `Constants` class holding every tunable number (window size, speeds, cooldowns, etc.).
-
-## How It All Connects
-
-```
-Main  →  Game (JFrame)
-              │
-              ├── MenuPanel ────── "PLAY" ──→ Game.showGame()
-              │
-              ├── GamePanel ────── owns WorldState
-              │       │                  │
-              │       │                  ├── Player
-              │       │                  ├── Asteroids (via AsteroidGenerator)
-              │       │                  ├── Aliens (via AlienGenerator)
-              │       │                  ├── Bullets
-              │       │                  └── AlienBullets
-              │       │
-              │       └── game timer fires actionPerformed() @ 60 FPS
-              │
-              └── GameOverPanel ── "NEW GAME" ──→ Game.restartGame()
+```text
+Main
+└── Game (JFrame)
+    ├── MenuPanel
+    ├── GamePanel
+    │   ├── InputHandler
+    │   └── WorldState
+    │       ├── Player and other GameObjects
+    │       ├── AsteroidSpawner
+    │       ├── AlienSpawner
+    │       └── BossAlienSpawner
+    ├── GameOverPanel
+    ├── GamePadManager (menu/game-over actions)
+    └── LeaderboardStore
 ```
 
-1. `Main` creates a `Game` (JFrame) on the Swing EDT.
-2. `Game` holds three panels in a `CardLayout` — Menu, Game, and Game Over.
-3. When the user clicks **PLAY**, `Game.showGame()` switches to `GamePanel` and starts the timer.
-4. Every frame (~16 ms at 60 FPS), `GamePanel.actionPerformed()` calls `WorldState.updateState()`, then `repaint()`.
-5. When the player dies, `GamePanel` stops the timer and tells `Game` to show the Game Over screen.
-6. From Game Over the user can restart (resets `WorldState`) or quit.
+## Packages
+
+| Package | Responsibility |
+|---|---|
+| `com.alienforce` | Application entry point |
+| `assets` | Typed image and sound keys, classpath loading, and audio playback |
+| `entities` | `GameObject` implementations and collision/update contracts |
+| `entities.amo` | Six projectile implementations selected by game level |
+| `game` | Window, panels, timer-driven simulation, and spawning orchestration |
+| `game.spawner` | Edge-based asteroid, alien, and boss-alien construction |
+| `input` | Keyboard state and first-detected JInput gamepad |
+| `leaderboard` | Score records, rankings, player names, and JSON persistence |
+| `motion` | Immutable `Position` and `Velocity` value types |
+| `utils` | Global constants, per-level tuning records, fonts, and mute state |
+
+## Runtime flow
+
+1. `Game` loads `LeaderboardStore`, creates the three panels, starts menu music, and begins polling a gamepad for menu actions.
+2. PLAY prompts the user to select or create a player name. A valid selection switches to `GamePanel`, changes music, and starts its Swing `Timer`.
+3. Each timer event updates `WorldState`, checks for player death, and repaints the panel.
+4. On death, `Game` records the score, refreshes the top-ten table, switches back to menu music, and shows `GameOverPanel`.
+5. NEW GAME resets the existing world and returns through the player-selection flow.
+
+## Assets
+
+`AssetManager` loads images and WAV clips with typed `ImageKey`, `SoundEffectKey`, and `SoundLoopKey` values. Maven packages resources from `src/resource/com/alienforce/assets` into the executable JAR.
+
+## Persistence
+
+`LeaderboardStore` uses Jackson to store the selected player, known player names, and the ten most recent scores in:
+
+```text
+~/.alien-force/.alien-force-leaderboard.json
+```
+
+Names are trimmed, case-insensitively unique, and limited to 1–50 characters. Read/write failures are intentionally non-fatal so persistence cannot prevent the game from starting or displaying game over.

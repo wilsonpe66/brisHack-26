@@ -1,42 +1,32 @@
-# Input & Controls
+# Input and Controls
 
-## Control Scheme
+## Keyboard
 
-| Action                   | Keys                                               |
-|--------------------------|----------------------------------------------------|
-| Thrust forward           | `W` or `↑`                                         |
-| Brake / reverse (unused) | `S` or `↓` (tracked but the player doesn't use it) |
-| Rotate left              | `A` or `←`                                         |
-| Rotate right             | `D` or `→`                                         |
-| Shoot                    | `Space`                                            |
+| Action | Keys | Notes |
+|---|---|---|
+| Thrust | `W` or `Up` | Accelerates forward; releasing thrust applies velocity decay |
+| Rotate left | `A` or `Left` | Rotates counter-clockwise |
+| Rotate right | `D` or `Right` | Rotates clockwise |
+| Fire | `Space` or `Z` | Uses the current level's shot cooldown and pattern |
+| Super fire | `X` | Uses the current shot pattern without the cooldown check |
+| Pause/resume | `Enter` | Toggles simulation and looping audio pause |
+| Mute | `M` | Toggles the global mute setting |
 
-Both WASD and arrow keys are supported for movement.
+`S` and `Down` are tracked as downward input but are not consumed by `Player`, so they currently have no gameplay effect.
 
-> **Note:** `S` / `↓` is captured by `InputHandler` but the `Player.update()` method does not read `downPressed`, so pressing it currently has no effect.
+`InputHandler` implements `KeyListener` and stores pressed/released state in boolean flags. This supports sustained actions while a key is held. `clearAllKeys()` resets every flag when a new game starts.
 
----
+## Gamepad
 
-## How `InputHandler` Works
+JInput selects the first controller whose type is `GAMEPAD`. During gameplay it is polled once per world update.
 
-`InputHandler` implements Java's `KeyListener` interface and is attached to `GamePanel`.
+| Action | Reported component |
+|---|---|
+| Move/rotate | `pov` directional values |
+| Fire | `A` or `Right Thumb` |
+| Super fire | `X` or `rz` |
+| Pause/resume | `Start` |
 
-### Key Map
+On the menu and game-over screens, pressing `A`, `X`, `rz`, `Right Thumb`, or `Start` calls `restartGame()`. Component names are supplied by the controller driver and may vary between devices.
 
-A `HashMap<Integer, Consumer<Boolean>>` maps each key code to a lambda that sets the corresponding boolean flag:
-
-```
-VK_W / VK_UP    → upPressed
-VK_S / VK_DOWN  → downPressed
-VK_A / VK_LEFT  → leftPressed
-VK_D / VK_RIGHT → rightPressed
-VK_SPACE        → shootPressed
-```
-
-- On `keyPressed` → the flag is set to `true`.
-- On `keyReleased` → the flag is set to `false`.
-
-This means the game uses **sustained** input: holding a key produces continuous action, not a single event.
-
-### `clearAllKeys()`
-
-When the game resets, `clearAllKeys()` sets all flags to `false`. This prevents stuck keys — if a key was held down when the game ended and focus was lost, the `keyReleased` event would never fire, leaving the flag `true` for the next game.
+Keyboard `M` is also registered as a window-level Swing key binding so mute remains available when another component has focus.
