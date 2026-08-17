@@ -12,12 +12,12 @@ public record LeaderBoard(
     List<PlayerScore> scores
 ) {
 
-    private static final Comparator<PlayerScore> comparator = Comparator
+    static final Comparator<PlayerScore> comparator = Comparator
         .comparing(PlayerScore::score).reversed()
         .thenComparing(Comparator.comparing(PlayerScore::createTime).reversed());
 
     public LeaderBoard {
-        scores = Objects.requireNonNullElseGet(scores, ArrayList::new);
+        scores = Objects.requireNonNullElseGet(scores, List::of);
     }
 
     public Optional<PlayerScore> getHighestScorer() {

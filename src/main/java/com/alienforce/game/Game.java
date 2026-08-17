@@ -7,6 +7,8 @@ import com.alienforce.leaderboard.LeaderboardStore;
 import com.alienforce.utils.Settings;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -48,17 +50,28 @@ public class Game extends JFrame {
         mainContainer.add(menupanel, "MENU");
         mainContainer.add(gamepanel, "GAME");
         mainContainer.add(gameOverPanel, "GAME OVER");
-        this.add(mainContainer);
+        add(mainContainer);
 
-        this.setTitle("Alien Force");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false); // Prevents layout glitches during gameplay
+        setTitle("Alien Force");
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(final WindowEvent event) {
+                quit();
+            }
+
+            @Override
+            public void windowLostFocus(final WindowEvent event) {
+                gamepanel.worldState
+            }
+        });
+        setResizable(false); // Prevents layout glitches during gameplay
 
         // pack() sizes the JFrame to fit the preferred sizes of its child components
-        this.pack();
+        pack();
         // setLocationRelativeTo(null) centres the window on screen
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
+        setLocationRelativeTo(null);
+        setVisible(true);
 
         registerGlobalKeyBindings();
 
@@ -134,6 +147,7 @@ public class Game extends JFrame {
 
     public void quit() {
         useMenuInputs.set(false);
+        JOptionPane.showMessageDialog(this, "Thank you");
         dispose();
         System.exit(0);
     }
