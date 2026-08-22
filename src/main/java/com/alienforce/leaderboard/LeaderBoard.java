@@ -1,6 +1,5 @@
 package com.alienforce.leaderboard;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -12,24 +11,18 @@ public record LeaderBoard(
     List<PlayerScore> scores
 ) {
 
-    private static final Comparator<PlayerScore> comparator = Comparator
+    static final Comparator<PlayerScore> comparator = Comparator
         .comparing(PlayerScore::score).reversed()
         .thenComparing(Comparator.comparing(PlayerScore::createTime).reversed());
 
     public LeaderBoard {
-        scores = Objects.requireNonNullElseGet(scores, ArrayList::new);
+        scores = Objects.requireNonNullElseGet(scores, List::of);
     }
 
     public Optional<PlayerScore> getHighestScorer() {
         return scores
             .stream()
-            .max(
-                Comparator.comparing(PlayerScore::score)
-                    .thenComparing(
-                        Comparator.comparing(PlayerScore::createTime)
-                            .reversed()
-                    )
-            )
+            .max(comparator)
             .stream()
             .findFirst();
     }

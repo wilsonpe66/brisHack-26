@@ -1,5 +1,8 @@
 package com.alienforce.game;
 
+import com.alienforce.leaderboard.LeaderBoard;
+import com.alienforce.utils.Constants;
+import com.alienforce.utils.CustomFonts;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -7,22 +10,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import com.alienforce.leaderboard.LeaderBoard;
-import com.alienforce.utils.Constants;
-import com.alienforce.utils.CustomFonts;
 
 public class GameOverPanel extends JPanel {
 
     private final JLabel scoreLabel;
-    private final JLabel highScoreLabel;
     private final DefaultTableModel leaderboardModel;
     private final Game game;
 
@@ -50,13 +49,7 @@ public class GameOverPanel extends JPanel {
         gbc.gridy = 1; // row 1
         add(scoreLabel, gbc);
 
-        highScoreLabel = new JLabel("Highest score: 0");
-        highScoreLabel.setFont(CustomFonts.PLAIN_22);
-        highScoreLabel.setForeground(new Color(255, 215, 0)); // gold colour
-        gbc.gridy = 2;
-        add(highScoreLabel, gbc);
-
-        leaderboardModel = new DefaultTableModel(new Object[] {"#", "Player", "Score", "Date"}, 0) {
+        leaderboardModel = new DefaultTableModel(new Object[]{"#", "Player", "Score", "Date"}, 0) {
             @Override
             public boolean isCellEditable(final int row, final int column) {
                 return false;
@@ -97,19 +90,16 @@ public class GameOverPanel extends JPanel {
 
     public void setScore(int score, final LeaderBoard leaderBoard) {
         scoreLabel.setText("Score: %,d".formatted(score));
-        final var highest = leaderBoard.getHighestScorer();
-        highScoreLabel.setText(highest
-            .map(playerScore -> "Highest score: %,d — %s".formatted(playerScore.score(), playerScore.name()))
-            .orElse("Highest score: 0"));
 
         leaderboardModel.setRowCount(0);
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        int rank = 1;
-        for (final var playerScore : leaderBoard.getTopScorers(10)) {
-            leaderboardModel.addRow(new Object[] {
-                rank++, playerScore.name(), "%,d".formatted(playerScore.score()),
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd");
+        final AtomicInteger rank = new AtomicInteger(1);
+        leaderBoard.getTopScorers(10)
+            .forEach(playerScore -> leaderboardModel.addRow(new Object[]{
+                rank.getAndIncrement(),
+                playerScore.name(),
+                "%,d".formatted(playerScore.score()),
                 playerScore.createTime().format(dateFormatter)
-            });
-        }
+            }));
     }
 }

@@ -25,6 +25,8 @@ public class BossAlien extends Alien {
             getImage(ImageKey.ALIEN_BOSS_5).get()
     );
 
+    final GameLevel gameLevel;
+
     /**
      * Spawn from side of screen with given position and initial velocity.
      */
@@ -33,6 +35,7 @@ public class BossAlien extends Alien {
         setRadius(60);
         setHealth(200);
         setScale(.2);
+        gameLevel = worldState.gameLevel();
     }
 
     @Override
@@ -48,7 +51,6 @@ public class BossAlien extends Alien {
             return Stream.of();
         }
 
-        final GameLevel gameLevel = worldState.gameLevel();
         final ShootConstants shootConstants = gameLevel.bossAlien().shootConstants();
         shootCooldown = shootConstants.shootCooldownFrames();
 

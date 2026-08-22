@@ -4,32 +4,32 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
-/** Persists the player name and the ten most recent game scores as JSON. */
+/// Persists the player name and the ten most recent game scores as JSON.
 public final class LeaderboardStore {
 
     private static final int MAX_RECORDS = 10;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-        .registerModule(new JavaTimeModule())
-        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-        .enable(SerializationFeature.INDENT_OUTPUT);
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .enable(SerializationFeature.INDENT_OUTPUT);
 
     private final Path file;
-    private final LeaderBoard leaderBoard;
     private final List<String> playerNames;
+    private LeaderBoard leaderBoard;
     private String playerName;
 
     private LeaderboardStore(
-        final Path file,
-        final String playerName,
-        final List<String> playerNames,
-        final LeaderBoard leaderBoard
+            final Path file,
+            final String playerName,
+            final List<String> playerNames,
+            final LeaderBoard leaderBoard
     ) {
         this.file = file;
         this.playerName = playerName;
@@ -39,9 +39,9 @@ public final class LeaderboardStore {
 
     public static LeaderboardStore load() {
         final Path file = Path.of(
-            System.getProperty("user.home", "."),
-            ".alien-force",
-            ".alien-force-leaderboard.json"
+                System.getProperty("user.home", "."),
+                ".alien-force",
+                ".alien-force-leaderboard.json"
         );
         if (!Files.exists(file)) {
             return new LeaderboardStore(file, null, new ArrayList<>(), LeaderBoard.builder().build());
@@ -49,19 +49,56 @@ public final class LeaderboardStore {
 
         try {
             final StoredLeaderboard stored = OBJECT_MAPPER.readValue(file.toFile(), StoredLeaderboard.class);
-            final List<PlayerScore> scores = stored.scores() == null
-                ? new ArrayList<>()
-                : new ArrayList<>(stored.scores());
             final List<String> playerNames = normalizeNames(stored.playerNames());
-            if (isValidName(stored.playerName()) && !containsName(playerNames, stored.playerName())) {
-                playerNames.add(stored.playerName().trim());
+            final String playerName = stored.playerName();
+            if (isValidName(playerName) && !containsName(playerNames, playerName)) {
+                playerNames.add(playerName.trim());
             }
-            retainRecentScores(scores);
-            final String selectedName = findName(playerNames, stored.playerName());
+            final List<PlayerScore> scores = retainRecentScores(stored.scores());
+            final String selectedName = findName(playerNames, playerName);
             return new LeaderboardStore(file, selectedName, playerNames, new LeaderBoard(scores));
         } catch (IOException | RuntimeException ignored) {
             return new LeaderboardStore(file, null, new ArrayList<>(), LeaderBoard.builder().build());
         }
+    }
+
+    private static List<PlayerScore> retainRecentScores(final List<PlayerScore> scores) {
+        return scores
+                .stream()
+                .sorted(LeaderBoard.comparator)
+                .limit(MAX_RECORDS)
+                .toList();
+    }
+
+    private static List<String> normalizeNames(final List<String> names) {
+        final List<String> normalized = new ArrayList<>();
+        if (names != null) {
+            names.stream()
+                    .filter(LeaderboardStore::isValidName)
+                    .map(String::trim)
+                    .filter(name -> !containsName(normalized, name))
+                    .forEach(normalized::add);
+        }
+        return normalized;
+    }
+
+    private static boolean isValidName(final String name) {
+        return name != null && !name.isBlank() && name.trim().length() <= 50;
+    }
+
+    private static boolean containsName(final List<String> names, final String candidate) {
+        return candidate != null && names.stream().anyMatch(name -> name.equalsIgnoreCase(candidate.trim()));
+    }
+
+    private static String findName(final List<String> names, final String candidate) {
+        if (candidate == null) {
+            return null;
+        }
+        return names
+                .stream()
+                .filter(name -> name.equalsIgnoreCase(candidate.trim()))
+                .findFirst()
+                .orElse(null);
     }
 
     public LeaderBoard leaderBoard() {
@@ -96,18 +133,20 @@ public final class LeaderboardStore {
     }
 
     public void record(final String name, final int score) {
-        leaderBoard.scores().add(PlayerScore.builder().name(name).score(score).build());
-        retainRecentScores(leaderBoard.scores());
-        save();
-    }
+        List<PlayerScore> scores = new ArrayList<>(leaderBoard.scores());
+        scores.add(
+                PlayerScore
+                        .builder()
+                        .name(name)
+                        .score(score)
+                        .build()
+        );
+        leaderBoard = leaderBoard
+                .toBuilder()
+                .scores(retainRecentScores(scores))
+                .build();
 
-    private static void retainRecentScores(final List<PlayerScore> scores) {
-        final List<PlayerScore> recentScores = scores.stream()
-            .sorted(Comparator.comparing(PlayerScore::createTime).reversed())
-            .limit(MAX_RECORDS)
-            .toList();
-        scores.clear();
-        scores.addAll(recentScores);
+        save();
     }
 
     private void save() {
@@ -118,36 +157,6 @@ public final class LeaderboardStore {
         } catch (IOException ignored) {
             // A score should never prevent the game-over screen from opening.
         }
-    }
-
-    private static List<String> normalizeNames(final List<String> names) {
-        final List<String> normalized = new ArrayList<>();
-        if (names != null) {
-            names.stream()
-                .filter(LeaderboardStore::isValidName)
-                .map(String::trim)
-                .filter(name -> !containsName(normalized, name))
-                .forEach(normalized::add);
-        }
-        return normalized;
-    }
-
-    private static boolean isValidName(final String name) {
-        return name != null && !name.isBlank() && name.trim().length() <= 50;
-    }
-
-    private static boolean containsName(final List<String> names, final String candidate) {
-        return candidate != null && names.stream().anyMatch(name -> name.equalsIgnoreCase(candidate.trim()));
-    }
-
-    private static String findName(final List<String> names, final String candidate) {
-        if (candidate == null) {
-            return null;
-        }
-        return names.stream()
-            .filter(name -> name.equalsIgnoreCase(candidate.trim()))
-            .findFirst()
-            .orElse(null);
     }
 
     @JsonInclude(JsonInclude.Include.ALWAYS)
