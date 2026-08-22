@@ -57,6 +57,10 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
         score = 0;
     }
 
+    public String name() {
+        return worldState.getLeaderBoardStore().playerName();
+    }
+
     public void incrementScore(final int offset) {
         score += offset;
     }

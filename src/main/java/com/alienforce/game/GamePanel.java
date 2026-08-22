@@ -1,5 +1,7 @@
 package com.alienforce.game;
 
+import static com.alienforce.assets.AssetManager.getImage;
+
 import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
@@ -7,19 +9,21 @@ import com.alienforce.entities.BackgroundStar;
 import com.alienforce.entities.GameObject;
 import com.alienforce.entities.Player;
 import com.alienforce.input.InputHandler;
-import com.alienforce.leaderboard.LeaderBoard;
+import com.alienforce.leaderboard.LeaderboardStore;
 import com.alienforce.motion.Position;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.CustomFonts;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.util.Objects;
-
-import static com.alienforce.assets.AssetManager.getImage;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener {
 
@@ -30,7 +34,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private final InputHandler inputHandler;
     private final Game game;
 
-    public GamePanel(Game game, final LeaderBoard leaderBoard) {
+    public GamePanel(Game game, final LeaderboardStore leaderBoardStore) {
         this.game = game;
         inputHandler = new InputHandler();
 
@@ -40,7 +44,7 @@ public class GamePanel extends JPanel implements ActionListener {
         setFocusable(true);
         addKeyListener(inputHandler);
 
-        worldState = new WorldState(inputHandler, leaderBoard);
+        worldState = new WorldState(inputHandler, leaderBoardStore);
 
         // Swing Timer fires actionPerformed() every FRAME_DELAY ms (~16 ms = 60 FPS).
         // This is the game loop driver — each tick updates state and repaints.
@@ -85,9 +89,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private static Color getColor(final double scale, Color startColor, Color endColor) {
         return new Color(
-                (int) getColor(scale, startColor.getRed(), endColor.getRed()),
-                (int) getColor(scale, startColor.getGreen(), endColor.getGreen()),
-                (int) getColor(scale, startColor.getBlue(), endColor.getBlue())
+            (int) getColor(scale, startColor.getRed(), endColor.getRed()),
+            (int) getColor(scale, startColor.getGreen(), endColor.getGreen()),
+            (int) getColor(scale, startColor.getBlue(), endColor.getBlue())
         );
     }
 
@@ -190,7 +194,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     g2d.setColor(backgroundStar.getColor());
                     final Position position = gameObject.getPosition();
                     g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
-                            (int) gameObject.getRadius());
+                        (int) gameObject.getRadius());
                 }
                 default -> {
                 }
@@ -199,19 +203,19 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // iterate over worldState
         worldState.objects
-                .stream()
-                .filter(gameObject -> Objects.nonNull(gameObject.getSprite()))
-                .forEach(object -> {
-                    final Image sprite = object.getSprite();
-                    final int w = sprite.getWidth(null);
-                    final int h = sprite.getHeight(null);
-                    if (w <= 0 || h <= 0) {
-                        return;
-                    }
-                    final AffineTransform transform = getAffineTransform(object, w, h);
+            .stream()
+            .filter(gameObject -> Objects.nonNull(gameObject.getSprite()))
+            .forEach(object -> {
+                final Image sprite = object.getSprite();
+                final int w = sprite.getWidth(null);
+                final int h = sprite.getHeight(null);
+                if (w <= 0 || h <= 0) {
+                    return;
+                }
+                final AffineTransform transform = getAffineTransform(object, w, h);
 
-                    g2d.drawImage(sprite, transform, null);
-                });
+                g2d.drawImage(sprite, transform, null);
+            });
 
         if (worldState.isPaused()) {
             showPauseAction(graphics);

@@ -2,6 +2,7 @@ package com.alienforce.game;
 
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
+import com.alienforce.entities.Player;
 import com.alienforce.input.GamePadManager;
 import com.alienforce.leaderboard.LeaderboardStore;
 import com.alienforce.utils.Settings;
@@ -23,6 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
+import lombok.Getter;
 import net.java.games.input.Event;
 
 public class Game extends JFrame {
@@ -34,6 +36,7 @@ public class Game extends JFrame {
     private final GamePanel gamepanel;
     private final GameOverPanel gameOverPanel;
     private final LeaderboardStore leaderboardStore;
+    @Getter
     private String playerName;
     private AtomicBoolean useMenuInputs;
     private final GamePadManager gamePadManager = new GamePadManager(this::gamePadEventHandler);
@@ -42,7 +45,7 @@ public class Game extends JFrame {
         leaderboardStore = LeaderboardStore.load();
         playerName = leaderboardStore.playerName();
         final MenuPanel menupanel = new MenuPanel(this);
-        gamepanel = new GamePanel(this, leaderboardStore.leaderBoard());
+        gamepanel = new GamePanel(this, leaderboardStore);
         gameOverPanel = new GameOverPanel(this);
         useMenuInputs = new AtomicBoolean(true);
 
@@ -50,7 +53,7 @@ public class Game extends JFrame {
         mainContainer.add(menupanel, "MENU");
         mainContainer.add(gamepanel, "GAME");
         mainContainer.add(gameOverPanel, "GAME OVER");
-        add(mainContainer);
+        this.add(mainContainer);
 
         setTitle("Alien Force");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -60,18 +63,21 @@ public class Game extends JFrame {
                 quit();
             }
 
-            @Override
-            public void windowLostFocus(final WindowEvent event) {
-                gamepanel.worldState
+            public void windowDeactivated(final WindowEvent event) {
+                final WorldState worldState = gamepanel.worldState;
+                final Player player = worldState.getPlayer();
+                if (player.isAlive() && player.getScore() > 0 && !worldState.isPaused()) {
+                    worldState.pause();
+                }
             }
         });
         setResizable(false); // Prevents layout glitches during gameplay
 
         // pack() sizes the JFrame to fit the preferred sizes of its child components
-        pack();
+        this.pack();
         // setLocationRelativeTo(null) centres the window on screen
-        setLocationRelativeTo(null);
-        setVisible(true);
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
 
         registerGlobalKeyBindings();
 
@@ -133,7 +139,7 @@ public class Game extends JFrame {
         useMenuInputs.set(true);
         leaderboardStore.record(playerName, score);
 
-        gameOverPanel.setScore(score, gamepanel.worldState.getLeaderBoard());
+        gameOverPanel.setScore(score, gamepanel.worldState.getLeaderBoardStore().leaderBoard());
         SoundManager.stop(SoundLoopKey.BACK_GROUND);
         SoundManager.play(SoundLoopKey.MENU_MUSIC);
         cardLayout.show(mainContainer, "GAME OVER");
@@ -147,13 +153,13 @@ public class Game extends JFrame {
 
     public void quit() {
         useMenuInputs.set(false);
-        JOptionPane.showMessageDialog(this, "Thank you");
+        final Player player = gamepanel.worldState.getPlayer();
+        if (player.isAlive() && player.getScore() > 0) {
+            player.die();
+            leaderboardStore.record(player.name(), player.getScore());
+        }
         dispose();
         System.exit(0);
-    }
-
-    public String getPlayerName() {
-        return playerName;
     }
 
     private boolean ensurePlayerName() {

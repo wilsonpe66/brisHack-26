@@ -11,9 +11,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Persists the player name and the ten most recent game scores as JSON.
- */
+/// Persists the player name and the ten most recent game scores as JSON.
 public final class LeaderboardStore {
 
     private static final int MAX_RECORDS = 10;
