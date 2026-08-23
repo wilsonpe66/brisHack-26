@@ -4,7 +4,7 @@
 
 ## Update order
 
-Each world update first polls the gameplay gamepad, edge-detects pause and mute inputs, and pauses or resumes looping audio. A paused world returns before simulation work.
+Each world update first polls the gameplay gamepad, edge-detects pause and mute inputs, and pauses or resumes looping audio. A paused world returns before simulation work. `Game` can also call `WorldState.pause()` when the application window loses focus during an active, nonzero-score game.
 
 An active update runs these phases:
 
@@ -34,4 +34,6 @@ Level thresholds and all per-level projectile/enemy tuning are documented in [Co
 
 ## Reset
 
-Starting a new round clears world objects, restores the player to the center with 100 health and zero score, resets level/pause state and input flags, and restarts timing. The same `Player`, `WorldState`, and leaderboard instances are reused.
+Starting a new round clears world objects, restores the player to the center with 100 health and zero score, resets level/pause state and input flags, and restarts timing. The same `Player`, `WorldState`, and `LeaderboardStore` instances are reused.
+
+Normal death records the final score before opening the game-over screen. Quitting also records an unfinished score when the player is alive and has scored at least one point.
