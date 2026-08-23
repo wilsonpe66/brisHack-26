@@ -42,6 +42,7 @@ Main
 3. Each timer event updates `WorldState`, checks for player death, and repaints the panel.
 4. On death, `Game` records the score, refreshes the top-ten table, switches back to menu music, and shows `GameOverPanel`.
 5. NEW GAME resets the existing world and returns through the player-selection flow.
+6. If the window loses focus during an active, nonzero-score game, `Game` pauses the world. Closing the window routes through `quit()`, which records an unfinished nonzero score before exiting.
 
 ## Assets
 
@@ -49,10 +50,10 @@ Main
 
 ## Persistence
 
-`LeaderboardStore` uses Jackson to store the selected player, known player names, and the ten most recent scores in:
+`LeaderboardStore` uses Jackson to store the selected player, known player names, and the ten highest-ranked scores in:
 
 ```text
 ~/.alien-force/.alien-force-leaderboard.json
 ```
 
-Names are trimmed, case-insensitively unique, and limited to 1–50 characters. Read/write failures are intentionally non-fatal so persistence cannot prevent the game from starting or displaying game over.
+Scores are ranked by value descending and then timestamp descending. Names are trimmed, case-insensitively unique, and limited to 1–50 characters. Read/write failures are intentionally non-fatal so persistence cannot prevent the game from starting or displaying game over.

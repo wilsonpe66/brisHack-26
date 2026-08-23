@@ -37,7 +37,7 @@ Aliens spawn beyond a random edge using current-level speed and timing values. T
 
 ## Boss alien
 
-`BossAlien` extends `Alien` with radius 60, health 200, scale 0.2, five level-selected sprites, and progressively wider projectile patterns. It takes:
+`BossAlien` extends `Alien` with radius 60, health 200, scale 0.2, five level-selected sprites, and progressively wider projectile patterns. It captures the current `GameLevel` when spawned and continues using that level's boss shooting configuration for its lifetime. It takes:
 
 - 20 damage from player bullets
 - 2 damage from other alien bullets
