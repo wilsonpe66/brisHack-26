@@ -81,7 +81,12 @@ public class GameOverPanel extends JPanel {
         quitButton.setPreferredSize(preferredSize);
         quitButton.addActionListener(_ -> game.quit());
 
+        final JButton fullScreenButton = new JButton("FULL SCREEN");
+        fullScreenButton.setPreferredSize(preferredSize);
+        fullScreenButton.addActionListener(_ -> game.toggleFullScreen());
+
         buttonPanel.add(newGameButton);
+        buttonPanel.add(fullScreenButton);
         buttonPanel.add(quitButton);
 
         gbc.gridy = 4;

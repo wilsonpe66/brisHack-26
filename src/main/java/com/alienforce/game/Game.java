@@ -7,6 +7,8 @@ import com.alienforce.input.GamePadManager;
 import com.alienforce.leaderboard.LeaderboardStore;
 import com.alienforce.utils.Settings;
 import java.awt.CardLayout;
+import java.awt.GraphicsDevice;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -36,6 +38,10 @@ public class Game extends JFrame {
     private final GamePanel gamepanel;
     private final GameOverPanel gameOverPanel;
     private final LeaderboardStore leaderboardStore;
+    private Rectangle windowedBounds;
+    private GraphicsDevice fullScreenDevice;
+    private boolean fullScreen;
+    private boolean changingDisplayMode;
     @Getter
     private String playerName;
     private AtomicBoolean useMenuInputs;
@@ -64,6 +70,9 @@ public class Game extends JFrame {
             }
 
             public void windowDeactivated(final WindowEvent event) {
+                if (changingDisplayMode) {
+                    return;
+                }
                 final WorldState worldState = gamepanel.worldState;
                 final Player player = worldState.getPlayer();
                 if (player.isAlive() && player.getScore() > 0 && !worldState.isPaused()) {
@@ -118,6 +127,87 @@ public class Game extends JFrame {
                 SoundManager.setMuted(!Settings.muted);
             }
         });
+
+        inputMap.put(KeyStroke.getKeyStroke("pressed F11"), "toggleFullScreen");
+        actionMap.put("toggleFullScreen", new AbstractAction() {
+            @Override
+            public void actionPerformed(final ActionEvent event) {
+                toggleFullScreen();
+            }
+        });
+
+        inputMap.put(KeyStroke.getKeyStroke("pressed ESCAPE"), "exitFullScreen");
+        actionMap.put("exitFullScreen", new AbstractAction() {
+            @Override
+            public void actionPerformed(final ActionEvent event) {
+                if (fullScreen) {
+                    toggleFullScreen();
+                }
+            }
+        });
+    }
+
+    /// Toggles fullscreen without changing the monitor's display mode.
+    ///
+    /// Fullscreen uses the display containing the window. The game panel scales its
+    /// fixed logical viewport to the available resolution, and leaving fullscreen
+    /// restores the window's previous bounds.
+    public void toggleFullScreen() {
+        changingDisplayMode = true;
+        try {
+            if (fullScreen) {
+                leaveFullScreen();
+            } else {
+                enterFullScreen();
+            }
+            fullScreen = !fullScreen;
+            mainContainer.revalidate();
+            mainContainer.repaint();
+            gamepanel.requestFocusInWindow();
+        } finally {
+            changingDisplayMode = false;
+        }
+    }
+
+    /// Enters fullscreen on the display containing the window.
+    ///
+    /// The current window bounds are saved before changing decoration state. When
+    /// fullscreen windows are unsupported, this falls back to borderless maximized
+    /// mode while preserving the display's current resolution.
+    private void enterFullScreen() {
+        windowedBounds = getBounds();
+        fullScreenDevice = getGraphicsConfiguration().getDevice();
+        dispose();
+        setUndecorated(true);
+        setResizable(false);
+        if (fullScreenDevice.isFullScreenSupported()) {
+            fullScreenDevice.setFullScreenWindow(this);
+        } else {
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            setVisible(true);
+        }
+    }
+
+    /// Leaves fullscreen and restores the previously saved window bounds.
+    ///
+    /// If no bounds were captured, the frame is packed to its preferred size and
+    /// centered on the screen.
+    private void leaveFullScreen() {
+        if (fullScreenDevice != null && fullScreenDevice.getFullScreenWindow() == this) {
+            fullScreenDevice.setFullScreenWindow(null);
+        }
+        dispose();
+        setUndecorated(false);
+        setResizable(false);
+        setExtendedState(JFrame.NORMAL);
+        if (windowedBounds == null) {
+            pack();
+            setLocationRelativeTo(null);
+        } else {
+            setBounds(windowedBounds);
+        }
+        setVisible(true);
+        fullScreenDevice = null;
     }
 
     public void showGame() {
