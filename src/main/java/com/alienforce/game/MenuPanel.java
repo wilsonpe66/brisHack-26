@@ -53,7 +53,12 @@ public class MenuPanel extends JPanel {
         quitButton.setPreferredSize(preferredSize);
         quitButton.addActionListener(_ -> game.quit());
 
+        final JButton fullScreenButton = new JButton("FULL SCREEN");
+        fullScreenButton.setPreferredSize(preferredSize);
+        fullScreenButton.addActionListener(_ -> game.toggleFullScreen());
+
         buttonPanel.add(playButton);
+        buttonPanel.add(fullScreenButton);
         buttonPanel.add(quitButton);
 
         gbc.gridy = 2; // row 2 of the grid
@@ -66,6 +71,6 @@ public class MenuPanel extends JPanel {
     @Override
     protected void paintComponent(final Graphics graphics) {
         super.paintComponent(graphics);
-        graphics.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
+        graphics.drawImage(SPACE_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
     }
 }

@@ -37,6 +37,8 @@ java -jar target/alien-force.jar
 | Fire without cooldown | `X` |
 | Pause | `Enter` |
 | Mute | `M` |
+| Toggle fullscreen | `F11` |
+| Exit fullscreen | `Escape` |
 
 The first detected JInput-compatible gamepad is also supported. See [Input & Controls](docs/input.md) for the controller mappings.
 

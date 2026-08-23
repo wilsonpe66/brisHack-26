@@ -18,6 +18,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
@@ -161,9 +162,31 @@ public class GamePanel extends JPanel implements ActionListener {
     protected void paintComponent(final Graphics game) {
         super.paintComponent(game);
 
-        drawBackground(game);
-        drawObjects(game);
-        drawHud(game);
+        final Graphics2D viewport = (Graphics2D) game.create();
+        try {
+            final double scale = Math.min(
+                getWidth() / (double) Constants.WIDTH,
+                getHeight() / (double) Constants.HEIGHT
+            );
+            final int viewportWidth = (int) Math.round(Constants.WIDTH * scale);
+            final int viewportHeight = (int) Math.round(Constants.HEIGHT * scale);
+            final int offsetX = (getWidth() - viewportWidth) / 2;
+            final int offsetY = (getHeight() - viewportHeight) / 2;
+
+            viewport.translate(offsetX, offsetY);
+            viewport.scale(scale, scale);
+            viewport.clipRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
+            viewport.setRenderingHint(
+                RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR
+            );
+
+            drawBackground(viewport);
+            drawObjects(viewport);
+            drawHud(viewport);
+        } finally {
+            viewport.dispose();
+        }
     }
 
     private void drawBackground(Graphics game) {

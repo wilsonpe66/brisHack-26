@@ -11,6 +11,8 @@
 | Super fire | `X` | Uses the current shot pattern without the cooldown check |
 | Pause/resume | `Enter` | Toggles simulation and looping audio pause |
 | Mute | `M` | Toggles the global mute setting |
+| Toggle fullscreen | `F11` | Switches between the saved window bounds and borderless fullscreen |
+| Exit fullscreen | `Escape` | Returns to windowed mode; has no effect when already windowed |
 
 `S` and `Down` are tracked as downward input but are not consumed by `Player`, so they currently have no gameplay effect.
 
@@ -29,4 +31,4 @@ JInput selects the first controller whose type is `GAMEPAD`. During gameplay it 
 
 On the menu and game-over screens, pressing `A`, `X`, `rz`, `Right Thumb`, or `Start` calls `restartGame()`. Component names are supplied by the controller driver and may vary between devices.
 
-Keyboard `M` is also registered as a window-level Swing key binding so mute remains available when another component has focus.
+Keyboard `M`, `F11`, and `Escape` are registered as window-level Swing key bindings so they remain available when another component has focus.

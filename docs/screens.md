@@ -1,6 +1,8 @@
 # Screens and UI
 
-`Game` presents three panels in a `CardLayout`. The fixed-size window is 1500 × 900 pixels, non-resizable, and centered on screen.
+`Game` presents three panels in a `CardLayout`. Windowed mode uses a fixed 1500 × 900-pixel content area and is centered on screen. F11 or the FULL SCREEN button enters fullscreen on the monitor containing the window without changing its display mode; unsupported window managers fall back to borderless maximized mode. Escape returns to the saved window bounds.
+
+Gameplay always uses a 1500 × 900 logical viewport. In fullscreen, `GamePanel` scales that viewport uniformly and centers it with black letterboxing when the monitor aspect ratio differs. World coordinates, collisions, HUD placement, and sprite proportions therefore remain unchanged across resolutions.
 
 ## Menu
 
@@ -8,7 +10,7 @@
 
 - the title **Alien Force**
 - the subtitle **Press PLAY to start**
-- PLAY GAME and QUIT buttons
+- PLAY GAME, FULL SCREEN, and QUIT buttons
 
 Menu music starts when the panel is created. PLAY opens the player-name flow before starting the game. If no names exist, the platform user name is offered; otherwise the user can select an existing name or add a unique 1–50 character name.
 
@@ -31,7 +33,7 @@ When player health reaches zero, the game timer stops and the score is persisted
 
 - the last score
 - a non-editable table of up to ten top scores with rank, player, score, and an `MM-dd` date
-- NEW GAME and QUIT buttons
+- NEW GAME, FULL SCREEN, and QUIT buttons
 
 The ranking sorts by score descending, then timestamp descending. The ten highest-ranked score records are retained on disk.
 
