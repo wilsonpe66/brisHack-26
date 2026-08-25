@@ -53,9 +53,13 @@ public class MenuPanel extends JPanel {
         quitButton.setPreferredSize(preferredSize);
         quitButton.addActionListener(_ -> game.quit());
 
-        final JButton fullScreenButton = new JButton("FULL SCREEN");
+        final JButton fullScreenButton = new JButton(Game.fullScreenButtonText(game.isFullScreen()));
         fullScreenButton.setPreferredSize(preferredSize);
         fullScreenButton.addActionListener(_ -> game.toggleFullScreen());
+        game.addPropertyChangeListener(
+            Game.FULL_SCREEN_PROPERTY,
+            event -> fullScreenButton.setText(Game.fullScreenButtonText((boolean) event.getNewValue()))
+        );
 
         buttonPanel.add(playButton);
         buttonPanel.add(fullScreenButton);
