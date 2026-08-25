@@ -31,6 +31,8 @@ import net.java.games.input.Event;
 
 public class Game extends JFrame {
 
+    static final String FULL_SCREEN_PROPERTY = "fullScreen";
+
     // CardLayout stacks panels on top of each other — only one is visible at a time.
     // Calling cardLayout.show(container, "name") switches which panel is displayed.
     private final CardLayout cardLayout = new CardLayout();
@@ -155,18 +157,35 @@ public class Game extends JFrame {
     public void toggleFullScreen() {
         changingDisplayMode = true;
         try {
+            final boolean previousFullScreen = fullScreen;
             if (fullScreen) {
                 leaveFullScreen();
             } else {
                 enterFullScreen();
             }
             fullScreen = !fullScreen;
+            firePropertyChange(FULL_SCREEN_PROPERTY, previousFullScreen, fullScreen);
             mainContainer.revalidate();
             mainContainer.repaint();
             gamepanel.requestFocusInWindow();
         } finally {
             changingDisplayMode = false;
         }
+    }
+
+    /// Returns whether the game is currently displayed in fullscreen mode.
+    ///
+    /// @return `true` while fullscreen is active; otherwise `false`
+    public boolean isFullScreen() {
+        return fullScreen;
+    }
+
+    /// Returns the action label for the current display mode.
+    ///
+    /// @param fullScreen whether fullscreen is currently active
+    /// @return `Restore Screen` in fullscreen, otherwise `Full Screen`
+    static String fullScreenButtonText(final boolean fullScreen) {
+        return fullScreen ? "Restore Screen" : "Full Screen";
     }
 
     /// Enters fullscreen on the display containing the window.
