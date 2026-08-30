@@ -17,7 +17,7 @@ shooting → alien shooting → spawning → entity updates → collisions → r
 3. **Spawning:** asteroids use the global one-second interval. Normal and boss aliens each use the current level's initial delay and recurring interval.
 4. **Updates:** background objects and active world objects run `update()`.
 5. **Collisions:** living objects are checked pairwise in O(n²) time using circle radii; on overlap, each object receives the other object's collision response.
-6. **Removal:** dead objects are removed from the world and update sets.
+6. **Removal:** every dead object creates an expanding red `Explosion`; dead world objects and expired effects are then removed from their respective sets.
 7. **Level update:** the score selects one of 15 difficulty configurations; transitions play a sound and restore some health.
 
 ## Spawning
@@ -36,4 +36,4 @@ Level thresholds and all per-level projectile/enemy tuning are documented in [Co
 
 Starting a new round clears world objects, restores the player to the center with 100 health and zero score, resets level/pause state and input flags, and restarts timing. The same `Player`, `WorldState`, and `LeaderboardStore` instances are reused.
 
-Normal death records the final score before opening the game-over screen. Quitting also records an unfinished score when the player is alive and has scored at least one point.
+Normal death records the displayed level and final score before opening the game-over screen. Quitting also records the current level and unfinished score when the player is alive and has scored at least one point.
