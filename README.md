@@ -1,6 +1,6 @@
 # Alien Force
 
-Alien Force is a Java Swing arcade game inspired by Asteroids. Pilot a ship, survive increasingly difficult waves of asteroids, aliens, and boss aliens, and compete on a local leaderboard.
+Alien Force is a Java Swing arcade game inspired by Asteroids. Pilot a ship through 15 increasingly difficult levels of asteroids, aliens, and boss aliens, then compare your score and reached level on a persistent local leaderboard.
 
 ## Requirements
 
@@ -41,6 +41,8 @@ java -jar target/alien-force.jar
 | Exit fullscreen | `Escape` |
 
 The first detected JInput-compatible gamepad is also supported. See [Input & Controls](docs/input.md) for the controller mappings.
+
+Destroyed objects leave short expanding explosion effects, and player progress unlocks stronger ship sprites and projectile patterns as the score increases.
 
 ## Documentation
 

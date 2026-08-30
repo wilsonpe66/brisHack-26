@@ -52,7 +52,9 @@ Six `BulletLevel` classes use different missile sprites but share `Bullet` behav
 
 Player-owned bullet collisions award points immediately: 2 for an asteroid, 5 for an alien, and 7 for a boss alien. The bullet then dies. Entity collision logic separately applies damage or death to the target.
 
-## Background stars and health bar
+## Explosions, background stars, and health bar
+
+During dead-object removal, `WorldState` creates an `Explosion` at each removed object's position using its collision radius. The effect has no sprite or collision response: `GamePanel` draws it as a red oval whose radius expands while its color fades toward black. It lasts for roughly 100 updates before dying and being removed from the background and update sets.
 
 `WorldState` creates three colored `BackgroundStar` objects, updates them separately, and `GamePanel` renders them as ovals. `HealthBar` mirrors player health, but the visible HUD health bar is drawn directly by `GamePanel` rather than using that entity.
 

@@ -19,7 +19,7 @@ Menu music starts when the panel is created. PLAY opens the player-name flow bef
 `GamePanel` renders, in order:
 
 1. the stretched space-background image
-2. three colored `BackgroundStar` objects
+2. background objects: three colored `BackgroundStar` objects and any expanding red `Explosion` effects
 3. every live sprite using position, rotation, and scale transforms
 4. the HUD and, when applicable, an animated PAUSED overlay
 
@@ -31,11 +31,11 @@ If the window loses focus after the player has scored, the game automatically pa
 
 When player health reaches zero, the game timer stops and the score is persisted. `GameOverPanel` displays:
 
-- the last score
-- a non-editable table of up to ten top scores with rank, player, score, and an `MM-dd` date
+- the last score and reached level
+- a non-editable table of up to ten top records with player, score, level, and an `MM-dd` date
 - NEW GAME, Full Screen/Restore Screen, and QUIT buttons
 
-The ranking sorts by score descending, then timestamp descending. The ten highest-ranked score records are retained on disk.
+The ranking sorts by score descending, then timestamp descending. Each stored record includes player name, score, reached level, and creation time; the ten highest-ranked records are retained on disk.
 
 When game over opens, gameplay music stops and menu music resumes.
 
