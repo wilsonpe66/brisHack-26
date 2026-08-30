@@ -5,7 +5,7 @@ import java.util.Objects;
 import lombok.Builder;
 
 @Builder(toBuilder = true)
-public record PlayerScore(String name, int score, LocalDateTime createTime) {
+public record PlayerScore(String name, int level, int score, LocalDateTime createTime) {
 
     public PlayerScore {
         name = Objects.requireNonNullElse(name, "<UNKNOWN>");

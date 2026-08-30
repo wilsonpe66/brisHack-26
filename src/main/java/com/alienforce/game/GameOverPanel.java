@@ -49,7 +49,7 @@ public class GameOverPanel extends JPanel {
         gbc.gridy = 1; // row 1
         add(scoreLabel, gbc);
 
-        leaderboardModel = new DefaultTableModel(new Object[]{"#", "Player", "Score", "Date"}, 0) {
+        leaderboardModel = new DefaultTableModel(new Object[]{"Player",  "Score","Level", "Date"}, 0) {
             @Override
             public boolean isCellEditable(final int row, final int column) {
                 return false;
@@ -97,17 +97,17 @@ public class GameOverPanel extends JPanel {
         add(buttonPanel, gbc);
     }
 
-    public void setScore(int score, final LeaderBoard leaderBoard) {
-        scoreLabel.setText("Score: %,d".formatted(score));
+    public void setScore(final int score, final int level, final LeaderBoard leaderBoard) {
+        scoreLabel.setText("Score: %,d, Level: %d".formatted(score, level));
 
         leaderboardModel.setRowCount(0);
         final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd");
         final AtomicInteger rank = new AtomicInteger(1);
         leaderBoard.getTopScorers(10)
             .forEach(playerScore -> leaderboardModel.addRow(new Object[]{
-                rank.getAndIncrement(),
                 playerScore.name(),
                 "%,d".formatted(playerScore.score()),
+                playerScore.level(),
                 playerScore.createTime().format(dateFormatter)
             }));
     }

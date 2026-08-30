@@ -21,10 +21,10 @@ import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import lombok.Getter;
 import net.java.games.input.Event;
@@ -40,14 +40,14 @@ public class Game extends JFrame {
     private final GamePanel gamepanel;
     private final GameOverPanel gameOverPanel;
     private final LeaderboardStore leaderboardStore;
+    private final GamePadManager gamePadManager = new GamePadManager(this::gamePadEventHandler);
     private Rectangle windowedBounds;
     private GraphicsDevice fullScreenDevice;
     private boolean fullScreen;
     private boolean changingDisplayMode;
     @Getter
     private String playerName;
-    private AtomicBoolean useMenuInputs;
-    private final GamePadManager gamePadManager = new GamePadManager(this::gamePadEventHandler);
+    private final AtomicBoolean useMenuInputs;
 
     public Game() {
         leaderboardStore = LeaderboardStore.load();
@@ -102,6 +102,19 @@ public class Game extends JFrame {
         });
     }
 
+    /// Returns the action label for the current display mode.
+    ///
+    /// @param fullScreen whether fullscreen is currently active
+    /// @return `Restore Screen` in fullscreen, otherwise `Full Screen`
+    static String fullScreenButtonText(final boolean fullScreen) {
+        return fullScreen ? "Restore Screen" : "Full Screen";
+    }
+
+    private static String platformUserName() {
+        final String platformName = System.getProperty("user.name", "").trim();
+        return platformName.length() <= 50 ? platformName : "";
+    }
+
     private void gamePadEventHandler(final Event event) {
         switch (event.getComponent().getName()) {
             case "A", "X", "rz", "Right Thumb", "Start" -> {
@@ -151,8 +164,7 @@ public class Game extends JFrame {
 
     /// Toggles fullscreen without changing the monitor's display mode.
     ///
-    /// Fullscreen uses the display containing the window. The game panel scales its
-    /// fixed logical viewport to the available resolution, and leaving fullscreen
+    /// Fullscreen uses the display containing the window. The game panel scales its fixed logical viewport to the available resolution, and leaving fullscreen
     /// restores the window's previous bounds.
     public void toggleFullScreen() {
         changingDisplayMode = true;
@@ -180,18 +192,9 @@ public class Game extends JFrame {
         return fullScreen;
     }
 
-    /// Returns the action label for the current display mode.
-    ///
-    /// @param fullScreen whether fullscreen is currently active
-    /// @return `Restore Screen` in fullscreen, otherwise `Full Screen`
-    static String fullScreenButtonText(final boolean fullScreen) {
-        return fullScreen ? "Restore Screen" : "Full Screen";
-    }
-
     /// Enters fullscreen on the display containing the window.
     ///
-    /// The current window bounds are saved before changing decoration state. When
-    /// fullscreen windows are unsupported, this falls back to borderless maximized
+    /// The current window bounds are saved before changing decoration state. When fullscreen windows are unsupported, this falls back to borderless maximized
     /// mode while preserving the display's current resolution.
     private void enterFullScreen() {
         windowedBounds = getBounds();
@@ -209,8 +212,7 @@ public class Game extends JFrame {
 
     /// Leaves fullscreen and restores the previously saved window bounds.
     ///
-    /// If no bounds were captured, the frame is packed to its preferred size and
-    /// centered on the screen.
+    /// If no bounds were captured, the frame is packed to its preferred size and centered on the screen.
     private void leaveFullScreen() {
         if (fullScreenDevice != null && fullScreenDevice.getFullScreenWindow() == this) {
             fullScreenDevice.setFullScreenWindow(null);
@@ -244,11 +246,11 @@ public class Game extends JFrame {
         mainContainer.getComponent(1).requestFocusInWindow();
     }
 
-    public void showGameOver(int score) {
+    public void showGameOver(final int level, final int score) {
         useMenuInputs.set(true);
-        leaderboardStore.record(playerName, score);
+        leaderboardStore.record(playerName, level, score);
 
-        gameOverPanel.setScore(score, gamepanel.worldState.getLeaderBoardStore().leaderBoard());
+        gameOverPanel.setScore(score, level, gamepanel.worldState.getLeaderBoardStore().leaderBoard());
         SoundManager.stop(SoundLoopKey.BACK_GROUND);
         SoundManager.play(SoundLoopKey.MENU_MUSIC);
         cardLayout.show(mainContainer, "GAME OVER");
@@ -265,7 +267,9 @@ public class Game extends JFrame {
         final Player player = gamepanel.worldState.getPlayer();
         if (player.isAlive() && player.getScore() > 0) {
             player.die();
-            leaderboardStore.record(player.name(), player.getScore());
+            leaderboardStore.record(
+                player.name(), gamepanel.worldState.gameLevel().levelNumber() + 1, player.getScore()
+            );
         }
         dispose();
         System.exit(0);
@@ -334,11 +338,6 @@ public class Game extends JFrame {
             }
             return newName;
         }
-    }
-
-    private static String platformUserName() {
-        final String platformName = System.getProperty("user.name", "").trim();
-        return platformName.length() <= 50 ? platformName : "";
     }
 
     private boolean selectPlayerName(final String name) {

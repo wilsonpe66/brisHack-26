@@ -6,6 +6,7 @@ import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
 import com.alienforce.entities.BackgroundStar;
+import com.alienforce.entities.Explosion;
 import com.alienforce.entities.GameObject;
 import com.alienforce.entities.Player;
 import com.alienforce.input.InputHandler;
@@ -151,7 +152,7 @@ public class GamePanel extends JPanel implements ActionListener {
         final Player player = worldState.getPlayer();
         if (player.isDead()) {
             stopGame();
-            game.showGameOver(player.getScore());
+            game.showGameOver(worldState.gameLevel().levelNumber() + 1, player.getScore());
         }
         repaint();
     }
@@ -215,6 +216,12 @@ public class GamePanel extends JPanel implements ActionListener {
             switch (gameObject) {
                 case BackgroundStar backgroundStar -> {
                     g2d.setColor(backgroundStar.getColor());
+                    final Position position = gameObject.getPosition();
+                    g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
+                        (int) gameObject.getRadius());
+                }
+                case Explosion explosion -> {
+                    g2d.setColor(explosion.getColor());
                     final Position position = gameObject.getPosition();
                     g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
                         (int) gameObject.getRadius());

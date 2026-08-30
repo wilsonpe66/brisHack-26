@@ -16,9 +16,9 @@ public final class LeaderboardStore {
 
     private static final int MAX_RECORDS = 10;
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .enable(SerializationFeature.INDENT_OUTPUT);
+        .registerModule(new JavaTimeModule())
+        .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        .enable(SerializationFeature.INDENT_OUTPUT);
 
     private final Path file;
     private final List<String> playerNames;
@@ -26,10 +26,10 @@ public final class LeaderboardStore {
     private String playerName;
 
     private LeaderboardStore(
-            final Path file,
-            final String playerName,
-            final List<String> playerNames,
-            final LeaderBoard leaderBoard
+        final Path file,
+        final String playerName,
+        final List<String> playerNames,
+        final LeaderBoard leaderBoard
     ) {
         this.file = file;
         this.playerName = playerName;
@@ -39,9 +39,9 @@ public final class LeaderboardStore {
 
     public static LeaderboardStore load() {
         final Path file = Path.of(
-                System.getProperty("user.home", "."),
-                ".alien-force",
-                ".alien-force-leaderboard.json"
+            System.getProperty("user.home", "."),
+            ".alien-force",
+            ".alien-force-leaderboard.json"
         );
         if (!Files.exists(file)) {
             return new LeaderboardStore(file, null, new ArrayList<>(), LeaderBoard.builder().build());
@@ -64,20 +64,20 @@ public final class LeaderboardStore {
 
     private static List<PlayerScore> retainRecentScores(final List<PlayerScore> scores) {
         return scores
-                .stream()
-                .sorted(LeaderBoard.comparator)
-                .limit(MAX_RECORDS)
-                .toList();
+            .stream()
+            .sorted(LeaderBoard.comparator)
+            .limit(MAX_RECORDS)
+            .toList();
     }
 
     private static List<String> normalizeNames(final List<String> names) {
         final List<String> normalized = new ArrayList<>();
         if (names != null) {
             names.stream()
-                    .filter(LeaderboardStore::isValidName)
-                    .map(String::trim)
-                    .filter(name -> !containsName(normalized, name))
-                    .forEach(normalized::add);
+                .filter(LeaderboardStore::isValidName)
+                .map(String::trim)
+                .filter(name -> !containsName(normalized, name))
+                .forEach(normalized::add);
         }
         return normalized;
     }
@@ -95,10 +95,10 @@ public final class LeaderboardStore {
             return null;
         }
         return names
-                .stream()
-                .filter(name -> name.equalsIgnoreCase(candidate.trim()))
-                .findFirst()
-                .orElse(null);
+            .stream()
+            .filter(name -> name.equalsIgnoreCase(candidate.trim()))
+            .findFirst()
+            .orElse(null);
     }
 
     public LeaderBoard leaderBoard() {
@@ -132,19 +132,20 @@ public final class LeaderboardStore {
         return true;
     }
 
-    public void record(final String name, final int score) {
-        List<PlayerScore> scores = new ArrayList<>(leaderBoard.scores());
+    public void record(final String name, final int level, final int score) {
+        final List<PlayerScore> scores = new ArrayList<>(leaderBoard.scores());
         scores.add(
-                PlayerScore
-                        .builder()
-                        .name(name)
-                        .score(score)
-                        .build()
+            PlayerScore
+                .builder()
+                .name(name)
+                .level(level)
+                .score(score)
+                .build()
         );
         leaderBoard = leaderBoard
-                .toBuilder()
-                .scores(retainRecentScores(scores))
-                .build();
+            .toBuilder()
+            .scores(retainRecentScores(scores))
+            .build();
 
         save();
     }
@@ -161,5 +162,6 @@ public final class LeaderboardStore {
 
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private record StoredLeaderboard(String playerName, List<String> playerNames, List<PlayerScore> scores) {
+
     }
 }

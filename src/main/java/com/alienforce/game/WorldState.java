@@ -6,6 +6,7 @@ import com.alienforce.assets.SoundManager;
 import com.alienforce.entities.Alien;
 import com.alienforce.entities.Asteroid;
 import com.alienforce.entities.BackgroundStar;
+import com.alienforce.entities.Explosion;
 import com.alienforce.entities.GameObject;
 import com.alienforce.entities.Player;
 import com.alienforce.entities.SelfDefendable;
@@ -194,8 +195,17 @@ public class WorldState {
             .count();
         player.incrementScore(shotAsteroids);
 
+        objects.stream()
+            .filter(GameObject::isDead)
+            .map(Explosion::new)
+                .forEach(explosion -> {
+                    backgroundObjects.add(explosion);
+                    updatableObjects.add(explosion);
+                });
+
         // removeIf modifies the list in-place, removing all dead objects
         objects.removeIf(GameObject::isDead);
+        backgroundObjects.removeIf(obj -> obj instanceof GameObject go && go.isDead());
         updatableObjects.removeIf(obj -> obj instanceof GameObject go && go.isDead());
     }
 
