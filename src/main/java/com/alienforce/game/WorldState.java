@@ -45,6 +45,7 @@ public class WorldState {
     @Getter
     private final LeaderboardStore leaderBoardStore;
     public Set<Updatable> backgroundUpdatableObjects;
+    public Set<GameObject> explosionObjects;
     public Set<GameObject> backgroundObjects;
     public Set<Updatable> updatableObjects;
     public Set<GameObject> objects;
@@ -80,6 +81,8 @@ public class WorldState {
     private void creatBackGroundStars() {
         backgroundObjects = new HashSet<>();
         backgroundUpdatableObjects = new HashSet<>();
+
+        explosionObjects = new HashSet<>();
 
         Stream
             .of(Color.CYAN, Color.RED, Color.GREEN)
@@ -199,12 +202,13 @@ public class WorldState {
             .filter(GameObject::isDead)
             .map(Explosion::new)
                 .forEach(explosion -> {
-                    backgroundObjects.add(explosion);
+                    explosionObjects.add(explosion);
                     updatableObjects.add(explosion);
                 });
 
         // removeIf modifies the list in-place, removing all dead objects
         objects.removeIf(GameObject::isDead);
+        explosionObjects.removeIf(obj -> obj instanceof GameObject go && go.isDead());
         backgroundObjects.removeIf(obj -> obj instanceof GameObject go && go.isDead());
         updatableObjects.removeIf(obj -> obj instanceof GameObject go && go.isDead());
     }

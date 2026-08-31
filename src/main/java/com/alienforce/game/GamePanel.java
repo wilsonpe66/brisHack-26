@@ -12,6 +12,7 @@ import com.alienforce.entities.Player;
 import com.alienforce.input.InputHandler;
 import com.alienforce.leaderboard.LeaderboardStore;
 import com.alienforce.motion.Position;
+import com.alienforce.utils.ColorTransition;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.CustomFonts;
 import java.awt.Color;
@@ -23,6 +24,7 @@ import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
+import java.util.List;
 import java.util.Objects;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -85,27 +87,9 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.fillRect(startX, 20, 2 * player.getHealth(), 10);
     }
 
-    private static double getColor(final double scale, double startColor, double endColor) {
-        return (endColor - startColor) * scale + startColor;
-    }
-
-    private static Color getColor(final double scale, Color startColor, Color endColor) {
-        return new Color(
-            (int) getColor(scale, startColor.getRed(), endColor.getRed()),
-            (int) getColor(scale, startColor.getGreen(), endColor.getGreen()),
-            (int) getColor(scale, startColor.getBlue(), endColor.getBlue())
-        );
-    }
-
-    private static Color getColorLoop(final double scale) {
-        if (scale < 1) {
-            return getColor(scale, Color.YELLOW, Color.CYAN);
-        } else if (scale < 2) {
-            return getColor(scale - 1, Color.CYAN, Color.RED);
-        } else {
-            return getColor(scale - 2, Color.RED, Color.YELLOW);
-        }
-    }
+    private static final ColorTransition colorTransition = new ColorTransition(List.of(
+        Color.YELLOW, Color.CYAN, Color.RED, Color.YELLOW
+    ));
 
     private static void showPauseAction(final Graphics graphics) {
         graphics.setFont(CustomFonts.TITLE);
@@ -116,7 +100,7 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.setColor(Color.BLACK);
         graphics.drawString("PAUSED", Constants.WIDTH / 2 - 400 + 2, (Constants.HEIGHT + CustomFonts.TITLE.getSize()) / 2 + 2);
 
-        graphics.setColor(getColorLoop(pauseTime));
+        graphics.setColor(colorTransition.getColor(pauseTime));
         graphics.drawString("PAUSED", Constants.WIDTH / 2 - 400, (Constants.HEIGHT + CustomFonts.TITLE.getSize()) / 2);
     }
 
@@ -220,6 +204,19 @@ public class GamePanel extends JPanel implements ActionListener {
                     g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
                         (int) gameObject.getRadius());
                 }
+                case Explosion explosion -> {
+                    g2d.setColor(explosion.getColor());
+                    final Position position = gameObject.getPosition();
+                    g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
+                        (int) gameObject.getRadius());
+                }
+                default -> {
+                }
+            }
+        });
+
+        worldState.explosionObjects.forEach(gameObject -> {
+            switch (gameObject) {
                 case Explosion explosion -> {
                     g2d.setColor(explosion.getColor());
                     final Position position = gameObject.getPosition();

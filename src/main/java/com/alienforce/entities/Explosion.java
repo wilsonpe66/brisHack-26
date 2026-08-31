@@ -1,13 +1,18 @@
 package com.alienforce.entities;
 
+import com.alienforce.utils.ColorTransition;
 import java.awt.Color;
 import java.awt.Image;
+import java.util.List;
 import lombok.Getter;
 
 
 public class Explosion extends GameObject {
 
     private static final Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0);
+    private static final ColorTransition colorTransition = new ColorTransition(List.of(
+        Color.BLUE, Color.YELLOW, Color.RED, TRANSPARENT_BLACK
+    ));
 
     @Getter
     Color color;
@@ -23,16 +28,7 @@ public class Explosion extends GameObject {
     }
 
     private static Color getColor(final double scale) {
-        final Color startColor = Color.RED;
-        return new Color(
-            (int) getColor(scale, startColor.getRed(), TRANSPARENT_BLACK.getRed()),
-            (int) getColor(scale, startColor.getGreen(), TRANSPARENT_BLACK.getGreen()),
-            (int) getColor(scale, startColor.getBlue(), TRANSPARENT_BLACK.getBlue())
-        );
-    }
-
-    private static double getColor(final double scale, double startColor, double endColor) {
-        return (endColor - startColor) * scale + startColor;
+        return colorTransition.getColor(scale);
     }
 
     @Override
@@ -53,7 +49,7 @@ public class Explosion extends GameObject {
     @Override
     public void update() {
         theta += .01;
-        if (theta > 1) {
+        if (theta > 3) {
             die();
             return;
         }
