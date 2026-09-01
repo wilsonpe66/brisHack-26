@@ -33,7 +33,7 @@ Main
 | `input` | Keyboard state and first-detected JInput gamepad |
 | `leaderboard` | Score records, rankings, player names, and JSON persistence |
 | `motion` | Immutable `Position` and `Velocity` value types |
-| `utils` | Global constants, per-level tuning records, fonts, and mute state |
+| `utils` | Global constants, per-level tuning records, color interpolation, fonts, and mute state |
 
 ## Runtime flow
 

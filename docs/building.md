@@ -43,7 +43,7 @@ src/main/java/com/alienforce/
 ├── input/        # keyboard and JInput gamepad handling
 ├── leaderboard/  # score model and JSON persistence
 ├── motion/       # position and velocity value types
-└── utils/        # constants, level tuning, settings, and fonts
+└── utils/        # constants, level tuning, color transitions, settings, fonts
 
 src/resource/com/alienforce/assets/
 ├── images/

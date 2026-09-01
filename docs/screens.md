@@ -6,7 +6,7 @@ Gameplay always uses a 1500 × 900 logical viewport. In fullscreen, `GamePanel` 
 
 ## Menu
 
-`MenuPanel` draws the space background and displays:
+`MenuPanel` stretches the space background to the panel, then draws the fifth boss-alien sprite as a centered square whose width and height equal the window height. The controls are painted over those images. The menu displays:
 
 - the title **Alien Force**
 - the subtitle **Press PLAY to start**
@@ -19,11 +19,14 @@ Menu music starts when the panel is created. PLAY opens the player-name flow bef
 `GamePanel` renders, in order:
 
 1. the stretched space-background image
-2. background objects: three colored `BackgroundStar` objects and any expanding red `Explosion` effects
-3. every live sprite using position, rotation, and scale transforms
-4. the HUD and, when applicable, an animated PAUSED overlay
+2. three colored `BackgroundStar` objects
+3. expanding explosion effects from the dedicated explosion set
+4. every live sprite using position, rotation, and scale transforms
+5. the HUD and, when applicable, an animated PAUSED overlay
 
 The HUD shows the score and player name on the left, level in the center, and a red/green health bar on the right.
+
+The PAUSED title cycles from yellow to cyan to red and back to yellow using the shared `ColorTransition` interpolation utility.
 
 If the window loses focus after the player has scored, the game automatically pauses. Returning to the window leaves the game paused until the player explicitly resumes it.
 
