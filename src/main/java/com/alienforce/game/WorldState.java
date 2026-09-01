@@ -11,6 +11,7 @@ import com.alienforce.entities.GameObject;
 import com.alienforce.entities.Player;
 import com.alienforce.entities.SelfDefendable;
 import com.alienforce.entities.Updatable;
+import com.alienforce.entities.amo.Bullet;
 import com.alienforce.game.spawner.AlienSpawner;
 import com.alienforce.game.spawner.AsteroidSpawner;
 import com.alienforce.game.spawner.BossAlienSpawner;
@@ -29,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -200,6 +202,7 @@ public class WorldState {
 
         objects.stream()
             .filter(GameObject::isDead)
+            .filter(Predicate.not(Bullet.class::isInstance))
             .map(Explosion::new)
                 .forEach(explosion -> {
                     explosionObjects.add(explosion);
