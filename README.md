@@ -42,7 +42,7 @@ java -jar target/alien-force.jar
 
 The first detected JInput-compatible gamepad is also supported. See [Input & Controls](docs/input.md) for the controller mappings.
 
-Destroyed objects leave short expanding explosion effects, and player progress unlocks stronger ship sprites and projectile patterns as the score increases.
+Destroyed non-projectile objects leave expanding, color-changing explosion effects, and player progress unlocks stronger ship sprites and projectile patterns as the score increases.
 
 ## Documentation
 
