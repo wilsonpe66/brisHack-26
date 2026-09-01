@@ -1,18 +1,29 @@
 package com.alienforce.game;
 
+import static com.alienforce.assets.AssetManager.getImage;
+
 import com.alienforce.assets.AssetManager;
 import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.CustomFonts;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class MenuPanel extends JPanel {
 
     private static final Image SPACE_BACKGROUND = AssetManager.getImage(ImageKey.SPACE_BACKGROUND).get();
+    private static final Image BOSS_ALIEN = getImage(ImageKey.ALIEN_BOSS_5).get();
 
     public MenuPanel(Game game) {
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
@@ -75,6 +86,9 @@ public class MenuPanel extends JPanel {
     @Override
     protected void paintComponent(final Graphics graphics) {
         super.paintComponent(graphics);
-        graphics.drawImage(SPACE_BACKGROUND, 0, 0, getWidth(), getHeight(), this);
+        final int windowHeight = getHeight();
+        final int windowWidth = getWidth();
+        graphics.drawImage(SPACE_BACKGROUND, 0, 0, windowWidth, windowHeight, this);
+        graphics.drawImage(BOSS_ALIEN, (windowWidth - windowHeight) / 2, 0, windowHeight, windowHeight, this);
     }
 }
