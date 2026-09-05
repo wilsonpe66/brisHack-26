@@ -25,7 +25,7 @@ public class MenuPanel extends JPanel {
     private static final Image SPACE_BACKGROUND = AssetManager.getImage(ImageKey.SPACE_BACKGROUND).get();
     private static final Image BOSS_ALIEN = getImage(ImageKey.ALIEN_BOSS_5).get();
 
-    public MenuPanel(Game game) {
+    public MenuPanel(final Game game) {
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         setBackground(new Color(30, 30, 40));
         // GridBagLayout centres components and allows flexible grid positioning
@@ -58,9 +58,9 @@ public class MenuPanel extends JPanel {
 
         final JButton playButton = new JButton("PLAY GAME");
         playButton.setPreferredSize(preferredSize);
-        playButton.addActionListener(_ -> game.showGame());
+        playButton.addActionListener(_ -> game.showGameSwitchUser());
 
-        final JButton quitButton = new JButton("QUIT");
+        final JButton quitButton = new JButton("GIVE UP");
         quitButton.setPreferredSize(preferredSize);
         quitButton.addActionListener(_ -> game.quit());
 

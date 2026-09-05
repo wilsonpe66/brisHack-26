@@ -54,7 +54,7 @@ public class WorldState {
     private boolean lastIsPressedState = false;
     @Getter
     private boolean isPaused = false;
-    private long gameStartTime;
+    private final long gameStartTime;
     private int level;
     private int lastLevel = 0;
     private boolean isMuteTogglePressedState = false;
@@ -74,10 +74,6 @@ public class WorldState {
         bossAlienGenerator = new Generate<>(new BossAlienSpawner(this));
         gameStartTime = System.currentTimeMillis();
         this.leaderBoardStore = leaderboardStore;
-    }
-
-    private static String aaa(final GameObject a) {
-        return "%s@%s: %d".formatted(a.getClass().getCanonicalName(), System.identityHashCode(a), a.getHealth());
     }
 
     private void creatBackGroundStars() {
@@ -297,28 +293,6 @@ public class WorldState {
             SoundManager.play(SoundLoopKey.BACK_GROUND);
             player.setHealth(Math.clamp((int) (player.getHealth() * 1.1), 10, 100));
         }
-    }
-
-    /**
-     * Reset player and clear all objects for a new game.
-     */
-    public void reset() {
-        objects.clear();
-        level = 0;
-        lastLevel = 0;
-        updatableObjects.clear();
-        player.setPosition(new Position(Constants.MIDDLE_X, Constants.MIDDLE_Y));
-        player.setVelocity(Velocity.ZERO);
-        player.setHealth(100);
-        player.setScore(0);
-        player.setRotationAngle(-PiConstants.PID2);
-        objects.add(player);
-        updatableObjects.add(player);
-        gameStartTime = System.currentTimeMillis();
-
-        lastIsPressedState = false;
-        isPaused = false;
-        Settings.muted = false;
     }
 
     public void pause() {

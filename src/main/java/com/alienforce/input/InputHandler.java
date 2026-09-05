@@ -5,11 +5,14 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import com.alienforce.game.Game;
 import lombok.Getter;
 import net.java.games.input.Event;
 
 public class InputHandler implements KeyListener {
 
+    private Game game = null;
     @Getter
     private boolean muteTogglePressed;
     @Getter
@@ -29,22 +32,28 @@ public class InputHandler implements KeyListener {
     // Double-brace initializer: creates an anonymous HashMap subclass and immediately
     // populates it. Each entry maps a key code to a lambda that sets the corresponding flag.
     // Consumer<Boolean> accepts true (pressed) or false (released).
-    private final Map<Integer, Consumer<Boolean>> keyMap = new HashMap<>() {{
-        put(KeyEvent.VK_M, v -> muteTogglePressed = v);
-        put(KeyEvent.VK_W, v -> upPressed = v);
-        put(KeyEvent.VK_UP, v -> upPressed = v);
-        put(KeyEvent.VK_S, v -> downPressed = v);
-        put(KeyEvent.VK_DOWN, v -> downPressed = v);
-        put(KeyEvent.VK_A, v -> leftPressed = v);
-        put(KeyEvent.VK_LEFT, v -> leftPressed = v);
-        put(KeyEvent.VK_D, v -> rightPressed = v);
-        put(KeyEvent.VK_RIGHT, v -> rightPressed = v);
-        put(KeyEvent.VK_SPACE, v -> shootPressed = v);
-        put(KeyEvent.VK_ENTER, v -> pausedPressed = v);
-        put(KeyEvent.VK_Z, v -> shootPressed = v);
-        put(KeyEvent.VK_X, v -> superShootPressed = v);
-    }};
+    private final Map<Integer, Consumer<Boolean>> keyMap;
     private final GamePadManager gamePadManager = new GamePadManager(this::gamePadEventHandler);
+
+    public InputHandler(final Game game) {
+        this.game = game;
+        keyMap = new HashMap<>() {{
+            put(KeyEvent.VK_M, v -> muteTogglePressed = v);
+            put(KeyEvent.VK_W, v -> upPressed = v);
+            put(KeyEvent.VK_UP, v -> upPressed = v);
+            put(KeyEvent.VK_S, v -> downPressed = v);
+            put(KeyEvent.VK_DOWN, v -> downPressed = v);
+            put(KeyEvent.VK_A, v -> leftPressed = v);
+            put(KeyEvent.VK_LEFT, v -> leftPressed = v);
+            put(KeyEvent.VK_D, v -> rightPressed = v);
+            put(KeyEvent.VK_RIGHT, v -> rightPressed = v);
+            put(KeyEvent.VK_SPACE, v -> shootPressed = v);
+            put(KeyEvent.VK_ENTER, v -> pausedPressed = v);
+            put(KeyEvent.VK_Z, v -> shootPressed = v);
+            put(KeyEvent.VK_X, v -> superShootPressed = v);
+            put(KeyEvent.VK_F11, v -> game.toggleFullScreen());
+        }};
+    }
 
     private void gamePadEventHandler(final Event event) {
         final float value = event.getValue();

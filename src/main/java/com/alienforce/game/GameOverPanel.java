@@ -25,7 +25,7 @@ public class GameOverPanel extends JPanel {
     private final DefaultTableModel leaderboardModel;
     private final Game game;
 
-    public GameOverPanel(Game game) {
+    public GameOverPanel(final Game game) {
         this.game = game;
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         setBackground(new Color(30, 30, 40));
@@ -73,11 +73,15 @@ public class GameOverPanel extends JPanel {
 
         final Dimension preferredSize = new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
 
-        final JButton newGameButton = new JButton("NEW GAME");
-        newGameButton.setPreferredSize(preferredSize);
-        newGameButton.addActionListener(_ -> game.restartGame());
+        final JButton newGameButtonSameUser = new JButton("NEW GAME (Retry)");
+        newGameButtonSameUser.setPreferredSize(preferredSize);
+        newGameButtonSameUser.addActionListener(_ -> game.restartGameSameUser());
 
-        final JButton quitButton = new JButton("QUIT");
+        final JButton newGameButtonSwitchUser = new JButton("NEW GAME (Switch User)");
+        newGameButtonSwitchUser.setPreferredSize(preferredSize);
+        newGameButtonSwitchUser.addActionListener(_ -> game.restartGame());
+
+        final JButton quitButton = new JButton("GIVE UP");
         quitButton.setPreferredSize(preferredSize);
         quitButton.addActionListener(_ -> game.quit());
 
@@ -89,7 +93,8 @@ public class GameOverPanel extends JPanel {
             event -> fullScreenButton.setText(Game.fullScreenButtonText((boolean) event.getNewValue()))
         );
 
-        buttonPanel.add(newGameButton);
+        buttonPanel.add(newGameButtonSameUser);
+        buttonPanel.add(newGameButtonSwitchUser);
         buttonPanel.add(fullScreenButton);
         buttonPanel.add(quitButton);
 
