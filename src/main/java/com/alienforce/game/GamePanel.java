@@ -33,14 +33,16 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private static final Image SPACE_BACKGROUND = getImage(ImageKey.SPACE_BACKGROUND).get();
     private static double pauseTime = 0;
-    final WorldState worldState;
+    WorldState worldState;
     private final Timer gameTimer;
     private final InputHandler inputHandler;
     private final Game game;
+    private final LeaderboardStore leaderBoardStore;
 
-    public GamePanel(Game game, final LeaderboardStore leaderBoardStore) {
+    public GamePanel(final Game game, final LeaderboardStore leaderBoardStore) {
         this.game = game;
-        inputHandler = new InputHandler();
+        inputHandler = new InputHandler(game);
+        this.leaderBoardStore = leaderBoardStore;
 
         setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
         setBackground(Color.BLACK);
@@ -126,7 +128,7 @@ public class GamePanel extends JPanel implements ActionListener {
     public void reset() {
         inputHandler.clearAllKeys(); // keys held during game over never got keyReleased (panel lost focus)
         SoundManager.stop(SoundLoopKey.THRUSTER);
-        worldState.reset();
+        worldState = new WorldState(inputHandler, leaderBoardStore);
     }
 
     // called every frame

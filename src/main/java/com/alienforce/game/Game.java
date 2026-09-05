@@ -43,6 +43,14 @@ public class Game extends JFrame {
     private final GamePadManager gamePadManager = new GamePadManager(this::gamePadEventHandler);
     private Rectangle windowedBounds;
     private GraphicsDevice fullScreenDevice;
+    /**
+     * -- GETTER --
+     * Returns whether the game is currently displayed in fullscreen mode.
+     * ///
+     * ///
+     * @return `true` while fullscreen is active; otherwise `false`
+     */
+    @Getter
     private boolean fullScreen;
     private boolean changingDisplayMode;
     @Getter
@@ -185,13 +193,6 @@ public class Game extends JFrame {
         }
     }
 
-    /// Returns whether the game is currently displayed in fullscreen mode.
-    ///
-    /// @return `true` while fullscreen is active; otherwise `false`
-    public boolean isFullScreen() {
-        return fullScreen;
-    }
-
     /// Enters fullscreen on the display containing the window.
     ///
     /// The current window bounds are saved before changing decoration state. When fullscreen windows are unsupported, this falls back to borderless maximized
@@ -231,8 +232,8 @@ public class Game extends JFrame {
         fullScreenDevice = null;
     }
 
-    public void showGame() {
-        if (!ensurePlayerName()) {
+    public void showGameSameUser() {
+        if (playerName== null || playerName.isBlank()) {
             return;
         }
         useMenuInputs.set(false);
@@ -246,6 +247,13 @@ public class Game extends JFrame {
         mainContainer.getComponent(1).requestFocusInWindow();
     }
 
+    public void showGameSwitchUser() {
+        if (!ensurePlayerName()) {
+            return;
+        }
+        showGameSameUser();
+    }
+
     public void showGameOver(final int level, final int score) {
         useMenuInputs.set(true);
         leaderboardStore.record(playerName, level, score);
@@ -257,9 +265,14 @@ public class Game extends JFrame {
 
     }
 
+    public void restartGameSameUser() {
+        gamepanel.reset();
+        showGameSameUser();
+    }
+
     public void restartGame() {
         gamepanel.reset();
-        showGame();
+        showGameSwitchUser();
     }
 
     public void quit() {
@@ -296,6 +309,7 @@ public class Game extends JFrame {
                 playerName == null ? choices.get(0) : playerName
             );
             if (selection == null) {
+                playerName = null;
                 return false;
             }
             if (addNewName.equals(selection)) {
