@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 public record ColorTransition(
-    List<Color> colors
+        List<Color> colors
 ) {
 
     public ColorTransition {
@@ -21,9 +21,9 @@ public record ColorTransition(
 
     private static Color getColor(final double scale, final Color startColor, final Color endColor) {
         return new Color(
-            (int) getColor(scale, startColor.getRed(), endColor.getRed()),
-            (int) getColor(scale, startColor.getGreen(), endColor.getGreen()),
-            (int) getColor(scale, startColor.getBlue(), endColor.getBlue())
+                (int) getColor(scale, startColor.getRed(), endColor.getRed()),
+                (int) getColor(scale, startColor.getGreen(), endColor.getGreen()),
+                (int) getColor(scale, startColor.getBlue(), endColor.getBlue())
         );
     }
 

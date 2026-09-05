@@ -1,8 +1,8 @@
 package com.alienforce.motion;
 
 public record Velocity(
-    double dx,
-    double dy
+        double dx,
+        double dy
 ) {
 
     public static final Velocity ZERO = new Velocity(0, 0);

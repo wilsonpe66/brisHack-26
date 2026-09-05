@@ -1,10 +1,11 @@
 package com.alienforce.input;
 
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import net.java.games.input.Event;
+
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class GamePadManager {
     private final Consumer<Event> consumer;
@@ -17,9 +18,9 @@ public class GamePadManager {
 
     private void initialize() {
         controller = Stream.of(ControllerEnvironment.getDefaultEnvironment().getControllers())
-            .filter(controllerLocal -> controllerLocal.getType() == Controller.Type.GAMEPAD)
-            .findFirst()
-            .orElse(null);
+                .filter(controllerLocal -> controllerLocal.getType() == Controller.Type.GAMEPAD)
+                .findFirst()
+                .orElse(null);
     }
 
     public void update() {

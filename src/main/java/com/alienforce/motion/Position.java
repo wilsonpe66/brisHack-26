@@ -1,8 +1,8 @@
 package com.alienforce.motion;
 
 public record Position(
-    double x,
-    double y
+        double x,
+        double y
 ) {
     public static final Position ZERO = new Position(0, 0);
 

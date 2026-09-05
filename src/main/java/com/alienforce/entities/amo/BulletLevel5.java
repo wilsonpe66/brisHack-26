@@ -7,7 +7,7 @@ import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
 import lombok.Getter;
 
-import java.awt.*;
+import java.awt.Image;
 
 import static com.alienforce.assets.AssetManager.getImage;
 

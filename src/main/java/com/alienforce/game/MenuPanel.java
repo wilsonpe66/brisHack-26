@@ -7,8 +7,17 @@ import com.alienforce.assets.SoundManager;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.CustomFonts;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
 
 import static com.alienforce.assets.AssetManager.getImage;
 

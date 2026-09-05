@@ -6,9 +6,9 @@ import java.util.Objects;
 
 /// Stores the game level constants.
 ///
-/// @param levelNumber               The level number zero based.
-/// @param alien                     The alien constants.
-/// @param bossAlien                 the boss alien constants.
+/// @param levelNumber The level number zero based.
+/// @param alien       The alien constants.
+/// @param bossAlien   the boss alien constants.
 /// @author Peter Wilson
 @Builder(toBuilder = true)
 public record GameLevel(

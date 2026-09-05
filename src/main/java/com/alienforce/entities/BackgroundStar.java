@@ -2,10 +2,11 @@ package com.alienforce.entities;
 
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
+import com.alienforce.utils.PiConstants;
+import lombok.Getter;
+
 import java.awt.Color;
 import java.awt.Image;
-import lombok.Getter;
-import com.alienforce.utils.PiConstants;
 
 
 public class BackgroundStar extends GameObject {

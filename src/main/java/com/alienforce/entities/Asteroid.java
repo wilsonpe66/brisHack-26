@@ -1,14 +1,15 @@
 package com.alienforce.entities;
 
-import static com.alienforce.assets.AssetManager.getImage;
-
 import com.alienforce.assets.ImageKey;
 import com.alienforce.entities.amo.Bullet;
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
+import com.alienforce.utils.Constants;
+
 import java.awt.Image;
 import java.util.Random;
-import com.alienforce.utils.Constants;
+
+import static com.alienforce.assets.AssetManager.getImage;
 
 public class Asteroid extends GameObject {
 
@@ -16,10 +17,10 @@ public class Asteroid extends GameObject {
 
     private static final Random random = new Random();
     private static final Image[] sprites = {
-        getImage(ImageKey.ASTEROID_1).get(),
-        getImage(ImageKey.ASTEROID_2).get(),
-        getImage(ImageKey.ASTEROID_3).get(),
-        getImage(ImageKey.ASTEROID_4).get()
+            getImage(ImageKey.ASTEROID_1).get(),
+            getImage(ImageKey.ASTEROID_2).get(),
+            getImage(ImageKey.ASTEROID_3).get(),
+            getImage(ImageKey.ASTEROID_4).get()
     };
     private final Image sprite;
     /**
@@ -57,7 +58,7 @@ public class Asteroid extends GameObject {
 
         if (getPosition() instanceof Position(final var x, final var y)) {
             if (x < -buffer || x > Constants.WIDTH + buffer
-                || y < -buffer || y > Constants.HEIGHT + buffer) {
+                    || y < -buffer || y > Constants.HEIGHT + buffer) {
                 die();
             }
         }
