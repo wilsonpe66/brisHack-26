@@ -2,10 +2,11 @@ package com.alienforce.entities;
 
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
-import java.awt.Image;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.awt.Image;
 
 @Setter
 @Getter

@@ -23,8 +23,9 @@ import com.alienforce.motion.Velocity;
 import com.alienforce.utils.AlienConstants;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.GameLevel;
-import com.alienforce.utils.PiConstants;
 import com.alienforce.utils.Settings;
+import lombok.Getter;
+
 import java.awt.Color;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +35,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import lombok.Getter;
 
 public class WorldState {
 
@@ -83,16 +83,16 @@ public class WorldState {
         explosionObjects = new HashSet<>();
 
         Stream
-            .of(Color.CYAN, Color.RED, Color.GREEN)
-            .forEach(color -> {
-                final BackgroundStar backgroundStar = new BackgroundStar(
-                    new Position(Math.random() * Constants.WIDTH, Math.random() * Constants.HEIGHT),
-                    Velocity.ZERO,
-                    color
-                );
-                backgroundObjects.add(backgroundStar);
-                backgroundUpdatableObjects.add(backgroundStar);
-            });
+                .of(Color.CYAN, Color.RED, Color.GREEN)
+                .forEach(color -> {
+                    final BackgroundStar backgroundStar = new BackgroundStar(
+                            new Position(Math.random() * Constants.WIDTH, Math.random() * Constants.HEIGHT),
+                            Velocity.ZERO,
+                            color
+                    );
+                    backgroundObjects.add(backgroundStar);
+                    backgroundUpdatableObjects.add(backgroundStar);
+                });
     }
 
     public GameLevel gameLevel() {
@@ -111,29 +111,29 @@ public class WorldState {
         }
 
         (superShootPressed ? player.shootIgnoreCoolDown() : player.shoot())
-            .filter(GameObject.class::isInstance)
-            .forEach(bullet -> {
-                objects.add((GameObject) bullet);
-                updatableObjects.add(bullet);
-            });
+                .filter(GameObject.class::isInstance)
+                .forEach(bullet -> {
+                    objects.add((GameObject) bullet);
+                    updatableObjects.add(bullet);
+                });
     }
 
     private void handleAlienShooting() {
         // Collect new bullets into a separate list first to avoid ConcurrentModificationException
         // (we can't add to 'objects' while iterating over it)
         objects
-            .stream()
-            .filter(Objects::nonNull)
-            .filter(GameObject::isAlive)
-            .filter(Alien.class::isInstance)
-            .map(SelfDefendable.class::cast)
-            .flatMap(SelfDefendable::shoot)
-            .filter(GameObject.class::isInstance)
-            .collect(Collectors.toSet())
-            .forEach(bullet -> {
-                objects.add((GameObject) bullet);
-                updatableObjects.add(bullet);
-            });
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(GameObject::isAlive)
+                .filter(Alien.class::isInstance)
+                .map(SelfDefendable.class::cast)
+                .flatMap(SelfDefendable::shoot)
+                .filter(GameObject.class::isInstance)
+                .collect(Collectors.toSet())
+                .forEach(bullet -> {
+                    objects.add((GameObject) bullet);
+                    updatableObjects.add(bullet);
+                });
     }
     //pausedPressed
 
@@ -165,25 +165,25 @@ public class WorldState {
 
     private void handleCollisions() {
         final List<GameObject> livingObjects = objects
-            .stream()
-            .filter(GameObject::isAlive)
-            .toList();
+                .stream()
+                .filter(GameObject::isAlive)
+                .toList();
 
         IntStream
-            .range(0, livingObjects.size())
-            .forEach(outerIndex -> {
-                IntStream
-                    .range(outerIndex + 1, livingObjects.size())
-                    .forEach(innerIndex -> {
-                        final GameObject a = livingObjects.get(outerIndex);
-                        final GameObject b = livingObjects.get(innerIndex);
-                        if (checkCollision(a, b)) {
-                            a.collide(b);
-                            b.collide(a);
-                        }
+                .range(0, livingObjects.size())
+                .forEach(outerIndex -> {
+                    IntStream
+                            .range(outerIndex + 1, livingObjects.size())
+                            .forEach(innerIndex -> {
+                                final GameObject a = livingObjects.get(outerIndex);
+                                final GameObject b = livingObjects.get(innerIndex);
+                                if (checkCollision(a, b)) {
+                                    a.collide(b);
+                                    b.collide(a);
+                                }
 
-                    });
-            });
+                            });
+                });
     }
 
     private void removeDeadObjects() {
@@ -191,15 +191,15 @@ public class WorldState {
         // Only asteroids with killedByBullet=true contribute to score —
         // those that flew off-screen or were destroyed by other asteroids don't count.
         int shotAsteroids = (int) objects.stream()
-            .filter(GameObject::isDead)
-            .filter(obj -> obj instanceof Asteroid asteroid && asteroid.wasKilledByBullet())
-            .count();
+                .filter(GameObject::isDead)
+                .filter(obj -> obj instanceof Asteroid asteroid && asteroid.wasKilledByBullet())
+                .count();
         player.incrementScore(shotAsteroids);
 
         objects.stream()
-            .filter(GameObject::isDead)
-            .filter(Predicate.not(Bullet.class::isInstance))
-            .map(Explosion::new)
+                .filter(GameObject::isDead)
+                .filter(Predicate.not(Bullet.class::isInstance))
+                .map(Explosion::new)
                 .forEach(explosion -> {
                     explosionObjects.add(explosion);
                     updatableObjects.add(explosion);

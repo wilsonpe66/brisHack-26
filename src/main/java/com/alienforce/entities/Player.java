@@ -17,7 +17,7 @@ import com.alienforce.utils.PiConstants;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.awt.*;
+import java.awt.Image;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -141,7 +141,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     @Override
     public Image getSprite() {
-        return sprites.get(Math.clamp((int)(worldState.gameLevel().levelNumber()/2.8), 0, 5));
+        return sprites.get(Math.clamp((int) (worldState.gameLevel().levelNumber() / 2.8), 0, 5));
     }
 
     @Override

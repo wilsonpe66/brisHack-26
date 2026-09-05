@@ -1,8 +1,9 @@
 package com.alienforce.leaderboard;
 
+import lombok.Builder;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
-import lombok.Builder;
 
 @Builder(toBuilder = true)
 public record PlayerScore(String name, int level, int score, LocalDateTime createTime) {

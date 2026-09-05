@@ -9,8 +9,9 @@ import com.alienforce.entities.amo.BulletLevel5;
 import com.alienforce.entities.amo.BulletLevel6;
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
-import java.util.stream.Stream;
 import com.alienforce.utils.PiConstants;
+
+import java.util.stream.Stream;
 
 public interface SelfDefendable {
 
@@ -20,96 +21,96 @@ public interface SelfDefendable {
 
     default Stream<Bullet> getSingleShoot(final Position playerPosition, final double radius, final double speed, final double angle) {
         return Stream.of(
-            new BulletLevel1(
-                playerPosition.add(Velocity.fromAngleAndSpeed(angle, radius)),
-                Velocity.fromAngleAndSpeed(angle, speed),
-                angle, this
-            )
+                new BulletLevel1(
+                        playerPosition.add(Velocity.fromAngleAndSpeed(angle, radius)),
+                        Velocity.fromAngleAndSpeed(angle, speed),
+                        angle, this
+                )
         );
     }
 
     default Stream<Bullet> getSupperShoot(final Position playerPosition, final double radius, final double speed, final double angle) {
         return Stream.concat(
-            getSingleShoot(playerPosition, radius, speed, angle),
-            Stream.of(
-                new BulletLevel2(
-                    playerPosition.add(Velocity.fromAngleAndSpeed(angle - ANGEL_OFFSET_THETA, radius)),
-                    Velocity.fromAngleAndSpeed(angle - ANGEL_OFFSET_THETA, 1.5 * speed),
-                    angle - ANGEL_OFFSET_THETA, this
-                ),
-                new BulletLevel2(
-                    playerPosition.add(Velocity.fromAngleAndSpeed(angle + ANGEL_OFFSET_THETA, radius)),
-                    Velocity.fromAngleAndSpeed(angle + ANGEL_OFFSET_THETA, 1.5 * speed),
-                    angle + ANGEL_OFFSET_THETA, this
+                getSingleShoot(playerPosition, radius, speed, angle),
+                Stream.of(
+                        new BulletLevel2(
+                                playerPosition.add(Velocity.fromAngleAndSpeed(angle - ANGEL_OFFSET_THETA, radius)),
+                                Velocity.fromAngleAndSpeed(angle - ANGEL_OFFSET_THETA, 1.5 * speed),
+                                angle - ANGEL_OFFSET_THETA, this
+                        ),
+                        new BulletLevel2(
+                                playerPosition.add(Velocity.fromAngleAndSpeed(angle + ANGEL_OFFSET_THETA, radius)),
+                                Velocity.fromAngleAndSpeed(angle + ANGEL_OFFSET_THETA, 1.5 * speed),
+                                angle + ANGEL_OFFSET_THETA, this
+                        )
                 )
-            )
         );
     }
 
     default Stream<Bullet> getSupperDuperShoot(final Position playerPosition, final double radius, final double speed, final double angle) {
         return Stream.concat(
-            getSupperShoot(playerPosition, radius, speed, angle),
-            Stream.of(
-                new BulletLevel3(
-                    playerPosition.add(Velocity.fromAngleAndSpeed(angle - PiConstants.PID4, radius)),
-                    Velocity.fromAngleAndSpeed(angle - PiConstants.PID4, speed),
-                    angle - PiConstants.PID4, this
-                ),
-                new BulletLevel3(
-                    playerPosition.add(Velocity.fromAngleAndSpeed(angle + PiConstants.PID4, radius)),
-                    Velocity.fromAngleAndSpeed(angle + PiConstants.PID4, speed),
-                    angle + PiConstants.PID4, this
+                getSupperShoot(playerPosition, radius, speed, angle),
+                Stream.of(
+                        new BulletLevel3(
+                                playerPosition.add(Velocity.fromAngleAndSpeed(angle - PiConstants.PID4, radius)),
+                                Velocity.fromAngleAndSpeed(angle - PiConstants.PID4, speed),
+                                angle - PiConstants.PID4, this
+                        ),
+                        new BulletLevel3(
+                                playerPosition.add(Velocity.fromAngleAndSpeed(angle + PiConstants.PID4, radius)),
+                                Velocity.fromAngleAndSpeed(angle + PiConstants.PID4, speed),
+                                angle + PiConstants.PID4, this
+                        )
                 )
-            )
         );
     }
 
     default Stream<Bullet> getSupperDuper2Shoot(final Position playerPosition, final double radius, final double speed, final double angle) {
         return Stream.concat(
-            getSupperDuperShoot(playerPosition, radius, speed, angle),
-            Stream.of(
-                new BulletLevel4(
-                    playerPosition.add(Velocity.fromAngleAndSpeed(angle - PiConstants.PID6, radius)),
-                    Velocity.fromAngleAndSpeed(angle - PiConstants.PID6, speed),
-                    angle - PiConstants.PID6, this
-                ),
-                new BulletLevel4(
-                    playerPosition.add(Velocity.fromAngleAndSpeed(angle + PiConstants.PID6, radius)),
-                    Velocity.fromAngleAndSpeed(angle + PiConstants.PID6, speed),
-                    angle + PiConstants.PID6, this
+                getSupperDuperShoot(playerPosition, radius, speed, angle),
+                Stream.of(
+                        new BulletLevel4(
+                                playerPosition.add(Velocity.fromAngleAndSpeed(angle - PiConstants.PID6, radius)),
+                                Velocity.fromAngleAndSpeed(angle - PiConstants.PID6, speed),
+                                angle - PiConstants.PID6, this
+                        ),
+                        new BulletLevel4(
+                                playerPosition.add(Velocity.fromAngleAndSpeed(angle + PiConstants.PID6, radius)),
+                                Velocity.fromAngleAndSpeed(angle + PiConstants.PID6, speed),
+                                angle + PiConstants.PID6, this
+                        )
                 )
-            )
         );
     }
 
     default Stream<Bullet> getSupperDuper3Shoot(final Position playerPosition, final double radius, final double speed, final double angle) {
         return Stream.concat(
-            getSupperDuper2Shoot(playerPosition, radius, speed, angle),
-            Stream.of(
-                new BulletLevel5(
-                    playerPosition.add(Velocity.fromAngleAndSpeed(angle - PiConstants.PID2, radius)),
-                    Velocity.fromAngleAndSpeed(angle - PiConstants.PID2, speed / 2),
-                    angle - PiConstants.PID2, this
-                ),
-                new BulletLevel5(
-                    playerPosition.add(Velocity.fromAngleAndSpeed(angle + PiConstants.PID2, radius)),
-                    Velocity.fromAngleAndSpeed(angle + PiConstants.PID2, speed / 2),
-                    angle + PiConstants.PID2, this
+                getSupperDuper2Shoot(playerPosition, radius, speed, angle),
+                Stream.of(
+                        new BulletLevel5(
+                                playerPosition.add(Velocity.fromAngleAndSpeed(angle - PiConstants.PID2, radius)),
+                                Velocity.fromAngleAndSpeed(angle - PiConstants.PID2, speed / 2),
+                                angle - PiConstants.PID2, this
+                        ),
+                        new BulletLevel5(
+                                playerPosition.add(Velocity.fromAngleAndSpeed(angle + PiConstants.PID2, radius)),
+                                Velocity.fromAngleAndSpeed(angle + PiConstants.PID2, speed / 2),
+                                angle + PiConstants.PID2, this
+                        )
                 )
-            )
         );
     }
 
     default Stream<Bullet> getSupperDuper4Shoot(final Position playerPosition, final double radius, final double speed, final double angle) {
         return Stream.concat(
-            getSupperDuper3Shoot(playerPosition, radius, speed, angle),
-            Stream.of(
-                new BulletLevel6(
-                    playerPosition.add(Velocity.fromAngleAndSpeed(angle - Math.PI, radius)),
-                    Velocity.fromAngleAndSpeed(angle -  - Math.PI, speed / 2),
-                    angle -  Math.PI, this
+                getSupperDuper3Shoot(playerPosition, radius, speed, angle),
+                Stream.of(
+                        new BulletLevel6(
+                                playerPosition.add(Velocity.fromAngleAndSpeed(angle - Math.PI, radius)),
+                                Velocity.fromAngleAndSpeed(angle - -Math.PI, speed / 2),
+                                angle - Math.PI, this
+                        )
                 )
-            )
         );
     }
 

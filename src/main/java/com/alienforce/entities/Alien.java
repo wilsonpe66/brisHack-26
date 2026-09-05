@@ -11,7 +11,7 @@ import com.alienforce.utils.AlienConstants;
 import com.alienforce.utils.GameLevel;
 import com.alienforce.utils.ShootConstants;
 
-import java.awt.*;
+import java.awt.Image;
 import java.util.stream.Stream;
 
 import static com.alienforce.assets.AssetManager.getImage;

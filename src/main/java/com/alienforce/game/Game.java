@@ -6,15 +6,9 @@ import com.alienforce.entities.Player;
 import com.alienforce.input.GamePadManager;
 import com.alienforce.leaderboard.LeaderboardStore;
 import com.alienforce.utils.Settings;
-import java.awt.CardLayout;
-import java.awt.GraphicsDevice;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.Getter;
+import net.java.games.input.Event;
+
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -26,8 +20,15 @@ import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import lombok.Getter;
-import net.java.games.input.Event;
+import java.awt.CardLayout;
+import java.awt.GraphicsDevice;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Game extends JFrame {
 
@@ -48,6 +49,7 @@ public class Game extends JFrame {
      * Returns whether the game is currently displayed in fullscreen mode.
      * ///
      * ///
+     *
      * @return `true` while fullscreen is active; otherwise `false`
      */
     @Getter
@@ -233,7 +235,7 @@ public class Game extends JFrame {
     }
 
     public void showGameSameUser() {
-        if (playerName== null || playerName.isBlank()) {
+        if (playerName == null || playerName.isBlank()) {
             return;
         }
         useMenuInputs.set(false);
@@ -281,7 +283,7 @@ public class Game extends JFrame {
         if (player.isAlive() && player.getScore() > 0) {
             player.die();
             leaderboardStore.record(
-                player.name(), gamepanel.worldState.gameLevel().levelNumber() + 1, player.getScore()
+                    player.name(), gamepanel.worldState.gameLevel().levelNumber() + 1, player.getScore()
             );
         }
         dispose();
@@ -300,13 +302,13 @@ public class Game extends JFrame {
         choices.add(addNewName);
         while (true) {
             final Object selection = javax.swing.JOptionPane.showInputDialog(
-                this,
-                "Select your player name:",
-                "Player name",
-                javax.swing.JOptionPane.QUESTION_MESSAGE,
-                null,
-                choices.toArray(),
-                playerName == null ? choices.get(0) : playerName
+                    this,
+                    "Select your player name:",
+                    "Player name",
+                    javax.swing.JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    choices.toArray(),
+                    playerName == null ? choices.get(0) : playerName
             );
             if (selection == null) {
                 playerName = null;
@@ -330,11 +332,11 @@ public class Game extends JFrame {
             prompt.add(new JLabel("Unique player name (1–50 characters):"));
             prompt.add(nameField);
             final int result = JOptionPane.showConfirmDialog(
-                this,
-                prompt,
-                "Add player name",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE
+                    this,
+                    prompt,
+                    "Add player name",
+                    JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
             );
             if (result != JOptionPane.OK_OPTION) {
                 return null;
@@ -343,10 +345,10 @@ public class Game extends JFrame {
             final String newName = nameField.getText().trim();
             if (newName.isBlank() || newName.length() > 50 || !leaderboardStore.addPlayerName(newName)) {
                 javax.swing.JOptionPane.showMessageDialog(
-                    this,
-                    "Names must be unique and between 1 and 50 characters.",
-                    "Invalid player name",
-                    javax.swing.JOptionPane.WARNING_MESSAGE
+                        this,
+                        "Names must be unique and between 1 and 50 characters.",
+                        "Invalid player name",
+                        javax.swing.JOptionPane.WARNING_MESSAGE
                 );
                 continue;
             }

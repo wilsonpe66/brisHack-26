@@ -29,7 +29,7 @@ public interface Bullet extends Updatable, Collidable {
 
         if (getPosition() instanceof Position(var x, var y)) {
             if (x < 0 || x > Constants.WIDTH
-                || y < 0 || y > Constants.HEIGHT) {
+                    || y < 0 || y > Constants.HEIGHT) {
                 die();
             }
         }

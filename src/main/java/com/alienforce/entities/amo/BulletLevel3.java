@@ -1,14 +1,15 @@
 package com.alienforce.entities.amo;
 
-import static com.alienforce.assets.AssetManager.getImage;
-
 import com.alienforce.assets.ImageKey;
 import com.alienforce.entities.GameObject;
 import com.alienforce.entities.SelfDefendable;
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
-import java.awt.Image;
 import lombok.Getter;
+
+import java.awt.Image;
+
+import static com.alienforce.assets.AssetManager.getImage;
 
 /// {@inheritDoc}
 public class BulletLevel3 extends GameObject implements Bullet {

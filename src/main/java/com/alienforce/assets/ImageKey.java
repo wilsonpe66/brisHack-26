@@ -23,7 +23,8 @@ public enum ImageKey implements AssetKey {
     BULLET_4("missile/4.png"),
     BULLET_5("missile/5.png"),
     BULLET_6("missile/6.png"),
-    SPACE_BACKGROUND("spacebackground.png"),;
+    SPACE_BACKGROUND("spacebackground.png"),
+    ;
 
     final String resourceId;
 

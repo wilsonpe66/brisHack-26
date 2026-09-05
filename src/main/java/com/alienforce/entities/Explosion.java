@@ -1,17 +1,18 @@
 package com.alienforce.entities;
 
 import com.alienforce.utils.ColorTransition;
+import lombok.Getter;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.util.List;
-import lombok.Getter;
 
 
 public class Explosion extends GameObject {
 
     private static final Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0);
     private static final ColorTransition colorTransition = new ColorTransition(List.of(
-        Color.BLUE, Color.YELLOW, Color.RED, TRANSPARENT_BLACK
+            Color.BLUE, Color.YELLOW, Color.RED, TRANSPARENT_BLACK
     ));
 
     @Getter

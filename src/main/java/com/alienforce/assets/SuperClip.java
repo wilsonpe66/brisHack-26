@@ -1,8 +1,9 @@
 package com.alienforce.assets;
 
-import java.util.Objects;
-import javax.sound.sampled.Clip;
 import lombok.Builder;
+
+import javax.sound.sampled.Clip;
+import java.util.Objects;
 
 @Builder(toBuilder = true)
 public record SuperClip(SoundKey soundKey, Clip clip) {
