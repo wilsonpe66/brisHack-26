@@ -1,24 +1,16 @@
 package com.alienforce.game;
 
-import static com.alienforce.assets.AssetManager.getImage;
-
 import com.alienforce.assets.AssetManager;
 import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.CustomFonts;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+
+import javax.swing.*;
+import java.awt.*;
+
+import static com.alienforce.assets.AssetManager.getImage;
 
 public class MenuPanel extends JPanel {
 
@@ -54,22 +46,17 @@ public class MenuPanel extends JPanel {
         // setOpaque(false) makes the panel transparent so the parent's background shows through
         buttonPanel.setOpaque(false);
 
-        final Dimension preferredSize = new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
-
-        final JButton playButton = new JButton("PLAY GAME");
-        playButton.setPreferredSize(preferredSize);
+        final JButton playButton = new RoundedButton("PLAY GAME");
         playButton.addActionListener(_ -> game.showGameSwitchUser());
 
-        final JButton quitButton = new JButton("GIVE UP");
-        quitButton.setPreferredSize(preferredSize);
+        final JButton quitButton = new RoundedButton("GIVE UP");
         quitButton.addActionListener(_ -> game.quit());
 
-        final JButton fullScreenButton = new JButton(Game.fullScreenButtonText(game.isFullScreen()));
-        fullScreenButton.setPreferredSize(preferredSize);
+        final JButton fullScreenButton = new RoundedButton(Game.fullScreenButtonText(game.isFullScreen()));
         fullScreenButton.addActionListener(_ -> game.toggleFullScreen());
         game.addPropertyChangeListener(
-            Game.FULL_SCREEN_PROPERTY,
-            event -> fullScreenButton.setText(Game.fullScreenButtonText((boolean) event.getNewValue()))
+                Game.FULL_SCREEN_PROPERTY,
+                event -> fullScreenButton.setText(Game.fullScreenButtonText((boolean) event.getNewValue()))
         );
 
         buttonPanel.add(playButton);

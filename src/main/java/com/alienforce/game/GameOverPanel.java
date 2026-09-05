@@ -3,21 +3,12 @@ package com.alienforce.game;
 import com.alienforce.leaderboard.LeaderBoard;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.CustomFonts;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
 
 public class GameOverPanel extends JPanel {
 
@@ -49,7 +40,7 @@ public class GameOverPanel extends JPanel {
         gbc.gridy = 1; // row 1
         add(scoreLabel, gbc);
 
-        leaderboardModel = new DefaultTableModel(new Object[]{"Player",  "Score","Level", "Date"}, 0) {
+        leaderboardModel = new DefaultTableModel(new Object[]{"Player", "Score", "Level", "Date"}, 0) {
             @Override
             public boolean isCellEditable(final int row, final int column) {
                 return false;
@@ -71,26 +62,20 @@ public class GameOverPanel extends JPanel {
         // setOpaque(false) makes the panel transparent so the parent's background shows through
         buttonPanel.setOpaque(false);
 
-        final Dimension preferredSize = new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT);
-
-        final JButton newGameButtonSameUser = new JButton("NEW GAME (Retry)");
-        newGameButtonSameUser.setPreferredSize(preferredSize);
+        final JButton newGameButtonSameUser = new RoundedButton("Retry");
         newGameButtonSameUser.addActionListener(_ -> game.restartGameSameUser());
 
-        final JButton newGameButtonSwitchUser = new JButton("NEW GAME (Switch User)");
-        newGameButtonSwitchUser.setPreferredSize(preferredSize);
+        final JButton newGameButtonSwitchUser = new RoundedButton("Switch User");
         newGameButtonSwitchUser.addActionListener(_ -> game.restartGame());
 
-        final JButton quitButton = new JButton("GIVE UP");
-        quitButton.setPreferredSize(preferredSize);
+        final JButton quitButton = new RoundedButton("GIVE UP");
         quitButton.addActionListener(_ -> game.quit());
 
-        final JButton fullScreenButton = new JButton(Game.fullScreenButtonText(game.isFullScreen()));
-        fullScreenButton.setPreferredSize(preferredSize);
+        final JButton fullScreenButton = new RoundedButton(Game.fullScreenButtonText(game.isFullScreen()));
         fullScreenButton.addActionListener(_ -> game.toggleFullScreen());
         game.addPropertyChangeListener(
-            Game.FULL_SCREEN_PROPERTY,
-            event -> fullScreenButton.setText(Game.fullScreenButtonText((boolean) event.getNewValue()))
+                Game.FULL_SCREEN_PROPERTY,
+                event -> fullScreenButton.setText(Game.fullScreenButtonText((boolean) event.getNewValue()))
         );
 
         buttonPanel.add(newGameButtonSameUser);
@@ -109,11 +94,11 @@ public class GameOverPanel extends JPanel {
         final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM-dd");
         final AtomicInteger rank = new AtomicInteger(1);
         leaderBoard.getTopScorers(10)
-            .forEach(playerScore -> leaderboardModel.addRow(new Object[]{
-                playerScore.name(),
-                "%,d".formatted(playerScore.score()),
-                playerScore.level(),
-                playerScore.createTime().format(dateFormatter)
-            }));
+                .forEach(playerScore -> leaderboardModel.addRow(new Object[]{
+                        playerScore.name(),
+                        "%,d".formatted(playerScore.score()),
+                        playerScore.level(),
+                        playerScore.createTime().format(dateFormatter)
+                }));
     }
 }
