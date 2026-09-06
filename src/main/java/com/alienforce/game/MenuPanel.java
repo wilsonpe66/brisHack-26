@@ -44,33 +44,22 @@ public class MenuPanel extends JPanel {
         gbc.gridy = 0; // row 0 of the grid
         add(titleLabel, gbc);
 
-        final JLabel subtitleLabel = new JLabel("Press PLAY to start");
-        subtitleLabel.setFont(CustomFonts.PLAIN_28);
-        subtitleLabel.setForeground(new Color(220, 220, 220));
-        gbc.gridy = 1; // row 1 of the grid
-        add(subtitleLabel, gbc);
-
         // FlowLayout(CENTER, hgap, vgap) places buttons side-by-side, centred
         final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
         // setOpaque(false) makes the panel transparent so the parent's background shows through
         buttonPanel.setOpaque(false);
 
-        final JButton playButton = new RoundedButton("PLAY GAME");
-        playButton.addActionListener(_ -> game.showGameSwitchUser());
-
-        final JButton quitButton = new RoundedButton("GIVE UP");
-        quitButton.addActionListener(_ -> game.quit());
-
-        final JButton fullScreenButton = new RoundedButton(Game.fullScreenButtonText(game.isFullScreen()));
-        fullScreenButton.addActionListener(_ -> game.toggleFullScreen());
+        final JButton fullScreenButton = new RoundedButton(
+                Game.fullScreenButtonText(game.isFullScreen()), game::toggleFullScreen
+        );
         game.addPropertyChangeListener(
                 Game.FULL_SCREEN_PROPERTY,
                 event -> fullScreenButton.setText(Game.fullScreenButtonText((boolean) event.getNewValue()))
         );
 
-        buttonPanel.add(playButton);
+        buttonPanel.add(new RoundedButton("PLAY GAME", game::showGameSwitchUser));
         buttonPanel.add(fullScreenButton);
-        buttonPanel.add(quitButton);
+        buttonPanel.add(new RoundedButton("GIVE UP",  game::quit));
 
         gbc.gridy = 2; // row 2 of the grid
         add(buttonPanel, gbc);

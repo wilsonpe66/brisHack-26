@@ -72,26 +72,16 @@ public class GameOverPanel extends JPanel {
         // setOpaque(false) makes the panel transparent so the parent's background shows through
         buttonPanel.setOpaque(false);
 
-        final JButton newGameButtonSameUser = new RoundedButton("Retry");
-        newGameButtonSameUser.addActionListener(_ -> game.restartGameSameUser());
-
-        final JButton newGameButtonSwitchUser = new RoundedButton("Switch User");
-        newGameButtonSwitchUser.addActionListener(_ -> game.restartGame());
-
-        final JButton quitButton = new RoundedButton("GIVE UP");
-        quitButton.addActionListener(_ -> game.quit());
-
-        final JButton fullScreenButton = new RoundedButton(Game.fullScreenButtonText(game.isFullScreen()));
-        fullScreenButton.addActionListener(_ -> game.toggleFullScreen());
+        final JButton fullScreenButton = new RoundedButton(Game.fullScreenButtonText(game.isFullScreen()), game::toggleFullScreen);
         game.addPropertyChangeListener(
                 Game.FULL_SCREEN_PROPERTY,
                 event -> fullScreenButton.setText(Game.fullScreenButtonText((boolean) event.getNewValue()))
         );
 
-        buttonPanel.add(newGameButtonSameUser);
-        buttonPanel.add(newGameButtonSwitchUser);
+        buttonPanel.add(new RoundedButton("Retry", game::restartGameSameUser));
+        buttonPanel.add(new RoundedButton("Switch User", game::restartGame));
         buttonPanel.add(fullScreenButton);
-        buttonPanel.add(quitButton);
+        buttonPanel.add(new RoundedButton("GIVE UP", game::quit));
 
         gbc.gridy = 4;
         add(buttonPanel, gbc);
