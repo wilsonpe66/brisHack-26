@@ -13,14 +13,18 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -28,7 +32,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Game extends JFrame {
 
@@ -42,6 +50,7 @@ public class Game extends JFrame {
     private final GameOverPanel gameOverPanel;
     private final LeaderboardStore leaderboardStore;
     private final GamePadManager gamePadManager = new GamePadManager(this::gamePadEventHandler);
+    private final AtomicBoolean useMenuInputs;
     private Rectangle windowedBounds;
     private GraphicsDevice fullScreenDevice;
     /**
@@ -57,7 +66,6 @@ public class Game extends JFrame {
     private boolean changingDisplayMode;
     @Getter
     private String playerName;
-    private final AtomicBoolean useMenuInputs;
 
     public Game() {
         leaderboardStore = LeaderboardStore.load();
@@ -295,8 +303,9 @@ public class Game extends JFrame {
         final List<String> choices = new ArrayList<>(leaderboardStore.playerNames());
 
         if (choices.isEmpty()) {
-            final String newName = requestNewName(platformUserName());
-            return newName != null && selectPlayerName(newName);
+            return requestNewName(platformUserName())
+                    .map(this::selectPlayerName)
+                    .orElse(false);
         }
 
         choices.add(addNewName);
@@ -308,16 +317,16 @@ public class Game extends JFrame {
                     javax.swing.JOptionPane.QUESTION_MESSAGE,
                     null,
                     choices.toArray(),
-                    playerName == null ? choices.get(0) : playerName
+                    playerName == null ? choices.getFirst() : playerName
             );
             if (selection == null) {
                 playerName = null;
                 return false;
             }
             if (addNewName.equals(selection)) {
-                final String newName = requestNewName("");
-                if (newName != null) {
-                    return selectPlayerName(newName);
+                final Optional<String> optNewName = requestNewName("");
+                if (optNewName.isPresent()) {
+                    return selectPlayerName(optNewName.get());
                 }
                 continue;
             }
@@ -325,35 +334,62 @@ public class Game extends JFrame {
         }
     }
 
-    private String requestNewName(final String initialName) {
-        while (true) {
-            final JTextField nameField = new JTextField(initialName, 30);
-            final JPanel prompt = new JPanel();
-            prompt.add(new JLabel("Unique player name (1–50 characters):"));
-            prompt.add(nameField);
-            final int result = JOptionPane.showConfirmDialog(
-                    this,
-                    prompt,
-                    "Add player name",
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-            );
-            if (result != JOptionPane.OK_OPTION) {
-                return null;
-            }
+    private static final Font ARIAL_FONT = new Font("Arial", Font.PLAIN, 20);
+    private static final Font ARIA_BOLD = ARIAL_FONT.deriveFont(Font.BOLD);
 
-            final String newName = nameField.getText().trim();
-            if (newName.isBlank() || newName.length() > 50 || !leaderboardStore.addPlayerName(newName)) {
-                javax.swing.JOptionPane.showMessageDialog(
-                        this,
-                        "Names must be unique and between 1 and 50 characters.",
-                        "Invalid player name",
-                        javax.swing.JOptionPane.WARNING_MESSAGE
-                );
-                continue;
+    private static JPanel getBlackPanel() {
+        final JPanel blackPanel = new JPanel(new FlowLayout());
+        blackPanel.setBackground(Color.BLACK);
+        return  blackPanel;
+    }
+
+    private Optional<String> requestNewName(final String initialName) {
+        final JDialog modalDialog = new JDialog(this, "Add player name", true);
+        modalDialog.setMinimumSize(new Dimension(700, 200));
+        modalDialog.setLocationRelativeTo(this);
+
+        final JPanel prompt = (JPanel) modalDialog.add(getBlackPanel());
+        prompt.setBackground(Color.BLACK);
+
+        final JLabel message = (JLabel) prompt.add(new JLabel("Player name must unique and (1–50 characters)"));
+        message.setFont(ARIA_BOLD);
+        message.setForeground(Color.RED);
+        message.setVisible(false);
+
+        final JPanel subPanel = (JPanel) prompt.add(getBlackPanel());
+
+        final JLabel label = (JLabel) subPanel.add(new JLabel("Player name"));
+        label.setFont(ARIA_BOLD);
+        label.setForeground(Color.YELLOW);
+
+        final JTextField nameField = (JTextField) subPanel.add(new JTextField(initialName, 25));
+        nameField.setFont(ARIAL_FONT);
+        nameField.setBackground(Color.GRAY);
+        nameField.setForeground(Color.YELLOW);
+        nameField.setPreferredSize(new Dimension(200, 30));
+
+        final var optNewName = new AtomicReference<Optional<String>>();
+
+        final JPanel buttonPanel = (JPanel) prompt.add(getBlackPanel());
+        buttonPanel.add(new RoundedButton("Confirm", () -> {
+            final Optional<String> newValue = Optional.ofNullable(nameField.getText())
+                    .map(String::trim)
+                    .filter(value -> value.length() <= 50)
+                    .filter(Predicate.not(String::isEmpty));
+            if (newValue.isPresent() && leaderboardStore.addPlayerName(newValue.get())) {
+                modalDialog.dispose();
+                optNewName.set(newValue);
+                return;
             }
-            return newName;
-        }
+            nameField.requestFocus();
+            message.setVisible(true);
+        }));
+        buttonPanel.add(new RoundedButton("Cancel", modalDialog::dispose));
+
+        // This line blocks user interaction with the main frame until closed
+        modalDialog.setVisible(true);
+        nameField.requestFocus();
+        return optNewName.get();
     }
 
     private boolean selectPlayerName(final String name) {

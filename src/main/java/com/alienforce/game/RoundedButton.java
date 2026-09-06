@@ -25,7 +25,10 @@ public class RoundedButton extends JButton {
     public RoundedButton(final String label, final Runnable runnable) {
         super(label);
         setPreferredSize(new Dimension(Constants.BUTTON_WIDTH, Constants.BUTTON_HEIGHT));
-        addActionListener(_ -> runnable.run());
+        addActionListener(_ -> {
+            isFocused = false;
+            runnable.run();
+        });
         setBorder(javax.swing.BorderFactory.createEmptyBorder());
 
         addMouseListener(new MouseListener() {
