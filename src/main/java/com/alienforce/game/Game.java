@@ -11,13 +11,17 @@ import net.java.games.input.Event;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import java.awt.CardLayout;
@@ -25,6 +29,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.GraphicsDevice;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -35,13 +40,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.IntStream;
 
 public class Game extends JFrame {
 
     static final String FULL_SCREEN_PROPERTY = "fullScreen";
-
+    private static final Collector<String, DefaultListModel<String>, DefaultListModel<String>> stringDefaultListModelCollector = Collector.of(
+            DefaultListModel::new,
+            (a, b) -> a.add(a.size(), b),
+            (a, b) -> {
+                IntStream.range(0, a.size()).forEach(i -> a.add(i, b.get(i)));
+                return a;
+            }
+    );
+    private static final Font ARIAL_FONT = new Font("Arial", Font.PLAIN, 20);
+    private static final Font ARIA_BOLD = ARIAL_FONT.deriveFont(Font.BOLD);
     // CardLayout stacks panels on top of each other — only one is visible at a time.
     // Calling cardLayout.show(container, "name") switches which panel is displayed.
     private final CardLayout cardLayout = new CardLayout();
@@ -131,6 +146,12 @@ public class Game extends JFrame {
     private static String platformUserName() {
         final String platformName = System.getProperty("user.name", "").trim();
         return platformName.length() <= 50 ? platformName : "";
+    }
+
+    private static JPanel getBlackPanel() {
+        final JPanel blackPanel = new JPanel(new FlowLayout());
+        blackPanel.setBackground(Color.BLACK);
+        return blackPanel;
     }
 
     private void gamePadEventHandler(final Event event) {
@@ -299,57 +320,95 @@ public class Game extends JFrame {
     }
 
     private boolean ensurePlayerName() {
-        final String addNewName = "Add new name...";
         final List<String> choices = new ArrayList<>(leaderboardStore.playerNames());
 
         if (choices.isEmpty()) {
-            return requestNewName(platformUserName())
+            return requestNewName(this, platformUserName())
                     .map(this::selectPlayerName)
                     .orElse(false);
         }
 
-        choices.add(addNewName);
         while (true) {
-            final Object selection = javax.swing.JOptionPane.showInputDialog(
-                    this,
-                    "Select your player name:",
-                    "Player name",
-                    javax.swing.JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    choices.toArray(),
-                    playerName == null ? choices.getFirst() : playerName
+            final JDialog modalDialog = new JDialog(this, "Select Player", true);
+            modalDialog.setMinimumSize(new Dimension(700, 440));
+            modalDialog.setLocationRelativeTo(this);
+
+            final JPanel prompt = (JPanel) modalDialog.add(getBlackPanel());
+            prompt.setLayout(new BoxLayout(prompt, BoxLayout.Y_AXIS));
+
+            final JLabel message = (JLabel) prompt.add(new JLabel("A player must be selected to play!"));
+            message.setFont(ARIA_BOLD);
+            message.setForeground(Color.RED);
+            message.setVisible(false);
+
+            final JLabel label = (JLabel) prompt.add(new JLabel("Player name"));
+            final JPanel subPanel = (JPanel) prompt.add(getBlackPanel());
+            label.setFont(ARIA_BOLD);
+            label.setForeground(Color.YELLOW);
+
+            final JList<String> nameField = new JList<>(
+                    choices
+                            .stream()
+                            .sorted(String::compareToIgnoreCase)
+                            .collect(stringDefaultListModelCollector)
             );
-            if (selection == null) {
+
+            final JScrollPane nameScrollPane = new JScrollPane(nameField);
+            subPanel.add(nameScrollPane);
+
+            nameField.setFont(ARIA_BOLD);
+            nameField.setBackground(Color.GRAY);
+            nameField.setForeground(Color.YELLOW);
+            nameField.scrollRectToVisible(new Rectangle(0, 0, 600, 6));
+            nameField.setPreferredSize(new Dimension(680, 300));
+            nameField.setSelectedValue(playerName, true);
+
+            final var optNewName = new AtomicReference<Optional<String>>(Optional.empty());
+
+            final JPanel buttonPanel = (JPanel) prompt.add(getBlackPanel());
+            buttonPanel.add(new RoundedButton("Play", () -> {
+                final Optional<String> selectedValue = Optional.ofNullable(nameField.getSelectedValue());
+                if (selectedValue.isPresent()) {
+                    optNewName.set(selectedValue);
+                    modalDialog.dispose();
+                    return;
+                }
+                message.setVisible(true);
+            }));
+            buttonPanel.add(new RoundedButton("Add New Player", () -> {
+                requestNewName(this, platformUserName())
+                        .ifPresent(newName -> {
+                            optNewName.set(Optional.of(newName));
+                            modalDialog.dispose();
+                        });
+            }));
+            buttonPanel.add(new RoundedButton("Cancel", () -> {
+                optNewName.set(Optional.empty());
+                modalDialog.dispose();
+            }));
+
+            // This line blocks user interaction with the main frame until closed
+            modalDialog.setVisible(true);
+            nameField.requestFocus();
+            modalDialog.repaint();
+
+            final var selection = optNewName.get();
+
+            if (selection.isEmpty()) {
                 playerName = null;
                 return false;
             }
-            if (addNewName.equals(selection)) {
-                final Optional<String> optNewName = requestNewName("");
-                if (optNewName.isPresent()) {
-                    return selectPlayerName(optNewName.get());
-                }
-                continue;
-            }
-            return selectPlayerName(selection.toString());
+
+            return selectPlayerName(selection.get());
         }
     }
 
-    private static final Font ARIAL_FONT = new Font("Arial", Font.PLAIN, 20);
-    private static final Font ARIA_BOLD = ARIAL_FONT.deriveFont(Font.BOLD);
-
-    private static JPanel getBlackPanel() {
-        final JPanel blackPanel = new JPanel(new FlowLayout());
-        blackPanel.setBackground(Color.BLACK);
-        return  blackPanel;
-    }
-
-    private Optional<String> requestNewName(final String initialName) {
-        final JDialog modalDialog = new JDialog(this, "Add player name", true);
-        modalDialog.setMinimumSize(new Dimension(700, 200));
+    private Optional<String> requestNewName(final Frame parent, final String initialName) {
+        final JDialog modalDialog = new JDialog(parent, "Add player name", true);
+        modalDialog.setMinimumSize(new Dimension(700, 150));
         modalDialog.setLocationRelativeTo(this);
 
         final JPanel prompt = (JPanel) modalDialog.add(getBlackPanel());
-        prompt.setBackground(Color.BLACK);
 
         final JLabel message = (JLabel) prompt.add(new JLabel("Player name must unique and (1–50 characters)"));
         message.setFont(ARIA_BOLD);
