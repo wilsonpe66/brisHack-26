@@ -8,6 +8,7 @@
 Main
 └── Game (JFrame)
     ├── MenuPanel
+    ├── RoundedButton (shared panel/dialog controls)
     ├── GamePanel
     │   ├── InputHandler
     │   └── WorldState
@@ -38,10 +39,10 @@ Main
 ## Runtime flow
 
 1. `Game` loads `LeaderboardStore`, creates the three panels, starts menu music, and begins polling a gamepad for menu actions.
-2. PLAY prompts the user to select or create a player name. A valid selection switches to `GamePanel`, changes music, and starts its Swing `Timer`.
+2. PLAY opens a modal player-selection flow. A valid existing or newly created name switches to `GamePanel`, changes music, and starts its Swing `Timer`.
 3. Each timer event updates `WorldState`, checks for player death, and repaints the panel.
 4. On death, `Game` records the reached level and score, refreshes the top-ten table, switches back to menu music, and shows `GameOverPanel`.
-5. NEW GAME resets the existing world and returns through the player-selection flow.
+5. RETRY replaces the gameplay world and starts with the current player. SWITCH USER replaces the world and returns through the player-selection flow.
 6. If the window loses focus during an active, nonzero-score game, `Game` pauses the world. Closing the window routes through `quit()`, which records an unfinished nonzero score before exiting.
 
 ## Assets

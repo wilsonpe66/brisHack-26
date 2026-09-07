@@ -9,10 +9,17 @@ Gameplay always uses a 1500 × 900 logical viewport. In fullscreen, `GamePanel` 
 `MenuPanel` stretches the space background to the panel, then draws the fifth boss-alien sprite as a centered square whose width and height equal the window height. The controls are painted over those images. The menu displays:
 
 - the title **Alien Force**
-- the subtitle **Press PLAY to start**
-- PLAY GAME, Full Screen/Restore Screen, and QUIT buttons
+- PLAY GAME, Full Screen/Restore Screen, and GIVE UP buttons
 
-Menu music starts when the panel is created. PLAY opens the player-name flow before starting the game. If no names exist, the platform user name is offered; otherwise the user can select an existing name or add a unique 1–50 character name.
+Menu music starts when the panel is created. PLAY opens the player-name flow before starting the game.
+
+## Buttons and player dialogs
+
+Menu, game-over, and player-dialog actions use `RoundedButton`. It paints an antialiased yellow pill with centered uppercase monospaced text; while pressed, it adds a red inset and changes the text to dark gray.
+
+If no player names exist, PLAY opens the modal **Add player name** form directly, prefilled with the platform user name when it is no longer than 50 characters. The form accepts a trimmed, case-insensitively unique name of 1–50 characters through Confirm, or can be closed with Cancel.
+
+When names already exist, PLAY opens a modal **Select Player** form. It shows the saved names in case-insensitive alphabetical order and preselects the current player when possible. Play requires a selected name, Add New Player opens the name form, and Cancel returns without starting gameplay.
 
 ## Gameplay
 
@@ -36,7 +43,9 @@ When player health reaches zero, the game timer stops and the score is persisted
 
 - the last score and reached level
 - a non-editable table of up to ten top records with player, score, level, and an `MM-dd` date
-- NEW GAME, Full Screen/Restore Screen, and QUIT buttons
+- RETRY, SWITCH USER, Full Screen/Restore Screen, and GIVE UP buttons
+
+RETRY constructs a fresh game world and starts immediately with the same player. SWITCH USER constructs a fresh world and opens the player-selection form before starting.
 
 The ranking sorts by score descending, then timestamp descending. Each stored record includes player name, score, reached level, and creation time; the ten highest-ranked records are retained on disk.
 
