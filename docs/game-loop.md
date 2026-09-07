@@ -34,6 +34,8 @@ Level thresholds and all per-level projectile/enemy tuning are documented in [Co
 
 ## Reset
 
-Starting a new round clears the active world and update sets, restores the player to the center with 100 health and zero score, resets level/pause state and input flags, and restarts timing. The same `Player`, `WorldState`, background-star set, explosion set, and `LeaderboardStore` instances are reused.
+Starting a new round clears held input flags, stops the thruster loop, and constructs a new `WorldState` with a new centered player, fresh object/background/explosion sets, level 1, 100 health, zero score, and new spawn timing. `GamePanel`, its `InputHandler`, and the existing `LeaderboardStore` are retained.
+
+From game over, **Retry** starts that fresh world with the currently selected player. **Switch User** creates the fresh world first and then opens the player-selection dialog; canceling the selection does not start the timer.
 
 Normal death records the displayed level and final score before opening the game-over screen. Quitting also records the current level and unfinished score when the player is alive and has scored at least one point.
