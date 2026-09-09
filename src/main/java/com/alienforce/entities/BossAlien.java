@@ -41,7 +41,7 @@ public class BossAlien extends Alien {
 
     @Override
     public Image getSprite() {
-        return sprites.get(Math.clamp((int) (worldState.gameLevel().levelNumber() / 3.4), 0, 4));
+        return sprites.get(Math.clamp((int) (gameLevel.levelNumber() / 3.4), 0, 4));
     }
 
     /**

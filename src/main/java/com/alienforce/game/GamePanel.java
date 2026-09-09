@@ -1,5 +1,7 @@
 package com.alienforce.game;
 
+import static com.alienforce.assets.AssetManager.getImage;
+
 import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
@@ -13,9 +15,6 @@ import com.alienforce.motion.Position;
 import com.alienforce.utils.ColorTransition;
 import com.alienforce.utils.Constants;
 import com.alienforce.utils.CustomFonts;
-
-import javax.swing.JPanel;
-import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -27,18 +26,22 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.Objects;
-
-import static com.alienforce.assets.AssetManager.getImage;
+import java.util.Optional;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener {
 
     private static final Image SPACE_BACKGROUND = getImage(ImageKey.SPACE_BACKGROUND).get();
+    private static final ColorTransition colorTransition = new ColorTransition(List.of(
+        Color.YELLOW, Color.CYAN, Color.RED, Color.YELLOW
+    ));
     private static double pauseTime = 0;
-    WorldState worldState;
     private final Timer gameTimer;
     private final InputHandler inputHandler;
     private final Game game;
     private final LeaderboardStore leaderBoardStore;
+    WorldState worldState;
 
     public GamePanel(final Game game, final LeaderboardStore leaderBoardStore) {
         this.game = game;
@@ -89,10 +92,6 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.setColor(Color.GREEN);
         graphics.fillRect(startX, 20, 2 * player.getHealth(), 10);
     }
-
-    private static final ColorTransition colorTransition = new ColorTransition(List.of(
-            Color.YELLOW, Color.CYAN, Color.RED, Color.YELLOW
-    ));
 
     private static void showPauseAction(final Graphics graphics) {
         graphics.setFont(CustomFonts.TITLE);
@@ -153,8 +152,8 @@ public class GamePanel extends JPanel implements ActionListener {
         final Graphics2D viewport = (Graphics2D) game.create();
         try {
             final double scale = Math.min(
-                    getWidth() / (double) Constants.WIDTH,
-                    getHeight() / (double) Constants.HEIGHT
+                getWidth() / (double) Constants.WIDTH,
+                getHeight() / (double) Constants.HEIGHT
             );
             final int viewportWidth = (int) Math.round(Constants.WIDTH * scale);
             final int viewportHeight = (int) Math.round(Constants.HEIGHT * scale);
@@ -165,8 +164,8 @@ public class GamePanel extends JPanel implements ActionListener {
             viewport.scale(scale, scale);
             viewport.clipRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
             viewport.setRenderingHint(
-                    RenderingHints.KEY_INTERPOLATION,
-                    RenderingHints.VALUE_INTERPOLATION_BILINEAR
+                RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR
             );
 
             drawBackground(viewport);
@@ -177,8 +176,8 @@ public class GamePanel extends JPanel implements ActionListener {
         }
     }
 
-    private void drawBackground(Graphics game) {
-        game.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
+    private void drawBackground(final Graphics graphics) {
+        graphics.drawImage(SPACE_BACKGROUND, 0, 0, Constants.WIDTH, Constants.HEIGHT, this);
     }
 
     private void drawHud(final Graphics graphics) {
@@ -202,16 +201,31 @@ public class GamePanel extends JPanel implements ActionListener {
         worldState.backgroundObjects.forEach(gameObject -> {
             switch (gameObject) {
                 case BackgroundStar backgroundStar -> {
-                    g2d.setColor(backgroundStar.getColor());
-                    final Position position = gameObject.getPosition();
-                    g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
-                            (int) gameObject.getRadius());
+                    Optional
+                        .ofNullable(backgroundStar.getSprite())
+                        .ifPresentOrElse(sprite -> {
+                                final int w = sprite.getWidth(null);
+                                final int h = sprite.getHeight(null);
+                                if (w <= 0 || h <= 0) {
+                                    return;
+                                }
+                                final AffineTransform transform = getAffineTransform(backgroundStar, w, h);
+
+                                g2d.drawImage(sprite, transform, null);
+                            },
+                            () -> {
+                                g2d.setColor(backgroundStar.getColor());
+                                final Position position = gameObject.getPosition();
+                                g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
+                                    (int) gameObject.getRadius());
+                            }
+                        );
                 }
                 case Explosion explosion -> {
                     g2d.setColor(explosion.getColor());
                     final Position position = gameObject.getPosition();
                     g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
-                            (int) gameObject.getRadius());
+                        (int) gameObject.getRadius());
                 }
                 default -> {
                 }
@@ -224,7 +238,7 @@ public class GamePanel extends JPanel implements ActionListener {
                     g2d.setColor(explosion.getColor());
                     final Position position = gameObject.getPosition();
                     g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
-                            (int) gameObject.getRadius());
+                        (int) gameObject.getRadius());
                 }
                 default -> {
                 }
@@ -233,19 +247,19 @@ public class GamePanel extends JPanel implements ActionListener {
 
         // iterate over worldState
         worldState.objects
-                .stream()
-                .filter(gameObject -> Objects.nonNull(gameObject.getSprite()))
-                .forEach(object -> {
-                    final Image sprite = object.getSprite();
-                    final int w = sprite.getWidth(null);
-                    final int h = sprite.getHeight(null);
-                    if (w <= 0 || h <= 0) {
-                        return;
-                    }
-                    final AffineTransform transform = getAffineTransform(object, w, h);
+            .stream()
+            .filter(gameObject -> Objects.nonNull(gameObject.getSprite()))
+            .forEach(object -> {
+                final Image sprite = object.getSprite();
+                final int w = sprite.getWidth(null);
+                final int h = sprite.getHeight(null);
+                if (w <= 0 || h <= 0) {
+                    return;
+                }
+                final AffineTransform transform = getAffineTransform(object, w, h);
 
-                    g2d.drawImage(sprite, transform, null);
-                });
+                g2d.drawImage(sprite, transform, null);
+            });
 
         if (worldState.isPaused()) {
             showPauseAction(graphics);

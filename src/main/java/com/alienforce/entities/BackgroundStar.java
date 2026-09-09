@@ -1,18 +1,34 @@
 package com.alienforce.entities;
 
+import static com.alienforce.assets.AssetManager.getImage;
+
+import com.alienforce.assets.ImageKey;
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
 import com.alienforce.utils.PiConstants;
-import lombok.Getter;
-
 import java.awt.Color;
 import java.awt.Image;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
+import lombok.Getter;
 
 
 public class BackgroundStar extends GameObject {
 
+    private static final Random random = new Random();
+
+    private final static List<Image> sprites = List.of(
+        getImage(ImageKey.PLANET_1).get(),
+        getImage(ImageKey.PLANET_2).get(),
+        getImage(ImageKey.PLANET_3).get(),
+        getImage(ImageKey.PLANET_1).get(),
+        getImage(ImageKey.PLANET_2).get(),
+        getImage(ImageKey.PLANET_3).get()
+    );
     @Getter
     final Color color;
+    private final Image sprite;
     double theta = 0;
 
     public BackgroundStar(final Position position, final Velocity velocity, final Color color) {
@@ -22,7 +38,11 @@ public class BackgroundStar extends GameObject {
         setRotationAngle(0);
         setRadius(100 + 200 * Math.random());
         setHealth(1);
-        setScale(0.3);
+        setScale(1- .5 * Math.random());
+
+        final int size = sprites.size();
+
+        sprite = sprites.get(random.nextInt(size));
     }
 
     @Override
@@ -32,7 +52,7 @@ public class BackgroundStar extends GameObject {
 
     @Override
     public Image getSprite() {
-        return null;
+        return sprite;
     }
 
     @Override
