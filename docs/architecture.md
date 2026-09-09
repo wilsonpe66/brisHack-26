@@ -49,6 +49,16 @@ Main
 
 `AssetManager` loads images and WAV clips with typed `ImageKey`, `SoundEffectKey`, and `SoundLoopKey` values. Maven packages resources from `src/resource/com/alienforce/assets` into the executable JAR.
 
+The active `ImageKey` entries cover the standard alien, five boss aliens, four asteroids, six player ships, six missiles, and the space background. Three additional 500 × 500 RGBA planet images are stored in `images/planet/`:
+
+| File | Visual | Runtime status |
+|---|---|---|
+| `rocky.png` | Rust-colored cratered desert planet | Packaged, but not declared in `ImageKey` or rendered |
+| `ocean.png` | Blue ocean planet with islands, clouds, and storms | Packaged, but not declared in `ImageKey` or rendered |
+| `volcanic.png` | Dark volcanic planet with glowing lava | Packaged, but not declared in `ImageKey` or rendered |
+
+All three planet files preserve transparent pixels outside their circular atmospheric rims. Adding a file beneath the resource directory makes Maven package it, but gameplay code must still add an `ImageKey` and explicitly load and draw the image before it appears on screen.
+
 ## Persistence
 
 `LeaderboardStore` uses Jackson to store the selected player, known player names, and the ten highest-ranked score records in:
