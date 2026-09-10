@@ -58,3 +58,30 @@ src/resource/com/alienforce/assets/
 ```
 
 Maven copies every file below `src/resource/com/alienforce/assets`. The three planet PNGs are mapped by `ImageKey.PLANET_1` through `PLANET_3`, loaded from the classpath by `Planet`, and included in the shaded JAR.
+
+## Ubuntu package
+
+Run the packaging script from the repository root:
+
+```bash
+./build.sh
+```
+
+The script builds the shaded JAR and then creates `target/alien-force_1.0.0_all.deb`. Install it with APT so Ubuntu resolves the Java runtime dependency:
+
+```bash
+sudo apt install ./target/alien-force_1.0.0_all.deb
+```
+
+The package requires Ubuntu's full `openjdk-26-jre` package because the game uses Swing, AWT, and audio. That Ubuntu package supplies the Java runtime and declares its required native GUI, font, printing, compression, and ALSA libraries. The package also depends on `libjinput-jni` and configures Java to find it in `/usr/lib/jni`, enabling JInput controller support.
+
+The package installs the application in the standard system locations:
+
+| Path | Purpose |
+|---|---|
+| `/usr/share/alien-force/alien-force.jar` | Application and bundled Java libraries |
+| `/usr/bin/alien-force` | Command-line launcher |
+| `/usr/share/applications/alien-force.desktop` | Desktop application launcher |
+| `/usr/share/icons/hicolor/256x256/apps/alien-force.png` | Desktop application icon |
+
+After installation, launch **Alien Force** from the desktop application menu or run `alien-force` in a terminal.

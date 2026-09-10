@@ -1,0 +1,10 @@
+Package: alien-force
+Version: 1.0.0
+Section: games
+Priority: optional
+Architecture: all
+Depends: openjdk-26-jre (>= 26~), libjinput-jni
+Maintainer: Alien Force Contributors <wilsonpe66@users.noreply.github.com>
+Homepage: https://github.com/wilsonpe66/brisHack-26
+Description: Alien Force arcade game
+ A Java Swing space arcade game created for BrisHack 2026.
