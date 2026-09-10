@@ -6,7 +6,7 @@ Alien Force is a Java Swing arcade game built at BrisHack 2026.
 |---|---|
 | [Architecture](architecture.md) | Packages, application lifecycle, assets, and persistence |
 | [Game loop](game-loop.md) | Per-tick processing, spawning, levels, collisions, and scoring |
-| [Entities](entities.md) | Player, asteroids, aliens, boss aliens, bullets, explosions, and plantes |
+| [Entities](entities.md) | Player, asteroids, aliens, boss aliens, bullets, explosions, and background planets |
 | [Screens](screens.md) | Menu, custom buttons, player dialogs, gameplay HUD, and leaderboard |
 | [Input](input.md) | Keyboard and gamepad controls |
 | [Sound](sound.md) | Sound keys, playback, pausing, and muting |

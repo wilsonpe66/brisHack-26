@@ -52,11 +52,13 @@ Six `BulletLevel` classes use different missile sprites but share `Bullet` behav
 
 Player-owned bullet collisions award points immediately: 2 for an asteroid, 5 for an alien, and 7 for a boss alien. The bullet then dies. Entity collision logic separately applies damage or death to the target.
 
-## Explosions, background stars, and health bar
+## Explosions, background planets, and health bar
 
-During dead-object removal, `WorldState` creates an `Explosion` for each dead non-bullet object at that object's position and collision radius. Explosions are stored separately from both background stars and active collidable objects. The effect has no sprite or collision response: `GamePanel` draws it as an expanding oval whose color moves through blue, yellow, red, and black using `ColorTransition`. Its radius grows from the source radius to roughly four times that size over about 300 updates, after which it dies and is removed from the explosion and update sets.
+During dead-object removal, `WorldState` creates an `Explosion` for each dead non-bullet object at that object's position and collision radius. Explosions are stored separately from both background planets and active collidable objects. The effect has no sprite or collision response: `GamePanel` draws it as an expanding oval whose color moves through blue, yellow, red, and black using `ColorTransition`. Its radius grows from the source radius to roughly four times that size over about 300 updates, after which it dies and is removed from the explosion and update sets.
 
-`WorldState` creates three colored `Planet` objects, updates them separately, and `GamePanel` renders them as ovals. `HealthBar` mirrors player health, but the visible HUD health bar is drawn directly by `GamePanel` rather than using that entity.
+`WorldState` creates three `Planet` objects at random positions and updates them separately from active gameplay objects. Each instance randomly selects the ocean, rocky, or volcanic planet sprite, starts at a random rotation, and uses a random scale from 0.25 up to 1.0. Its base radius is randomly chosen from 100 up to 300 pixels, while its update cycle slowly pulses the effective radius. Its velocity is zero, it has no collision response, and `GamePanel` renders the selected planet image behind explosions and active sprites. The stored color remains available for an oval fallback if a background sprite is absent.
+
+`HealthBar` mirrors player health, but the visible HUD health bar is drawn directly by `GamePanel` rather than using that entity.
 
 `ColorTransition` accepts at least two `Color` values and linearly interpolates between adjacent entries according to the integer and fractional parts of a supplied scale. `GamePanel` also uses it to cycle the paused title through yellow, cyan, red, and back to yellow.
 

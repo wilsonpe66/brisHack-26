@@ -50,11 +50,11 @@ src/resource/com/alienforce/assets/
 │   ├── asteroid/    # four asteroid sprites
 │   ├── boss-alien/  # five boss sprites
 │   ├── missile/     # six projectile sprites
-│   ├── planet/      # three packaged 500x500 RGBA planet assets (currently unused)
+│   ├── planet/      # three 500x500 RGBA gameplay-background sprites
 │   ├── spaceship/   # six player-ship sprites
 │   ├── shipGreen_manned.png
 │   └── spacebackground.png
 └── sounds/          # music loops and sound effects
 ```
 
-Maven copies every file below `src/resource/com/alienforce/assets`, including resources that are not yet referenced by an asset-key enum. Consequently, the planet PNGs are present in the shaded JAR even though the current game does not load them.
+Maven copies every file below `src/resource/com/alienforce/assets`. The three planet PNGs are mapped by `ImageKey.PLANET_1` through `PLANET_3`, loaded from the classpath by `Planet`, and included in the shaded JAR.
