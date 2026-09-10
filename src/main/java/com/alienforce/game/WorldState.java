@@ -5,7 +5,7 @@ import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
 import com.alienforce.entities.Alien;
 import com.alienforce.entities.Asteroid;
-import com.alienforce.entities.BackgroundStar;
+import com.alienforce.entities.Planet;
 import com.alienforce.entities.Explosion;
 import com.alienforce.entities.GameObject;
 import com.alienforce.entities.Player;
@@ -85,13 +85,13 @@ public class WorldState {
         Stream
                 .of(Color.CYAN, Color.RED, Color.GREEN)
                 .forEach(color -> {
-                    final BackgroundStar backgroundStar = new BackgroundStar(
+                    final Planet planet = new Planet(
                             new Position(Math.random() * Constants.WIDTH, Math.random() * Constants.HEIGHT),
                             Velocity.ZERO,
                             color
                     );
-                    backgroundObjects.add(backgroundStar);
-                    backgroundUpdatableObjects.add(backgroundStar);
+                    backgroundObjects.add(planet);
+                    backgroundUpdatableObjects.add(planet);
                 });
     }
 

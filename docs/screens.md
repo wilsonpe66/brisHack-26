@@ -26,7 +26,7 @@ When names already exist, PLAY opens a modal **Select Player** form. It shows th
 `GamePanel` renders, in order:
 
 1. the stretched space-background image
-2. three colored `BackgroundStar` objects
+2. three colored `Planet` objects
 3. expanding explosion effects from the dedicated explosion set
 4. every live sprite using position, rotation, and scale transforms
 5. the HUD and, when applicable, an animated PAUSED overlay

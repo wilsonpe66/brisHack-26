@@ -10,11 +10,10 @@ import java.awt.Color;
 import java.awt.Image;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 import lombok.Getter;
 
 
-public class BackgroundStar extends GameObject {
+public class Planet extends GameObject {
 
     private static final Random random = new Random();
 
@@ -31,14 +30,14 @@ public class BackgroundStar extends GameObject {
     private final Image sprite;
     double theta = 0;
 
-    public BackgroundStar(final Position position, final Velocity velocity, final Color color) {
+    public Planet(final Position position, final Velocity velocity, final Color color) {
         this.color = color;
         setPosition(position);
         setVelocity(velocity);
-        setRotationAngle(0);
+        setRotationAngle(Math.random()*PiConstants.TAU);
         setRadius(100 + 200 * Math.random());
         setHealth(1);
-        setScale(1- .5 * Math.random());
+        setScale(1 - .75 * Math.random());
 
         final int size = sprites.size();
 

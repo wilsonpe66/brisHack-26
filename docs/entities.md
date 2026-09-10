@@ -56,7 +56,7 @@ Player-owned bullet collisions award points immediately: 2 for an asteroid, 5 fo
 
 During dead-object removal, `WorldState` creates an `Explosion` for each dead non-bullet object at that object's position and collision radius. Explosions are stored separately from both background stars and active collidable objects. The effect has no sprite or collision response: `GamePanel` draws it as an expanding oval whose color moves through blue, yellow, red, and black using `ColorTransition`. Its radius grows from the source radius to roughly four times that size over about 300 updates, after which it dies and is removed from the explosion and update sets.
 
-`WorldState` creates three colored `BackgroundStar` objects, updates them separately, and `GamePanel` renders them as ovals. `HealthBar` mirrors player health, but the visible HUD health bar is drawn directly by `GamePanel` rather than using that entity.
+`WorldState` creates three colored `Planet` objects, updates them separately, and `GamePanel` renders them as ovals. `HealthBar` mirrors player health, but the visible HUD health bar is drawn directly by `GamePanel` rather than using that entity.
 
 `ColorTransition` accepts at least two `Color` values and linearly interpolates between adjacent entries according to the integer and fractional parts of a supplied scale. `GamePanel` also uses it to cycle the paused title through yellow, cyan, red, and back to yellow.
 
