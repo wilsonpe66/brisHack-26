@@ -5,7 +5,7 @@ import static com.alienforce.assets.AssetManager.getImage;
 import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
-import com.alienforce.entities.BackgroundStar;
+import com.alienforce.entities.Planet;
 import com.alienforce.entities.Explosion;
 import com.alienforce.entities.GameObject;
 import com.alienforce.entities.Player;
@@ -91,6 +91,8 @@ public class GamePanel extends JPanel implements ActionListener {
         graphics.fillRect(startX, 20, 2 * MAX_HEALTH, 10);
         graphics.setColor(Color.GREEN);
         graphics.fillRect(startX, 20, 2 * player.getHealth(), 10);
+        graphics.setColor(Color.YELLOW);
+        graphics.drawRect(startX, 20, 2 * MAX_HEALTH, 10);
     }
 
     private static void showPauseAction(final Graphics graphics) {
@@ -200,21 +202,21 @@ public class GamePanel extends JPanel implements ActionListener {
 
         worldState.backgroundObjects.forEach(gameObject -> {
             switch (gameObject) {
-                case BackgroundStar backgroundStar -> {
+                case Planet planet -> {
                     Optional
-                        .ofNullable(backgroundStar.getSprite())
+                        .ofNullable(planet.getSprite())
                         .ifPresentOrElse(sprite -> {
                                 final int w = sprite.getWidth(null);
                                 final int h = sprite.getHeight(null);
                                 if (w <= 0 || h <= 0) {
                                     return;
                                 }
-                                final AffineTransform transform = getAffineTransform(backgroundStar, w, h);
+                                final AffineTransform transform = getAffineTransform(planet, w, h);
 
                                 g2d.drawImage(sprite, transform, null);
                             },
                             () -> {
-                                g2d.setColor(backgroundStar.getColor());
+                                g2d.setColor(planet.getColor());
                                 final Position position = gameObject.getPosition();
                                 g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
                                     (int) gameObject.getRadius());
