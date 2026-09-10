@@ -49,15 +49,15 @@ Main
 
 `AssetManager` loads images and WAV clips with typed `ImageKey`, `SoundEffectKey`, and `SoundLoopKey` values. Maven packages resources from `src/resource/com/alienforce/assets` into the executable JAR.
 
-The active `ImageKey` entries cover the standard alien, five boss aliens, four asteroids, six player ships, six missiles, and the space background. Three additional 500 × 500 RGBA planet images are stored in `images/planet/`:
+The active `ImageKey` entries cover the standard alien, five boss aliens, four asteroids, three planets, six player ships, six missiles, and the space background. The 500 × 500 RGBA planet images are stored in `images/planet/`:
 
-| File | Visual | Runtime status |
+| Key | File | Visual |
 |---|---|---|
-| `rocky.png` | Rust-colored cratered desert planet | Packaged, but not declared in `ImageKey` or rendered |
-| `ocean.png` | Blue ocean planet with islands, clouds, and storms | Packaged, but not declared in `ImageKey` or rendered |
-| `volcanic.png` | Dark volcanic planet with glowing lava | Packaged, but not declared in `ImageKey` or rendered |
+| `PLANET_1` | `ocean.png` | Blue ocean planet with islands, clouds, and storms |
+| `PLANET_2` | `rocky.png` | Rust-colored cratered desert planet |
+| `PLANET_3` | `volcanic.png` | Dark volcanic planet with glowing lava |
 
-All three planet files preserve transparent pixels outside their circular atmospheric rims. Adding a file beneath the resource directory makes Maven package it, but gameplay code must still add an `ImageKey` and explicitly load and draw the image before it appears on screen.
+All three planet files preserve transparent pixels outside their circular atmospheric rims. `Planet` loads the three keyed images, and each background object randomly selects one when constructed. `GamePanel` renders the selected image with the standard position, rotation, and scale transform before drawing explosions and active gameplay objects.
 
 ## Persistence
 
