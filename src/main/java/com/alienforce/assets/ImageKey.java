@@ -1,6 +1,9 @@
 package com.alienforce.assets;
 
 public enum ImageKey implements AssetKey {
+    ICON_16("icon/16.png"),
+    ICON_32("icon/32.png"),
+    ICON_64("icon/64.png"),
     ALIEN("shipGreen_manned.png"),
     ALIEN_BOSS_1("boss-alien/1.png"),
     ALIEN_BOSS_2("boss-alien/2.png"),

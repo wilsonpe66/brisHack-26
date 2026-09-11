@@ -51,7 +51,7 @@
 
     <resources>
       <resource>
-        <directory>src/resource/com/alienforce/assets</directory>
+        <directory>src/main/resource/com/alienforce/assets</directory>
         <targetPath>com/alienforce/assets</targetPath>
       </resource>
     </resources>

@@ -47,7 +47,7 @@ Main
 
 ## Assets
 
-`AssetManager` loads images and WAV clips with typed `ImageKey`, `SoundEffectKey`, and `SoundLoopKey` values. Maven packages resources from `src/resource/com/alienforce/assets` into the executable JAR.
+`AssetManager` loads images and WAV clips with typed `ImageKey`, `SoundEffectKey`, and `SoundLoopKey` values. Maven packages resources from `../src/main/resource` into the executable JAR.
 
 The active `ImageKey` entries cover the standard alien, five boss aliens, four asteroids, three planets, six player ships, six missiles, and the space background. The 500 × 500 RGBA planet images are stored in `images/planet/`:
 

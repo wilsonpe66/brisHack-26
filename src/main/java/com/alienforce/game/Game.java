@@ -1,14 +1,33 @@
 package com.alienforce.game;
 
+import com.alienforce.assets.AssetManager;
+import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
 import com.alienforce.entities.Player;
 import com.alienforce.input.GamePadManager;
 import com.alienforce.leaderboard.LeaderboardStore;
 import com.alienforce.utils.Settings;
-import lombok.Getter;
-import net.java.games.input.Event;
-
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GraphicsDevice;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.IntStream;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.BoxLayout;
@@ -24,36 +43,19 @@ import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GraphicsDevice;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Predicate;
-import java.util.stream.Collector;
-import java.util.stream.IntStream;
+import lombok.Getter;
+import net.java.games.input.Event;
 
 public class Game extends JFrame {
 
     static final String FULL_SCREEN_PROPERTY = "fullScreen";
     private static final Collector<String, DefaultListModel<String>, DefaultListModel<String>> stringDefaultListModelCollector = Collector.of(
-            DefaultListModel::new,
-            (a, b) -> a.add(a.size(), b),
-            (a, b) -> {
-                IntStream.range(0, a.size()).forEach(i -> a.add(i, b.get(i)));
-                return a;
-            }
+        DefaultListModel::new,
+        (a, b) -> a.add(a.size(), b),
+        (a, b) -> {
+            IntStream.range(0, a.size()).forEach(i -> a.add(i, b.get(i)));
+            return a;
+        }
     );
     private static final Font ARIAL_FONT = new Font("Arial", Font.PLAIN, 20);
     private static final Font ARIA_BOLD = ARIAL_FONT.deriveFont(Font.BOLD);
@@ -69,10 +71,7 @@ public class Game extends JFrame {
     private Rectangle windowedBounds;
     private GraphicsDevice fullScreenDevice;
     /**
-     * -- GETTER --
-     * Returns whether the game is currently displayed in fullscreen mode.
-     * ///
-     * ///
+     * -- GETTER -- Returns whether the game is currently displayed in fullscreen mode. /// ///
      *
      * @return `true` while fullscreen is active; otherwise `false`
      */
@@ -97,6 +96,7 @@ public class Game extends JFrame {
         this.add(mainContainer);
 
         setTitle("Alien Force");
+        setIconImages(loadWindowIcons());
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
@@ -134,6 +134,18 @@ public class Game extends JFrame {
 
         });
     }
+
+    /// Loads the platform-specific window icon sizes from the application classpath.
+    ///
+    /// @return the boss-alien images ordered from smallest to largest
+    private static List<Image> loadWindowIcons() {
+        return List.of(
+            AssetManager.getImage(ImageKey.ICON_16).get(),
+            AssetManager.getImage(ImageKey.ICON_32).get(),
+            AssetManager.getImage(ImageKey.ICON_64).get()
+        );
+    }
+
 
     /// Returns the action label for the current display mode.
     ///
@@ -312,7 +324,7 @@ public class Game extends JFrame {
         if (player.isAlive() && player.getScore() > 0) {
             player.die();
             leaderboardStore.record(
-                    player.name(), gamepanel.worldState.gameLevel().levelNumber() + 1, player.getScore()
+                player.name(), gamepanel.worldState.gameLevel().levelNumber() + 1, player.getScore()
             );
         }
         dispose();
@@ -324,8 +336,8 @@ public class Game extends JFrame {
 
         if (choices.isEmpty()) {
             return requestNewName(this, platformUserName())
-                    .map(this::selectPlayerName)
-                    .orElse(false);
+                .map(this::selectPlayerName)
+                .orElse(false);
         }
 
         while (true) {
@@ -347,10 +359,10 @@ public class Game extends JFrame {
             label.setForeground(Color.YELLOW);
 
             final JList<String> nameField = new JList<>(
-                    choices
-                            .stream()
-                            .sorted(String::compareToIgnoreCase)
-                            .collect(stringDefaultListModelCollector)
+                choices
+                    .stream()
+                    .sorted(String::compareToIgnoreCase)
+                    .collect(stringDefaultListModelCollector)
             );
 
             final JScrollPane nameScrollPane = new JScrollPane(nameField);
@@ -377,10 +389,10 @@ public class Game extends JFrame {
             }));
             buttonPanel.add(new RoundedButton("Add New Player", () -> {
                 requestNewName(this, platformUserName())
-                        .ifPresent(newName -> {
-                            optNewName.set(Optional.of(newName));
-                            modalDialog.dispose();
-                        });
+                    .ifPresent(newName -> {
+                        optNewName.set(Optional.of(newName));
+                        modalDialog.dispose();
+                    });
             }));
             buttonPanel.add(new RoundedButton("Cancel", () -> {
                 optNewName.set(Optional.empty());
@@ -432,9 +444,9 @@ public class Game extends JFrame {
         final JPanel buttonPanel = (JPanel) prompt.add(getBlackPanel());
         buttonPanel.add(new RoundedButton("Confirm", () -> {
             final Optional<String> newValue = Optional.ofNullable(nameField.getText())
-                    .map(String::trim)
-                    .filter(value -> value.length() <= 50)
-                    .filter(Predicate.not(String::isEmpty));
+                .map(String::trim)
+                .filter(value -> value.length() <= 50)
+                .filter(Predicate.not(String::isEmpty));
             if (newValue.isPresent() && leaderboardStore.addPlayerName(newValue.get())) {
                 modalDialog.dispose();
                 optNewName.set(newValue);

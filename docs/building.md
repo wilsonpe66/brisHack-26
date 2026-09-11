@@ -23,7 +23,7 @@ To create only the Maven artifacts:
 mvn clean package
 ```
 
-The Maven Shade plugin sets `com.alienforce.Main` as the entry point and bundles runtime dependencies. Images and sounds from `src/resource/com/alienforce/assets` are copied onto the classpath under `com/alienforce/assets`.
+The Maven Shade plugin sets `com.alienforce.Main` as the entry point and bundles runtime dependencies. Images and sounds from `../src/main/resource` are copied onto the classpath under `com/alienforce/assets`.
 
 ## Run
 
@@ -57,7 +57,7 @@ src/resource/com/alienforce/assets/
 └── sounds/          # music loops and sound effects
 ```
 
-Maven copies every file below `src/resource/com/alienforce/assets`. The three planet PNGs are mapped by `ImageKey.PLANET_1` through `PLANET_3`, loaded from the classpath by `Planet`, and included in the shaded JAR.
+Maven copies every file below `../src/main/resource`. The three planet PNGs are mapped by `ImageKey.PLANET_1` through `PLANET_3`, loaded from the classpath by `Planet`, and included in the shaded JAR.
 
 ## Ubuntu package
 
