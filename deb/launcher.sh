@@ -1,5 +1,4 @@
-#!/bin/bash 
+#!/bin/sh
 
-cd "$(dirname "$0")" || exit 1
-java -jar alien-force.jar
-
+exec java -Djava.library.path=/usr/lib/jni \
+    -jar /usr/share/alien-force/alien-force.jar "$@"

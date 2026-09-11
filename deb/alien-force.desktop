@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Alien Force
+Comment=Play the Alien Force space arcade game
+Exec=alien-force
+Icon=alien-force
+Terminal=false
+Categories=Game;ArcadeGame;
+Keywords=game;arcade;space;alien;
+StartupNotify=true
