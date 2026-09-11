@@ -2,6 +2,8 @@
 
 `Game` presents three panels in a `CardLayout`. Windowed mode uses a fixed 1500 × 900-pixel content area and is centered on screen. F11 or the **Full Screen** button enters fullscreen on the monitor containing the window without changing its display mode; unsupported window managers fall back to borderless maximized mode. In fullscreen, the button changes to **Restore Screen**. Escape or **Restore Screen** returns to the saved window bounds.
 
+The application window supplies 16 × 16, 32 × 32, and 64 × 64 icons derived from the fifth boss-alien sprite, allowing the operating system to select the best size for title bars, task switchers, and window lists.
+
 Gameplay always uses a 1500 × 900 logical viewport. In fullscreen, `GamePanel` scales that viewport uniformly and centers it with black letterboxing when the monitor aspect ratio differs. World coordinates, collisions, HUD placement, and sprite proportions therefore remain unchanged across resolutions.
 
 ## Menu

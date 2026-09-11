@@ -4,6 +4,7 @@
 
 - JDK 26, matching the Maven compiler source and target
 - Maven 3
+- `dpkg-deb`, provided by Ubuntu's `dpkg` package, when using `./build.sh`
 
 The project depends on Lombok, JInput, Jackson Databind, and Jackson's Java Time module. Maven downloads these dependencies during the build.
 
@@ -15,7 +16,7 @@ From the repository root:
 ./build.sh
 ```
 
-`build.sh` runs Maven's default goal (`clean package`) and copies the shaded executable JAR from `target/alien-force.jar` to `deb/alien-force.jar`.
+`build.sh` runs `mvn clean package`, stages a root-owned Debian filesystem beneath `target/debian-package-root`, and creates `target/alien-force_1.0.0_all.deb`.
 
 To create only the Maven artifacts:
 
@@ -23,7 +24,7 @@ To create only the Maven artifacts:
 mvn clean package
 ```
 
-The Maven Shade plugin sets `com.alienforce.Main` as the entry point and bundles runtime dependencies. Images and sounds from `../src/main/resource` are copied onto the classpath under `com/alienforce/assets`.
+The Maven Shade plugin sets `com.alienforce.Main` as the entry point and bundles runtime dependencies. Images and sounds from `src/main/resource/com/alienforce/assets` are copied onto the classpath under `com/alienforce/assets`.
 
 ## Run
 
@@ -45,10 +46,11 @@ src/main/java/com/alienforce/
 ├── motion/       # position and velocity value types
 └── utils/        # constants, level tuning, color transitions, settings, fonts
 
-src/resource/com/alienforce/assets/
+src/main/resource/com/alienforce/assets/
 ├── images/
 │   ├── asteroid/    # four asteroid sprites
 │   ├── boss-alien/  # five boss sprites
+│   ├── icon/        # 16px, 32px, and 64px window icons
 │   ├── missile/     # six projectile sprites
 │   ├── planet/      # three 500x500 RGBA gameplay-background sprites
 │   ├── spaceship/   # six player-ship sprites
@@ -57,7 +59,7 @@ src/resource/com/alienforce/assets/
 └── sounds/          # music loops and sound effects
 ```
 
-Maven copies every file below `../src/main/resource`. The three planet PNGs are mapped by `ImageKey.PLANET_1` through `PLANET_3`, loaded from the classpath by `Planet`, and included in the shaded JAR.
+Maven copies every file below `src/main/resource/com/alienforce/assets`. The three planet PNGs are mapped by `ImageKey.PLANET_1` through `PLANET_3` and loaded by `Planet`. The window icons are mapped by `ImageKey.ICON_16` through `ICON_64` and loaded by `Game`. All of these resources are included in the shaded JAR.
 
 ## Ubuntu package
 
