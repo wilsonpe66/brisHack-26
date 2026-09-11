@@ -8,6 +8,7 @@ Alien Force is a Java Swing arcade game inspired by Asteroids. Pilot a ship thro
 
 - JDK 26
 - Maven 3
+- `dpkg-deb` when building the Ubuntu package with `./build.sh`
 
 ## Build
 
@@ -15,9 +16,9 @@ Alien Force is a Java Swing arcade game inspired by Asteroids. Pilot a ship thro
 ./build.sh
 ```
 
-The script runs the Maven build and copies `target/alien-force.jar` into `deb/`.
+The script builds the shaded executable JAR and assembles `target/alien-force_1.0.0_all.deb`, including its command launcher, desktop launcher, and application icon.
 
-To build without copying the JAR:
+To build only the JAR:
 
 ```bash
 mvn clean package
