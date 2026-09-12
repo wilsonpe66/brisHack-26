@@ -4,7 +4,7 @@ set -euo pipefail
 
 project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 package_root="${project_dir}/target/debian-package-root"
-package_file="${project_dir}/target/alien-force_1.0.0_all.deb"
+package_file="${project_dir}/target/alien-force_1.0.1_all.deb"
 
 cd "${project_dir}"
 mvn clean package
