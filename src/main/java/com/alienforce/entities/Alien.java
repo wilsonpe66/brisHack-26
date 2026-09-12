@@ -1,5 +1,7 @@
 package com.alienforce.entities;
 
+import static com.alienforce.assets.AssetManager.getImage;
+
 import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundEffectKey;
 import com.alienforce.assets.SoundManager;
@@ -10,11 +12,8 @@ import com.alienforce.motion.Velocity;
 import com.alienforce.utils.AlienConstants;
 import com.alienforce.utils.GameLevel;
 import com.alienforce.utils.ShootConstants;
-
 import java.awt.Image;
 import java.util.stream.Stream;
-
-import static com.alienforce.assets.AssetManager.getImage;
 
 public class Alien extends GameObject implements Wrappable, SelfDefendable {
 
@@ -84,13 +83,15 @@ public class Alien extends GameObject implements Wrappable, SelfDefendable {
         if (noShootTimer > 0) {
             noShootTimer--;
         }
+        final double targetAngle = player.getPosition().minus(getPosition()).getRotation();
+        final GameLevel gameLevel = worldState.gameLevel();
+        final AlienConstants alienConstants = gameLevel.alien();
+        setVelocity(Velocity.fromAngleAndSpeed(targetAngle, alienConstants.speed()));
+        final double reservationRationFactor = .2;
+        setRotationAngle((reservationRationFactor * getRotationAngle() + (1-reservationRationFactor) * targetAngle));
+
         targetUpdateTimer--;
         if (targetUpdateTimer <= 0 && player.isAlive()) {
-            final double angle = player.getPosition().minus(getPosition()).getRotation();
-            final GameLevel gameLevel = worldState.gameLevel();
-            final AlienConstants alienConstants = gameLevel.alien();
-            setVelocity(Velocity.fromAngleAndSpeed(angle, alienConstants.speed()));
-            setRotationAngle(angle);
             targetUpdateTimer = alienConstants.targetUpdateInterval();
         }
         // update position according to velocity:
