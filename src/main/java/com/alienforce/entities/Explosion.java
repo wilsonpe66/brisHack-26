@@ -22,6 +22,7 @@ public class Explosion extends GameObject {
     public Explosion(final GameObject gameObject) {
         this.color = getColor(0);
         setPosition(gameObject.getPosition());
+        setVelocity(gameObject.getVelocity().scale(.5));
         setRotationAngle(0);
         setRadius(gameObject.getRadius());
         setHealth(1);
@@ -49,6 +50,9 @@ public class Explosion extends GameObject {
 
     @Override
     public void update() {
+        // update position according to velocity:
+        setPosition(getPosition().add(getVelocity()));
+
         theta += .01;
         if (theta > 3) {
             die();
