@@ -11,8 +11,9 @@ Audio resources are WAV files loaded from the application classpath by `AssetMan
 | `THRUSTER` | `thruster.wav` | Loop | Active player thrust |
 | `SHOOT` | `shoot.wav` | Effect | Player firing |
 | `EXPLOSION` | `explosion.wav` | Effect | Alien or boss death; configured at -8 dB |
-| `LEVEL_UP` | `level-up.wav` | Effect | Level transition |
+| `LEVEL_UP` | `level-up.wav` | Effect | Ominous level-transition announcement |
 | `GAME_OVER` | `game-over.wav` | Effect | Player death |
+| `TAKING_ON_DAMAGE` | `taking-on-damage.wav` | Effect | Every player collision handled by `Player.collide()` |
 
 ## Playback API
 

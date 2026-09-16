@@ -17,12 +17,12 @@ shooting → alien shooting → spawning → entity updates → collisions → r
 3. **Spawning:** asteroids use the global one-second interval. Normal and boss aliens each use the current level's initial delay and recurring interval.
 4. **Updates:** background objects and active world objects run `update()`.
 5. **Collisions:** living objects are checked pairwise in O(n²) time using circle radii; on overlap, each object receives the other object's collision response.
-6. **Removal:** each dead non-bullet object creates an expanding, color-changing `Explosion`; dead world objects and expired effects are then removed from their respective sets.
+6. **Removal:** each dead non-bullet object is converted into a moving, expanding `Explosion`; asteroid, alien, and boss deaths select distinct sprites and color ramps. Dead world objects and expired effects are then removed from their respective sets.
 7. **Level update:** the score selects one of 15 difficulty configurations; transitions play a sound and restore some health.
 
 ## Spawning
 
-`AsteroidSpawner`, `AlienSpawner`, and `BossAlienSpawner` choose a random screen edge and create an entity 50 pixels beyond it. Initial velocity points at the player's position at spawn time. Aliens then retarget periodically and wrap across the screen; asteroids keep their initial trajectory and eventually despawn.
+`AsteroidSpawner`, `AlienSpawner`, and `BossAlienSpawner` choose a random screen edge and create an entity 50 pixels beyond it. Initial velocity points at the player's position at spawn time. Aliens continuously recompute their velocity toward the player and wrap across the screen; asteroids keep their initial trajectory and eventually despawn.
 
 `WorldState.Generate` uses wall-clock milliseconds for initial and recurring spawn delays. Each generator has an independent `lastSpawnTime`.
 
