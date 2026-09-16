@@ -54,16 +54,20 @@ Six `BulletLevel` classes use different missile sprites but share `Bullet` behav
 
 Player-owned bullet collisions award points immediately: 2 for an asteroid, 5 for an alien, and 7 for a boss alien. The bullet then dies. Entity collision logic separately applies damage or death to the target.
 
-## Explosions, background planets, and health bar
+## Explosions
 
 During dead-object removal, `WorldState` constructs an `Explosion` for every dead non-bullet object. `Explosion` currently defines sprite and color mappings for the exact `Asteroid`, `Alien`, and `BossAlien` classes: orange fire for asteroids, green plasma for standard aliens, and blue energy for bosses. Each effect combines its expanding sprite with a class-specific colored oval, moves at half the destroyed object's velocity, and has no collision response. Asteroid explosions also inherit the asteroid's angular velocity; alien explosions do not rotate.
 
 Explosion progress increases by 0.02 per update and expires after passing 3, which is about 150 updates. Over that lifetime its collision radius grows from the source radius to roughly three times that value, while its rendered sprite scale grows from zero toward 1.8. Explosions are stored separately from both background planets and active collidable objects and are removed from the explosion and update sets after death.
 
+## Background planets
+
 `WorldState` creates three `Planet` objects at random positions and updates them separately from active gameplay objects. Each instance randomly selects the ocean, rocky, or volcanic planet sprite, starts at a random rotation, and uses a random scale from 0.25 up to 1.0. Its base radius is randomly chosen from 100 up to 300 pixels, while its update cycle slowly pulses the effective radius. Its velocity is zero, it has no collision response, and `GamePanel` renders the selected planet image behind explosions and active sprites. The stored color remains available for an oval fallback if a background sprite is absent.
+
+## Health bar and color transitions
 
 `HealthBar` mirrors player health, but the visible HUD health bar is drawn directly by `GamePanel` rather than using that entity.
 
-`ColorTransition` accepts at least two `Color` values and linearly interpolates between adjacent entries according to the integer and fractional parts of a supplied scale. `GamePanel` also uses it to cycle the paused title through yellow, cyan, red, and back to yellow.
+`ColorTransition` accepts at least two `Color` values and linearly interpolates between adjacent entries according to the integer and fractional parts of a supplied scale. Explosions use it for their class-specific underlays, and `GamePanel` uses it to cycle the paused title through yellow, cyan, red, and back to yellow.
 
-> `Asteroid.killedByBullet` and the related removal-time score path remain in the code, but the flag is never set. Current asteroid points come from `Bullet.collide()`.
+Implementation note: `Asteroid.killedByBullet` and the related removal-time score path remain in the code, but the flag is never set. Current asteroid points come from `Bullet.collide()`.

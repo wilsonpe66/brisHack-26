@@ -10,19 +10,21 @@ Alien Force is a Java Swing arcade game inspired by Asteroids. Pilot a ship thro
 - Maven 3
 - `dpkg-deb` when building the Ubuntu package with `./build.sh`
 
-## Build
+## Build the JAR
+
+```bash
+mvn clean package
+```
+
+The executable JAR is written to `target/alien-force.jar`.
+
+## Build the Ubuntu package
 
 ```bash
 ./build.sh
 ```
 
-The script builds the shaded executable JAR and assembles `target/alien-force_1.1.0-SNAPSHOT_all.deb`, including its command launcher, desktop launcher, and application icon.
-
-To build only the JAR:
-
-```bash
-mvn clean package
-```
+The script rebuilds the shaded JAR and assembles `target/alien-force_1.1.0-SNAPSHOT_all.deb`, including its command launcher, desktop launcher, and application icon.
 
 ## Run
 
@@ -37,7 +39,7 @@ java -jar target/alien-force.jar
 | Thrust | `W` or `Up` |
 | Rotate | `A`/`D` or `Left`/`Right` |
 | Fire | `Space` or `Z` |
-| Fire without cooldown | `X` |
+| Super fire (ignores cooldown) | `X` |
 | Pause | `Enter` |
 | Mute | `M` |
 | Toggle fullscreen | `F11` |
@@ -45,7 +47,7 @@ java -jar target/alien-force.jar
 
 The first detected JInput-compatible gamepad is also supported. See [Input & Controls](docs/input.md) for the controller mappings.
 
-Destroyed asteroids and aliens leave moving, expanding, color-changing sprite explosions, and player progress unlocks stronger ship sprites and projectile patterns as the score increases.
+Destroyed asteroids, aliens, and boss aliens leave moving, expanding, color-changing sprite explosions. Player progress unlocks stronger ship sprites and projectile patterns as the score increases.
 
 Player profiles are stored locally. After a game, **Retry** immediately starts again with the same player, while **Switch User** opens the player-selection dialog.
 

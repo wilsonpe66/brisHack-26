@@ -1,19 +1,28 @@
-## ESpeak / Audacity
+# Creating Voice Effects with ESpeak and Audacity
 
-## bash Shell
+Generate the source voice clips with ESpeak, then process them in Audacity with the settings shown below.
 
-```shell
-[23:12:11] linux-user📁~ ❱ espeak -v en+croak -p 40 -s 160 "More Danger is Coming" -w more-danger-is-comming.wav
-[13:21:22] linux-user📁~ ❱ espeak -v en+croak -p 40 -s 160 "Taking on Damage Captain" -w taking-on-damage.wav
+## Generate the voice clips
+
+```bash
+espeak -v en+croak -p 40 -s 160 "More Danger is Coming" -w more-danger-is-coming.wav
+espeak -v en+croak -p 40 -s 160 "Taking on Damage Captain" -w taking-on-damage.wav
 ```
-## Base and Treble Effect
 
-![drawing](base-and-treble.png)
+The `en+croak` voice supplies the rough vocal character, `-p 40` lowers the pitch, and `-s 160` sets the speaking rate.
 
-## Distortion Effect
+## Apply Audacity effects
 
-![drawing](distortion.png)
+Apply the effects in this order.
 
-## Reverb Effect
+### Bass and treble
 
-![drawing](reverb.png)
+![Audacity bass and treble settings](base-and-treble.png)
+
+### Distortion
+
+![Audacity distortion settings](distortion.png)
+
+### Reverb
+
+![Audacity reverb settings](reverb.png)

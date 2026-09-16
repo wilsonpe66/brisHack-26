@@ -27,6 +27,6 @@ Audio resources are WAV files loaded from the application classpath by `AssetMan
 
 The gameplay input path also toggles `Settings.muted` directly when `M` is pressed. Starting a new game resets the muted setting to `false`.
 
-## Sound Generation
+## Creating voice effects
 
-[ESpeak and Audacity](./espeak/speaking-notes.md)
+See [Creating voice effects with ESpeak and Audacity](espeak/speaking-notes.md) for the commands and Audacity settings used to create the spoken cues.
