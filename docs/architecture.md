@@ -49,7 +49,9 @@ Main
 
 `AssetManager` loads images and WAV clips with typed `ImageKey`, `SoundEffectKey`, and `SoundLoopKey` values. Maven packages resources from `src/main/resource/com/alienforce/assets` into the executable JAR beneath `com/alienforce/assets`.
 
-The active `ImageKey` entries cover three window icons, the standard alien, five boss aliens, four asteroids, three planets, six player ships, six missiles, and the space background. `Game` loads the 16 × 16, 32 × 32, and 64 × 64 boss-alien-derived icons through `ICON_16`, `ICON_32`, and `ICON_64`, then passes the ordered list to `JFrame.setIconImages` so the window manager can choose an appropriate size.
+The active `ImageKey` entries cover three window icons, three explosion effects, the standard alien, five boss aliens, four asteroids, three planets, six player ships, six missiles, and the space background. `Game` loads the 16 × 16, 32 × 32, and 64 × 64 boss-alien-derived icons through `ICON_16`, `ICON_32`, and `ICON_64`, then passes the ordered list to `JFrame.setIconImages` so the window manager can choose an appropriate size.
+
+`Explosion` maps asteroid, standard-alien, and boss-alien deaths to `EXPLOSION_1`, `EXPLOSION_2`, and `EXPLOSION_3`, respectively. The same classes select orange, green, or blue-based `ColorTransition` ramps beneath their sprite effects.
 
 The 500 × 500 RGBA planet images are stored in `images/planet/`:
 

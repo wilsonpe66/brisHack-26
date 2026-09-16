@@ -16,7 +16,7 @@ From the repository root:
 ./build.sh
 ```
 
-`build.sh` runs `mvn clean package`, stages a root-owned Debian filesystem beneath `target/debian-package-root`, and creates `target/alien-force_1.0.0_all.deb`.
+`build.sh` runs `mvn clean package`, stages a root-owned Debian filesystem beneath `target/debian-package-root`, and creates `target/alien-force_1.1.0-SNAPSHOT_all.deb`.
 
 To create only the Maven artifacts:
 
@@ -50,6 +50,7 @@ src/main/resource/com/alienforce/assets/
 ├── images/
 │   ├── asteroid/    # four asteroid sprites
 │   ├── boss-alien/  # five boss sprites
+│   ├── explosion/   # three 100x100 class-specific explosion sprites
 │   ├── icon/        # 16px, 32px, and 64px window icons
 │   ├── missile/     # six projectile sprites
 │   ├── planet/      # three 500x500 RGBA gameplay-background sprites
@@ -59,7 +60,7 @@ src/main/resource/com/alienforce/assets/
 └── sounds/          # music loops and sound effects
 ```
 
-Maven copies every file below `src/main/resource/com/alienforce/assets`. The three planet PNGs are mapped by `ImageKey.PLANET_1` through `PLANET_3` and loaded by `Planet`. The window icons are mapped by `ImageKey.ICON_16` through `ICON_64` and loaded by `Game`. All of these resources are included in the shaded JAR.
+Maven copies every file below `src/main/resource/com/alienforce/assets`. The three planet PNGs are mapped by `ImageKey.PLANET_1` through `PLANET_3` and loaded by `Planet`. The window icons are mapped by `ImageKey.ICON_16` through `ICON_64` and loaded by `Game`. The explosion sprites are mapped by `ImageKey.EXPLOSION_1` through `EXPLOSION_3` and selected by `Explosion` according to the destroyed object's class. All of these resources are included in the shaded JAR.
 
 ## Ubuntu package
 
@@ -69,10 +70,10 @@ Run the packaging script from the repository root:
 ./build.sh
 ```
 
-The script builds the shaded JAR and then creates `target/alien-force_1.0.0_all.deb`. Install it with APT so Ubuntu resolves the Java runtime dependency:
+The script builds the shaded JAR and then creates `target/alien-force_1.1.0-SNAPSHOT_all.deb`. Install it with APT so Ubuntu resolves the Java runtime dependency:
 
 ```bash
-sudo apt install ./target/alien-force_1.0.0_all.deb
+sudo apt install ./target/alien-force_1.1.0-SNAPSHOT_all.deb
 ```
 
 The package requires Ubuntu's full `openjdk-26-jre` package because the game uses Swing, AWT, and audio. That Ubuntu package supplies the Java runtime and declares its required native GUI, font, printing, compression, and ALSA libraries. The package also depends on `libjinput-jni` and configures Java to find it in `/usr/lib/jni`, enabling JInput controller support.

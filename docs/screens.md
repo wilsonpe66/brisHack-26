@@ -29,7 +29,7 @@ When names already exist, PLAY opens a modal **Select Player** form. It shows th
 
 1. the stretched space-background image
 2. three `Planet` objects rendered with randomly selected ocean, rocky, or volcanic planet sprites
-3. expanding explosion effects from the dedicated explosion set
+3. moving, expanding class-specific explosion sprites and colored underlays from the dedicated explosion set
 4. every live sprite using position, rotation, and scale transforms
 5. the HUD and, when applicable, an animated PAUSED overlay
 
