@@ -146,6 +146,7 @@ public class Player extends GameObject implements Wrappable, SelfDefendable {
 
     @Override
     public void collide(final Collidable collidable) {
+        SoundManager.play(SoundEffectKey.TAKING_ON_DAMAGE);
         final int health = getHealth();
         switch (collidable) {
             case Player _ -> throw new RuntimeException("PLAYER HIT PLAYER?!?!?");

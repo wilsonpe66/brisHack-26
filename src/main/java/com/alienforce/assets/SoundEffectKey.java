@@ -6,7 +6,8 @@ public enum SoundEffectKey implements SoundKey {
     SHOOT("shoot.wav"),
     EXPLOSION("explosion.wav", -8.0f),
     LEVEL_UP("level-up.wav"),
-    GAME_OVER("game-over.wav");
+    GAME_OVER("game-over.wav"),
+    TAKING_ON_DAMAGE("taking-on-damage.wav");
 
     final String resourceId;
     final Float soundVolume;

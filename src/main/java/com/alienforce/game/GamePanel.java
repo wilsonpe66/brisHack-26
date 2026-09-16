@@ -5,9 +5,9 @@ import static com.alienforce.assets.AssetManager.getImage;
 import com.alienforce.assets.ImageKey;
 import com.alienforce.assets.SoundLoopKey;
 import com.alienforce.assets.SoundManager;
-import com.alienforce.entities.Planet;
 import com.alienforce.entities.Explosion;
 import com.alienforce.entities.GameObject;
+import com.alienforce.entities.Planet;
 import com.alienforce.entities.Player;
 import com.alienforce.input.InputHandler;
 import com.alienforce.leaderboard.LeaderboardStore;
@@ -70,7 +70,7 @@ public class GamePanel extends JPanel implements ActionListener {
     ///
     /// +270° corrects for sprites that face right by default to face up at angle 0
     ///      * 4. translate(cx, cy) — move the origin to the object's world position
-    private static AffineTransform getAffineTransform(final GameObject object, int w, int h) {
+    public static AffineTransform getAffineTransform(final GameObject object, int w, int h) {
         final double cx = object.getPosition().x();
         final double cy = object.getPosition().y();
 
@@ -202,33 +202,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
         worldState.backgroundObjects.forEach(gameObject -> {
             switch (gameObject) {
-                case Planet planet -> {
-                    Optional
-                        .ofNullable(planet.getSprite())
-                        .ifPresentOrElse(sprite -> {
-                                final int w = sprite.getWidth(null);
-                                final int h = sprite.getHeight(null);
-                                if (w <= 0 || h <= 0) {
-                                    return;
-                                }
-                                final AffineTransform transform = getAffineTransform(planet, w, h);
-
-                                g2d.drawImage(sprite, transform, null);
-                            },
-                            () -> {
-                                g2d.setColor(planet.getColor());
-                                final Position position = gameObject.getPosition();
-                                g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
-                                    (int) gameObject.getRadius());
-                            }
-                        );
-                }
-                case Explosion explosion -> {
-                    g2d.setColor(explosion.getColor());
-                    final Position position = gameObject.getPosition();
-                    g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
-                        (int) gameObject.getRadius());
-                }
+                case Planet planet -> planet.repaint(g2d);
                 default -> {
                 }
             }
@@ -236,12 +210,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
         worldState.explosionObjects.forEach(gameObject -> {
             switch (gameObject) {
-                case Explosion explosion -> {
-                    g2d.setColor(explosion.getColor());
-                    final Position position = gameObject.getPosition();
-                    g2d.fillOval((int) position.x(), (int) position.y(), (int) gameObject.getRadius(),
-                        (int) gameObject.getRadius());
-                }
+                case Explosion explosion -> explosion.repaint(g2d);
                 default -> {
                 }
             }
@@ -251,17 +220,7 @@ public class GamePanel extends JPanel implements ActionListener {
         worldState.objects
             .stream()
             .filter(gameObject -> Objects.nonNull(gameObject.getSprite()))
-            .forEach(object -> {
-                final Image sprite = object.getSprite();
-                final int w = sprite.getWidth(null);
-                final int h = sprite.getHeight(null);
-                if (w <= 0 || h <= 0) {
-                    return;
-                }
-                final AffineTransform transform = getAffineTransform(object, w, h);
-
-                g2d.drawImage(sprite, transform, null);
-            });
+            .forEach(object -> object.repaint(g2d));
 
         if (worldState.isPaused()) {
             showPauseAction(graphics);

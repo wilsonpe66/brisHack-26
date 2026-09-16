@@ -1,14 +1,21 @@
 package com.alienforce.entities;
 
 import static com.alienforce.assets.AssetManager.getImage;
+import static com.alienforce.game.GamePanel.getAffineTransform;
 
 import com.alienforce.assets.ImageKey;
+import com.alienforce.assets.SoundEffectKey;
+import com.alienforce.assets.SoundManager;
 import com.alienforce.motion.Position;
 import com.alienforce.motion.Velocity;
 import com.alienforce.utils.PiConstants;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.geom.AffineTransform;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import lombok.Getter;
 
@@ -56,7 +63,6 @@ public class Planet extends GameObject {
 
     @Override
     public void collide(final Collidable collidable) {
-
     }
 
     @Override

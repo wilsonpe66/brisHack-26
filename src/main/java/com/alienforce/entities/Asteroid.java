@@ -8,6 +8,7 @@ import com.alienforce.utils.Constants;
 
 import java.awt.Image;
 import java.util.Random;
+import lombok.Getter;
 
 import static com.alienforce.assets.AssetManager.getImage;
 
@@ -28,6 +29,8 @@ public class Asteroid extends GameObject {
      */
     private boolean killedByBullet;
     private final int spriteIndex;
+    @Getter
+    private final double angularVelocity;
 
     // CONSTRUCTOR:
     public Asteroid(final Position position, final Velocity velocity) {
@@ -36,9 +39,17 @@ public class Asteroid extends GameObject {
         setPosition(position);
         setVelocity(velocity);
         setRotationAngle(Math.random() * PI2);
-        setRadius(30);
+
+        final double ss = .75 * Math.random() + .75;
+        setRadius(30* ss);
         setHealth(1 + spriteIndex);
-        setScale(0.3);
+        setScale(0.3 * ss);
+
+        if (Math.random() < .5) {
+            angularVelocity =  Math.random() / 20;
+        } else {
+            angularVelocity = - Math.random() / 20;
+        }
     }
 
     @Override
@@ -65,7 +76,7 @@ public class Asteroid extends GameObject {
     }
 
     private double getNextAngle() {
-        final double nextAngle = getRotationAngle() + .05;
+        final double nextAngle = getRotationAngle() + angularVelocity;
         if (nextAngle > PI2) {
             return nextAngle - PI2;
         }
