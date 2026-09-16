@@ -8,23 +8,15 @@
 
 The project depends on Lombok, JInput, Jackson Databind, and Jackson's Java Time module. Maven downloads these dependencies during the build.
 
-## Build
+## Build the JAR
 
 From the repository root:
-
-```bash
-./build.sh
-```
-
-`build.sh` runs `mvn clean package`, stages a root-owned Debian filesystem beneath `target/debian-package-root`, and creates `target/alien-force_1.1.0-SNAPSHOT_all.deb`.
-
-To create only the Maven artifacts:
 
 ```bash
 mvn clean package
 ```
 
-The Maven Shade plugin sets `com.alienforce.Main` as the entry point and bundles runtime dependencies. Images and sounds from `src/main/resource/com/alienforce/assets` are copied onto the classpath under `com/alienforce/assets`.
+The Maven Shade plugin sets `com.alienforce.Main` as the entry point, bundles runtime dependencies, and writes the executable `target/alien-force.jar`. Images and sounds from `src/main/resource/com/alienforce/assets` are copied onto the classpath under `com/alienforce/assets`.
 
 ## Run
 
@@ -62,7 +54,7 @@ src/main/resource/com/alienforce/assets/
 
 Maven copies every file below `src/main/resource/com/alienforce/assets`. The three planet PNGs are mapped by `ImageKey.PLANET_1` through `PLANET_3` and loaded by `Planet`. The window icons are mapped by `ImageKey.ICON_16` through `ICON_64` and loaded by `Game`. The explosion sprites are mapped by `ImageKey.EXPLOSION_1` through `EXPLOSION_3` and selected by `Explosion` according to the destroyed object's class. All of these resources are included in the shaded JAR.
 
-## Ubuntu package
+## Build the Ubuntu package
 
 Run the packaging script from the repository root:
 
@@ -70,7 +62,7 @@ Run the packaging script from the repository root:
 ./build.sh
 ```
 
-The script builds the shaded JAR and then creates `target/alien-force_1.1.0-SNAPSHOT_all.deb`. Install it with APT so Ubuntu resolves the Java runtime dependency:
+The script runs `mvn clean package`, stages a root-owned Debian filesystem beneath `target/debian-package-root`, and creates `target/alien-force_1.1.0-SNAPSHOT_all.deb`. Install it with APT so Ubuntu resolves the Java runtime dependency:
 
 ```bash
 sudo apt install ./target/alien-force_1.1.0-SNAPSHOT_all.deb
