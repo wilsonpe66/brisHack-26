@@ -14,6 +14,7 @@ import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.Getter;
 
 
@@ -60,7 +61,11 @@ public class Explosion extends GameObject {
     }
 
     private Color getColor(final double scale) {
-        return colorTransitions.get(deadObject.getClass()).getColor(scale);
+        return Optional.ofNullable(deadObject)
+            .map(Object::getClass)
+            .map(colorTransitions::get)
+            .map(colorTransition -> colorTransition.getColor(scale))
+            .orElse(Color.black);
     }
 
     @Override

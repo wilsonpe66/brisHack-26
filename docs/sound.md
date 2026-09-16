@@ -26,3 +26,7 @@ Audio resources are WAV files loaded from the application classpath by `AssetMan
 - `setMuted(boolean)` updates `Settings.muted` and stops loops when muting.
 
 The gameplay input path also toggles `Settings.muted` directly when `M` is pressed. Starting a new game resets the muted setting to `false`.
+
+## Sound Generation
+
+[ESpeak and Audacity](./espeak/speaking-notes.md)
